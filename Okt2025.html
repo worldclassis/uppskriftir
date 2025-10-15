@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Class Recipes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .recipe-section-title {
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .recipe-section-title:hover {
+            background-color: #e5e7eb;
+        }
+        .content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            padding: 0 1rem;
+        }
+        .content.open {
+            max-height: 2000px; /* Large enough value to cover content */
+            padding: 1rem;
+        }
+        /* Custom scrollbar for better appearance */
+        .recipe-list-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .recipe-list-container::-webkit-scrollbar-thumb {
+            background-color: #e5e7eb;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <header class="text-center mb-8 sm:mb-12">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
+            World Class Recipes
+        </h1>
+        <!-- Updated subheading -->
+        <p class="text-lg text-gray-500 mt-2">Fueling Your Body</p>
+        
+        <button id="translate-button" onclick="toggleLanguage()" class="mt-4 px-6 py-2 bg-indigo-600 text-white font-semibold rounded-full shadow-md hover:bg-indigo-700 transition duration-150 ease-in-out text-sm">
+            Translate to English 🇬🇧
+        </button>
+    </header>
+
+    <div id="recipe-container" class="max-w-4xl mx-auto space-y-6 recipe-list-container">
+        <!-- Recipes will be dynamically loaded here -->
+    </div>
+
+    <footer class="text-center mt-12 text-gray-400 text-sm">
+        <p>Tip: Click on any section title to expand and collapse the recipes.</p>
+    </footer>
+
+    <script>
+        let currentLanguage = 'is'; // Default language is Icelandic
+
+        // Recipe Data Structure with updated names based on the user's request:
+        // 1. Item names are always in English.
+        // 2. Drink categories follow: "English Noun + Drykkir".
+        // 3. Food categories now use simple Icelandic nouns: Skálar, Grautar, Salat, Krisp.
+        const recipes = [
+            {
+                category: { en: "Energy Drinks", is: "Energy Drykkir" },
+                icon: "⚡",
+                color: "bg-yellow-100",
+                borderColor: "border-yellow-500",
+                items: [
+                    { name: { en: "Power", is: "Power" }, ingredients: { en: ["110g Vanilla Skyr", "100g Banana", "60g Strawberries", "30g Vanilla Protein"], is: ["110 g vanilluskyr", "100 g banana", "60 g jarðaber", "30 g vanilluprótein"] }, instructions: { en: "Blend until smooth.", is: "Blandaðu þar til áferðin er slétt." } },
+                    { name: { en: "Protein Iced Coffee", is: "Protein Iced Coffee" }, ingredients: { en: ["200ml Double Espresso", "10ml Olive Oil", "30g Salted Caramel Protein"], is: ["200 ml tvöfaldur espresso", "10 ml ólífuolía", "30 g salted caramel prótein"] }, instructions: { en: "Blend until smooth.", is: "Blandaðu þar til drykkurinn verður sléttur." } },
+                    { name: { en: "Snap", is: "Snap" }, ingredients: { en: ["60g Strawberries", "100g Banana", "90ml Apple Juice", "30g P/M Tango Protein"], is: ["60 g jarðaber", "100 g banana", "90 ml eplasafi", "30 g P/M Tango prótein"] }, instructions: { en: "Blend well until soft and smooth.", is: "Blandaðu vel þar til áferðin er mjúk og slétt." } }
+                ]
+            },
+            {
+                category: { en: "Strength Drinks", is: "Strength Drykkir" },
+                icon: "💪",
+                color: "bg-red-100",
+                borderColor: "border-red-500",
+                items: [
+                    { name: { en: "Mass", is: "Mass" }, ingredients: { en: ["140g Strawberries", "40g Dates", "60g Banana", "60g Peanut Butter", "8g Cocoa Powder", "200ml Almond Milk", "30g Cookie Protein"], is: ["140 g jarðaber", "40 g döðlur", "60 g banana", "60 g hnetusmjör", "8 g kakóduft", "200 ml möndlumjólk", "30 g cookie prótein"] }, instructions: { en: "Blend until everything is silky smooth.", is: "Blandaðu þar til allt er silkimjúkt." } },
+                    { name: { en: "Energy", is: "Energy" }, ingredients: { en: ["60g Banana", "80g Oatmeal", "200ml Oat Milk", "60g Almond Butter", "30g Whey Protein"], is: ["60 g banana", "80 g haframjöl", "200 ml haframjólk", "60 g möndlusmjör", "30 g whey prótein"] }, instructions: { en: "Blend until the texture is smooth.", is: "Blandaðu þar til áferðin er slétt." } },
+                    { name: { en: "Berry Bomb", is: "Berry Bomb" }, ingredients: { en: ["60g Raspberries", "60g Blueberries", "50ml Olive Oil", "200ml Coconut Milk", "30g Whey Protein"], is: ["60 g hindber", "60 g bláber", "50 ml ólífuolía", "200 ml kókosmjólk", "30 g whey prótein"] }, instructions: { en: "Blend until the texture is smooth.", is: "Blandaðu þar til áferðin er slétt." } }
+                ]
+            },
+            {
+                category: { en: "Light Drinks", is: "Light Drykkir" },
+                icon: "🍃",
+                color: "bg-green-100",
+                borderColor: "border-green-500",
+                items: [
+                    { name: { en: "Green Health", is: "Green Health" }, ingredients: { en: ["100g Spinach", "30g Mango", "155g Apple", "40g Celery", "20ml Ginger Juice", "30g Collagen Protein"], is: ["100 g spínat", "30 g mangó", "155 g epli", "40 g sellerí", "20 ml engifersafi", "30 g collagen prótein"] }, instructions: { en: "Blend until soft and evenly mixed.", is: "Blandaðu þar til áferðin er mjúk og jöfn." } },
+                    { name: { en: "Metabolism", is: "Metabolism" }, ingredients: { en: ["155g Apple", "60g Mango", "60g Blueberries", "30g Grated/Chopped Ginger", "30g Whey Protein"], is: ["155 g epli", "60 g mangó", "60 g bláber", "30 g rifinn/saxaður engifer", "30 g whey prótein"] }, instructions: { en: "Blend until the texture is smooth.", is: "Blandaðu þar til áferðin er slétt." } },
+                    { name: { en: "Warm-up", is: "Warm-up" }, ingredients: { en: ["110g Vanilla Skyr", "60g Strawberries", "60g Mango", "60g Pineapple"], is: ["110 g vanilluskyr", "60 g jarðaber", "60 g mangó", "60 g ananas"] }, instructions: { en: "Blend until the texture is smooth.", is: "Blandaðu þar til áferðin er slétt." } }
+                ]
+            },
+            {
+                category: { en: "Balance Drinks", is: "Balance Drykkir" },
+                icon: "⚖️",
+                color: "bg-blue-100",
+                borderColor: "border-blue-500",
+                items: [
+                    { name: { en: "Joy", is: "Joy" }, ingredients: { en: ["20ml Lemon Juice", "30g Ginger", "60g Strawberries", "155g Apple", "30g Strawberry Protein"], is: ["20 ml sítrónusafi", "30 g engifer", "60 g jarðaber", "155 g epli", "30 g jarðaberja prótein"] }, instructions: { en: "Blend until the texture is smooth.", is: "Blandaðu þar til áferðin er slétt." } },
+                    { name: { en: "Life", is: "Life" }, ingredients: { en: ["130g Avocado", "200g Apple", "140g Pineapple", "30g Ginger"], is: ["130 g avókadó", "200 g epli", "140 g ananas", "30 g engifer"] }, instructions: { en: "Blend until the texture is soft and smooth.", is: "Blandaðu þar til áferðin er mjúk og slétt." } },
+                    { name: { en: "Renewal", is: "Renewal" }, ingredients: { en: ["90ml Beetroot Juice", "130g Avocado", "30g Celery", "40g Strawberries", "155g Apple", "30ml Lemon Juice", "3g Spirulina"], is: ["90 ml rauðrófusafi", "130 g avókadó", "30 g sellerí", "40 g jarðaber", "155 g epli", "30 ml sítrónusafi", "3 g spirulina"] }, instructions: { en: "Blend until the texture is smooth.", is: "Blandaðu þar til áferðin er slétt." } }
+                ]
+            },
+            {
+                // UPDATED: is: "Bowls Skálar" -> "Skálar"
+                category: { en: "Bowls", is: "Skálar" }, 
+                icon: "🥣",
+                color: "bg-gray-200",
+                borderColor: "border-gray-500",
+                items: [
+                    { name: { en: "Energy Bowl", is: "Energy Bowl" }, ingredients: { en: ["Base: 40g Granola", "Blend: 110g Skyr, 100g Banana, 60g Strawberries, 30g Vanilla Protein", "Topping: 40g Blueberries, 50g Strawberries, 50g Almond Butter"], is: ["Grunnur: 40 g granóla", "Blanda: 110 g Skyr, 100 g Banani, 60 g Jarðaber, 30 g Vanillu Prótein", "Ofan á: 40 g Bláber, 50 g Jarðaber, 50 g Möndlusmjör"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } },
+                    { name: { en: "Strength Bowl", is: "Strength Bowl" }, ingredients: { en: ["Base: 40g Granola", "Blend: 140g Strawberries", "40g Dates", "60g Banana", "60g Peanut Butter", "8g Cocoa", "200ml Almond Milk", "30g Cookie Protein"], is: ["Grunnur: 40 g granóla", "Blanda: 140 g Jarðaber", "40 g Döðlur", "60 g Banani", "60 g Hnetusmjör", "8 g Kakó", "200 ml Möndlumjólk", "30 g Cookie Prótein"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } },
+                    { name: { en: "Balance Bowl", is: "Balance Bowl" }, ingredients: { en: ["Base: 40g Granola", "Blend: 20ml Lemon Juice", "30g Ginger", "60g Strawberries", "155g Apple", "30g Strawberry Protein"], is: ["Grunnur: 40 g granóla", "Blanda: 20 ml Sítrónusafi", "30 g Engifer", "60 g Jarðaber", "155 g Epli", "30 g Jarðaberja Prótein"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } },
+                    { name: { en: "Light Bowl", is: "Light Bowl" }, ingredients: { en: ["Base: 40g Granola", "Blend: 155g Apple", "60g Mango", "60g Blueberries", "30g Ginger", "30g Whey Protein"], is: ["Grunnur: 40 g granóla", "Blanda: 155 g Epli", "60 g Mangó", "60 g Bláber", "30 g Engifer", "30 g Whey Prótein"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } }
+                ]
+            },
+            {
+                // UPDATED: is: "Porridges Grautar" -> "Grautar"
+                category: { en: "Porridges", is: "Grautar" },
+                icon: "🍚",
+                color: "bg-amber-100",
+                borderColor: "border-amber-500",
+                items: [
+                    { name: { en: "Energy Porridge", is: "Energy Porridge" }, ingredients: { en: ["Base: Almond Milk, Oats, Honey, Apple, Banana, Cream Protein"], is: ["Grunnur: Möndlumjólk, Hafrar, Hunang, Epli, Banani, Rjómaprótein"] }, instructions: { en: "Topping: 20g Almond Butter, 30g Blueberries, 30g Strawberries, 10ml Honey", is: "Bættu ofan á: 20 g Möndlusmjör, 30 g Bláber, 30 g Jarðaber, 10 ml Hunang" } },
+                    { name: { en: "Strength Porridge", is: "Strength Porridge" }, ingredients: { en: ["Base: Almond Milk, Oats, Honey, Apple, Banana, Vanilla Protein"], is: ["Grunnur: Möndlumjólk, Hafrar, Hunang, Epli, Banani, Vanillu Prótein"] }, instructions: { en: "Topping: 20g Peanut Butter, 60g Banana, 20g Dates, 10ml Honey", is: "Bættu ofan á: 20 g Hnetusmjör, 60 g Banani, 20 g Döðlur, 10 ml Hunang" } },
+                    { name: { en: "Balance Porridge", is: "Balance Porridge" }, ingredients: { en: ["Base: Almond Milk, Oats, Honey, Apple, Banana, Collagen"], is: ["Grunnur: Möndlumjólk, Hafrar, Hunang, Epli, Banani, Collagen"] }, instructions: { en: "Topping: 10g Hemp Seeds, 30g Blueberries, 30g Dates, 10ml Honey", is: "Bættu ofan á: 10 g Hampfræ, 30 g Bláber, 30 g Döðlur, 10 ml Hunang" } },
+                    { name: { en: "Light Porridge", is: "Light Porridge" }, ingredients: { en: ["Base: Almond Milk, Oats, Honey, Apple, Banana"], is: ["Grunnur: Möndlumjólk, Hafrar, Hunang, Epli, Banani"] }, instructions: { en: "Topping: 10g Hemp Seeds, 30g Strawberries, 10g Coconut Flakes, 10ml Honey", is: "Bættu ofan á: 10 g Hampfræ, 30 g Jarðaber, 10 g Kókosflögur, 10 ml Hunang" } }
+                ]
+            },
+            {
+                // UPDATED: is: "Salads SALAT" -> "Salat"
+                category: { en: "Salads", is: "Salat" },
+                icon: "🥗",
+                color: "bg-teal-100",
+                borderColor: "border-teal-500",
+                items: [
+                    { name: { en: "Energy Salad", is: "Energy Salad" }, ingredients: { en: ["100g Pasta", "50g Salad Mix", "120g Chicken", "20g Dates", "15g Parmesan"], is: ["100 g pasta", "50 g salat mix", "120 g kjúklingur", "20 g döðlur", "15 g parmesan"] }, instructions: { en: "Pour 80ml Caesar dressing over before serving.", is: "Helltu 80 ml Caesar dressing yfir áður en borið er fram." } },
+                    { name: { en: "Strength Salad", is: "Strength Salad" }, ingredients: { en: ["100g Pasta", "70g Cherry Tomatoes", "90g Spinach", "20g Dates", "50g Cashews", "70g Feta Cheese"], is: ["100 g pasta", "70 g kirsuberjatómatar", "90 g spínat", "20 g döðlur", "50 g kasjúhnetur", "70 g fetaostur"] }, instructions: { en: "Pour 100ml Pesto over before serving.", is: "Helltu 100 ml pestó yfir áður en borið er fram." } },
+                    { name: { en: "Balance Salad", is: "Balance Salad" }, ingredients: { en: ["100g Salad Mix", "Vegetable Patty (?)", "80g Avocado", "50g Red Onion", "70g Cucumber", "70g Cherry Tomatoes"], is: ["100 g salat mix", "Grænmetisbuff (?)", "80 g avókadó", "50 g rauðlaukur", "70 g gúrka", "70 g kirsuberjatómatar"] }, instructions: { en: "Pour 80ml Vinegar dressing over before serving.", is: "Helltu 80 ml vinegar dressing yfir áður en borið er fram." } },
+                    { name: { en: "Light Salad", is: "Light Salad" }, ingredients: { en: ["100g Salad Mix", "120g Tuna", "50g Egg", "40g Red Onion", "70g Cucumber"], is: ["100 g salat mix", "120 g túnfiskur", "50 g egg", "40 g rauðlaukur", "70 g gúrka"] }, instructions: { en: "Pour 100g Cottage Cheese dressing over before serving.", is: "Helltu 100 g kotasælu dressing yfir áður en borið er fram." } }
+                ]
+            },
+            {
+                // UPDATED: is: "Crispbreads KRISP" -> "Krisp"
+                category: { en: "Crispbreads", is: "Krisp" },
+                icon: "🍞",
+                color: "bg-stone-100",
+                borderColor: "border-stone-500",
+                items: [
+                    { name: { en: "Chicken Crisp", is: "Chicken Crisp" }, ingredients: { en: ["Finn Crisp Base", "80g Chicken", "10g Sweet & Sour Pickle", "5g Parsley", "15g Red Onion"], is: ["Finn Crisp Grunnur", "80 g Kjúklingur", "10 g Súr-sæt Súrsað Gúrka", "5 g Steinselja", "15 g Rauðlaukur"] }, instructions: { en: "Spread 40ml Mustard dressing over.", is: "Smyrðu 40 ml sinneps dressing yfir." } },
+                    { name: { en: "Tuna & Egg Crisp", is: "Tuna & Egg Crisp" }, ingredients: { en: ["Finn Crisp Base", "45g Tuna", "10g Onion", "15g Cucumber", "5g Spring Onion", "20g Cottage Cheese", "15g Tomatoes", "20g Egg"], is: ["Finn Crisp Grunnur", "45 g Túnfiskur", "10 g Laukur", "15 g Gúrka", "5 g Vorlaukur", "20 g Kotasæla", "15 g Tómatar", "20 g Egg"] }, instructions: { en: "Spread 20ml Caesar dressing over.", is: "Smyrðu 20 ml Caesar dressing yfir." } },
+                    { name: { en: "Chicken & Avocado Crisp", is: "Chicken & Avocado Crisp" }, ingredients: { en: ["Finn Crisp Base", "80g Chicken", "10g Sweet & Sour Pickle", "5g Parsley", "15g Red Onion", "60g Avocado"], is: ["Finn Crisp Grunnur", "80 g Kjúklingur", "10 g Súr-sæt Súrsað Gúrka", "5 g Steinselja", "15 g Rauðlaukur", "60 g Avókadó"] }, instructions: { en: "Spread 40ml Mustard dressing over.", is: "Smyrðu 40 ml sinneps dressing yfir." } },
+                    { name: { en: "Hummus Crisp", is: "Hummus Crisp" }, ingredients: { en: ["Finn Crisp Base"], is: ["Finn Crisp Grunnur"] }, instructions: { en: "Spread hummus and add desired toppings (recipe incomplete).", is: "Smyrðu hummus og bættu við óskatoppum (uppskrift ófullkomin)." } }
+                ]
+            }
+        ];
+
+        const container = document.getElementById('recipe-container');
+
+        // Function to toggle between English and Icelandic
+        function toggleLanguage() {
+            // Switch to the opposite language
+            currentLanguage = currentLanguage === 'en' ? 'is' : 'en'; 
+            const button = document.getElementById('translate-button');
+            
+            // Update button text to reflect the target language
+            if (currentLanguage === 'en') {
+                button.textContent = 'Túlka á Íslensku 🇮🇸';
+            } else {
+                button.textContent = 'Translate to English 🇬🇧';
+            }
+            renderRecipes(); // Rerender the entire list with the new language
+        }
+
+        // Function to create and render all sections
+        function renderRecipes() {
+            container.innerHTML = '';
+            const lang = currentLanguage;
+
+            recipes.forEach((section, index) => {
+                const sectionId = `section-${index}`;
+                
+                // Main Card Container
+                const card = document.createElement('div');
+                card.className = `${section.borderColor} border-t-4 shadow-lg rounded-xl overflow-hidden ${section.color} transition duration-300 hover:shadow-xl`;
+
+                // Section Title (Accordion Header)
+                const title = document.createElement('div');
+                title.id = `title-${sectionId}`;
+                title.className = 'recipe-section-title flex justify-between items-center p-4 sm:p-5 bg-white transition duration-200 ease-in-out border-b cursor-pointer';
+                title.innerHTML = `
+                    <h2 class="text-xl sm:text-2xl font-semibold text-gray-700 flex items-center">
+                        <span class="text-2xl mr-3">${section.icon}</span>
+                        ${section.category[lang]}
+                    </h2>
+                    <svg id="arrow-${sectionId}" class="w-6 h-6 text-gray-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                `;
+                title.onclick = () => toggleAccordion(sectionId);
+                card.appendChild(title);
+
+                // Section Content (Accordion Body)
+                const content = document.createElement('div');
+                content.id = sectionId;
+                content.className = 'content ' + section.color;
+                
+                let recipesHtml = '';
+                section.items.forEach(item => {
+                    const ingredientsList = item.ingredients[lang].map(ing => `<li class="mb-1 text-sm text-gray-700">${ing}</li>`).join('');
+                    
+                    const instructionsTitle = lang === 'en' ? 'Method/Topping' : 'Aðferð/Álegg';
+                    const ingredientsTitle = lang === 'en' ? 'Ingredients' : 'Hráefni';
+
+                    recipesHtml += `
+                        <div class="p-4 sm:p-5 bg-white rounded-lg shadow-md mb-4 border-l-4 border-gray-300">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">${item.name[lang]}</h3>
+                            <div class="sm:flex sm:space-x-4">
+                                <div class="w-full sm:w-1/2 mb-3 sm:mb-0">
+                                    <p class="font-semibold text-sm uppercase text-gray-500 mb-1">${ingredientsTitle}</p>
+                                    <ul class="list-disc list-inside space-y-0.5 text-sm">${ingredientsList}</ul>
+                                </div>
+                                <div class="w-full sm:w-1/2">
+                                    <p class="font-semibold text-sm uppercase text-gray-500 mb-1">${instructionsTitle}</p>
+                                    <p class="text-gray-700 text-sm italic">${item.instructions[lang]}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                content.innerHTML = `<div class="p-4">${recipesHtml}</div>`;
+                card.appendChild(content);
+
+                container.appendChild(card);
+            });
+        }
+
+        // Toggle function for the accordion
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const arrow = document.getElementById(`arrow-section-${id.split('-')[1]}`);
+            const isOpen = content.classList.contains('open');
+
+            // Close all open sections first (for single-open accordion)
+            document.querySelectorAll('.content.open').forEach(openContent => {
+                if (openContent.id !== id) {
+                    openContent.classList.remove('open');
+                    const otherArrow = document.getElementById(`arrow-section-${openContent.id.split('-')[1]}`);
+                    if(otherArrow) otherArrow.classList.remove('rotate-180');
+                }
+            });
+
+            if (isOpen) {
+                content.classList.remove('open');
+                arrow.classList.remove('rotate-180');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('rotate-180');
+            }
+        }
+
+        // Initialize rendering
+        window.onload = renderRecipes;
+    </script>
+</body>
+</html>
