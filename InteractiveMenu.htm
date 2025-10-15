@@ -192,7 +192,7 @@
             category_skal: 'BOWLS',
             category_krisp: 'CRISPS',
             category_kaffi: 'COFFEE',
-            category_grab_go: 'GRAB & GO', // CHANGED to GRAB & GO
+            category_grab_go: 'GRAB & GO', // Correct English Name
         };
 
         
@@ -349,9 +349,18 @@
         // Helper to get translated category name
         const getCategoryDisplayName = (categoryKey) => {
             const lang = getLang();
-            // Category keys are simplified in the Lang objects (e.g., 'DRYKKIR' -> 'category_drykkir')
-            const normalizedKey = 'category_' + categoryKey.toLowerCase().replace(/[^a-z]/g, '');
-            return lang[normalizedKey] || categoryKey;
+            let lookupKey;
+
+            // FIX: Map the problematic Icelandic string directly to the intended English key
+            if (categoryKey === 'GRÍPTU MEÐ') {
+                lookupKey = 'category_grab_go'; 
+            } else {
+                // Category keys are simplified in the Lang objects (e.g., 'DRYKKIR' -> 'category_drykkir')
+                // This original logic works for the simpler Icelandic names like DRYKKIR, SALAT
+                lookupKey = 'category_' + categoryKey.toLowerCase().replace(/[^a-z]/g, '');
+            }
+            
+            return lang[lookupKey] || categoryKey;
         }
 
         const updateStaticText = () => {
