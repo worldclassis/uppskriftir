@@ -157,7 +157,7 @@
             category_skal: 'SKÁL',
             category_krisp: 'KRISP',
             category_kaffi: 'KAFFI',
-            category_grab_go: 'GRÍPTU MEÐ',
+            category_grab_go: 'GRÍPTU MEÐ', // Displayed in Icelandic even when in Icelandic mode
         };
         const EN_LANG = {
             tagline: 'Health & Energy Source | Heilsu & orku uppspretta',
@@ -192,7 +192,7 @@
             category_skal: 'BOWLS',
             category_krisp: 'CRISPS',
             category_kaffi: 'COFFEE',
-            category_grab_go: 'GRAB & GO',
+            category_grab_go: 'GRAB & GO', // CHANGED to GRAB & GO
         };
 
         
@@ -508,6 +508,8 @@
                 modalSizeSelector.innerHTML = '';
                 return;
             }
+
+            modalActiveSize = modalActiveSize || 'M'; // Ensure a size is selected if it was cleared
 
             modalSizeSelector.innerHTML = `
                 <button class="size-button ${modalActiveSize === 'S' ? 'active' : 'bg-gray-200'}" onclick="setModalSize(${itemIndex}, 'S')">S</button>
