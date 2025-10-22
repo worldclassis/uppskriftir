@@ -141,20 +141,16 @@
 </head>
 <body class="bg-gray-50 flex flex-col lg:flex-row p-4 lg:p-10 gap-8">
 
-    <!-- Control Panel -->
-    <div class="lg:w-1/3 w-full bg-white p-6 rounded-xl shadow-lg h-fit border border-gray-100">
+    <!-- Control Panel --><div class="lg:w-1/3 w-full bg-white p-6 rounded-xl shadow-lg h-fit border border-gray-100">
         <h2 class="text-2xl font-bold mb-6 text-gray-800">Dish Tag Editor</h2>
 
-        <!-- Text Inputs for all 16 tags -->
-        <h3 class="text-lg font-semibold mb-4 text-gray-800 border-t pt-4">Dish Details (16 Instances)</h3>
+        <!-- Text Inputs for all 16 tags --><h3 class="text-lg font-semibold mb-4 text-gray-800 border-t pt-4">Dish Details (16 Instances)</h3>
         <p class="text-sm text-gray-500 mb-4">Set the text and icons individually for each tag below.</p>
         
         <div id="text-input-container" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-            <!-- Input fields and icon selectors will be generated here by JS -->
-        </div>
+            <!-- Input fields and icon selectors will be generated here by JS --></div>
 
-        <!-- Print Button -->
-        <button id="print-button" class="mt-6 w-full bg-[#8B0000] text-white py-3 rounded-lg font-bold hover:bg-red-800 transition shadow-md">
+        <!-- Print Button --><button id="print-button" class="mt-6 w-full bg-[#8B0000] text-white py-3 rounded-lg font-bold hover:bg-red-800 transition shadow-md">
             Print Dish Tags
         </button>
 
@@ -163,11 +159,9 @@
         </p>
     </div>
 
-    <!-- A4 Preview Panel -->
-    <div class="lg:w-2/3 w-full flex justify-center items-start pt-4 lg:pt-0">
+    <!-- A4 Preview Panel --><div class="lg:w-2/3 w-full flex justify-center items-start pt-4 lg:pt-0">
         <div id="a4-preview" class="a4-page">
-            <!-- Dish Blocks will be generated here -->
-        </div>
+            <!-- Dish Blocks will be generated here --></div>
     </div>
 
     <script>
@@ -243,8 +237,7 @@
 
                     <p class="text-xs font-bold text-gray-600 mb-2">Dietary Icons:</p>
                     <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-700">
-                        <!-- Top Right: Vegetarian / Vegan / None Radio Buttons (Grouped by name="dietaryStatus-${index}") -->
-                        <div class="flex items-center space-x-1">
+                        <!-- Top Right: Vegetarian / Vegan / None Radio Buttons (Grouped by name="dietaryStatus-${index}") --><div class="flex items-center space-x-1">
                             <input type="radio" name="dietaryStatus-${index}" value="Vegetarian" ${tag.dietaryStatus === 'Vegetarian' ? 'checked' : ''} data-index="${index}" data-icon-type="dietaryStatus" class="form-radio h-3 w-3 text-green-600 icon-radio">
                             <span>Veg</span>
                         </div>
@@ -257,11 +250,9 @@
                             <span>None</span>
                         </div>
                         
-                        <!-- Separator -->
-                        <span class="text-gray-300">|</span>
+                        <!-- Separator --><span class="text-gray-300">|</span>
 
-                        <!-- Bottom Icons: Allergen Checkboxes -->
-                        <div class="flex items-center space-x-1">
+                        <!-- Bottom Icons: Allergen Checkboxes --><div class="flex items-center space-x-1">
                             <input type="checkbox" ${tag.iconNuts ? 'checked' : ''} data-index="${index}" data-icon-type="iconNuts" class="form-checkbox h-3 w-3 text-red-600 icon-checkbox">
                             <span>Nuts</span>
                         </div>
@@ -305,40 +296,28 @@
             
             return `
                 <div class="dish-block">
-                    <!-- Custom 'R' Image Background (Left) -->
-                    <img 
+                    <!-- Custom 'R' Image Background (Left) --><img 
                         src="${IMAGE_PATHS.CustomR}" 
                         alt="Custom R" 
                         class="custom-r-background" 
                         onerror="this.onerror=null; this.src='https://placehold.co/100x297/8B0000/FFFFFF?text=R'; this.style.opacity='0.2';"
                     >
-                    <!-- Divider Line: 10% opacity (opacity-10) -->
-                    <div class="absolute left-0 top-0 bottom-0 w-[40px] bg-maroon-text opacity-10 z-10"></div>
-
-
-                    <!-- Text Content (Center) -->
-                    <div class="flex flex-col pl-[70px] pr-2 w-full h-full justify-center z-20 relative">
+                    <!-- REMOVED: Divider Line --><!-- Text Content (Center) - Adjusted padding for no line --><div class="flex flex-col pl-[40px] pr-2 w-full h-full justify-center z-20 relative">
                         <span class="line1 maroon-text truncate">${line1}</span>
                         <span class="line2 truncate">${line2}</span>
                     </div>
 
-                    <!-- Right Icons -->
-                    <!-- Top Right Icon: UPDATED: Less margin (top-2 right-2) -->
-                    <div class="absolute right-2 top-2 veg-icon-container flex items-center justify-center z-20">
+                    <!-- Right Icons --><!-- Top Right Icon: UPDATED: Less margin (top-2 right-2) --><div class="absolute right-2 top-2 veg-icon-container flex items-center justify-center z-20">
                         ${topIconHTML}
                     </div>
 
-                    <!-- Bottom Right Icons: UPDATED: Less margin (bottom-2 right-2) and reduced spacing (space-x-1) -->
-                    <div class="absolute right-2 bottom-2 flex space-x-1 items-end z-20">
+                    <!-- Bottom Right Icons: UPDATED: Less margin (bottom-2 right-2) and reduced spacing (space-x-1) --><div class="absolute right-2 bottom-2 flex space-x-1 items-end z-20">
                         
-                        <!-- Contains Nuts -->
-                        ${iconNuts ? createImageHTML('ContainsNuts', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
+                        <!-- Contains Nuts -->${iconNuts ? createImageHTML('ContainsNuts', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
 
-                        <!-- Lactose Free -->
-                        ${iconLactoseFree ? createImageHTML('LactoseFree', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
+                        <!-- Lactose Free -->${iconLactoseFree ? createImageHTML('LactoseFree', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
                         
-                        <!-- Gluten Free -->
-                        ${iconGlutenFree ? createImageHTML('GlutenFree', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
+                        <!-- Gluten Free -->${iconGlutenFree ? createImageHTML('GlutenFree', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
                     </div>
                 </div>
             `;
