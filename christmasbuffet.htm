@@ -31,10 +31,10 @@
             height: 297mm;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             background: white;
-            /* 2x7 grid for 14 blocks (2 columns, 7 rows) */
+            /* 2x8 grid for 16 blocks (2 columns, 8 rows) */
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(7, 1fr); /* Updated for 14 tags */
+            grid-template-rows: repeat(8, 1fr); /* UPDATED: 8 rows for 16 tags */
         }
 
         /* Set the 'R' color to a deep maroon matching the image */
@@ -65,30 +65,30 @@
             color: #333;
         }
         
-        /* Style for the image icons (Allergic icons are now 31px, up 30% from 24px) */
+        /* Style for the image icons (Allergic icons are now 31px) */
         .dish-icon {
-            width: 31px; /* Standard size for bottom icons (30% bigger) */
+            width: 31px; /* Standard size for bottom icons */
             height: 31px;
             object-fit: contain;
         }
         .veg-icon-container {
-            width: 32px; /* Slightly larger container for the top right icon (remains 32px) */
+            width: 32px; /* Container for the top right icon */
             height: 32px;
         }
 
         /* Style for the custom 'R' image */
         .custom-r-background {
             position: absolute;
-            left: 0px; /* ADJUSTED: Moved from -10px to 0px to prevent cutoff */
+            left: 0px; 
             top: 50%;
             transform: translateY(-50%);
-            height: 100%; /* Make it fill the height of the block */
-            width: auto; /* Maintain aspect ratio */
+            height: 100%; 
+            width: auto; 
             opacity: 1.0; 
             user-select: none;
             object-fit: contain;
             object-position: left center;
-            z-index: 0; /* Ensure it stays in the background */
+            z-index: 0; 
         }
         /* Custom scrollbar styling for the input panel */
         #text-input-container::-webkit-scrollbar {
@@ -101,49 +101,39 @@
 
         /* --- PRINT STYLES --- */
         @media print {
-            /* Hide the entire body except for the A4 container */
             body {
                 background-color: white !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                /* Ensure print doesn't rely on flex row layout */
                 flex-direction: column; 
             }
             
-            /* Hide the Control Panel and the Print Button */
             .lg\:w-1\/3, #print-button {
                 display: none !important;
             }
 
-            /* Make the A4 preview the full width and height of the printed area */
             .lg\:w-2\/3 {
                 width: 100% !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                /* Adjust alignment for print */
                 justify-content: flex-start !important; 
                 align-items: flex-start !important;
             }
 
             .a4-page {
-                /* Override potential browser margins/paddings on print */
                 width: 210mm !important;
                 height: 297mm !important;
                 box-shadow: none !important;
                 border: none !important;
-                /* Ensure grid behaves well on print */
                 display: grid !important; 
                 grid-template-columns: repeat(2, 1fr) !important;
-                grid-template-rows: repeat(7, 1fr) !important;
-                /* Set print scale - adjust as needed for optimal fit */
-                transform: scale(0.98); /* Slightly reduce scale to ensure all fits */
+                grid-template-rows: repeat(8, 1fr) !important; /* UPDATED: 8 rows for print */
+                transform: scale(0.98); 
                 transform-origin: top left;
             }
 
-            /* Ensure borders are visible on print (use black border for cutting) */
             .dish-block {
                 border: 1px solid #000 !important;
-                /* Crucial for preventing content from breaking across pages */
                 page-break-inside: avoid !important; 
             }
         }
@@ -155,8 +145,8 @@
     <div class="lg:w-1/3 w-full bg-white p-6 rounded-xl shadow-lg h-fit border border-gray-100">
         <h2 class="text-2xl font-bold mb-6 text-gray-800">Dish Tag Editor</h2>
 
-        <!-- Text Inputs for all 14 tags -->
-        <h3 class="text-lg font-semibold mb-4 text-gray-800 border-t pt-4">Dish Details (14 Instances)</h3>
+        <!-- Text Inputs for all 16 tags -->
+        <h3 class="text-lg font-semibold mb-4 text-gray-800 border-t pt-4">Dish Details (16 Instances)</h3>
         <p class="text-sm text-gray-500 mb-4">Set the text and icons individually for each tag below.</p>
         
         <div id="text-input-container" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
@@ -169,7 +159,7 @@
         </button>
 
         <p class="mt-6 text-xs text-gray-500">
-            *The preview simulates an A4 page (210mm x 297mm) with 14 unique tags.
+            *The preview simulates an A4 page (210mm x 297mm) with 16 unique tags.
         </p>
     </div>
 
@@ -187,38 +177,34 @@
             Vegan: 'https://github.com/worldclassis/hotelranga/blob/main/HR_VEGAN.png?raw=true', 
             ContainsNuts: 'https://github.com/worldclassis/hotelranga/blob/main/HR_NUTS.png?raw=true',
             LactoseFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_LACTOSEFREE.png?raw=true',
-            // Updated to new GitHub raw links:
             GlutenFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_GLUTENFREE.png?raw=true',
             CustomR: 'https://github.com/worldclassis/hotelranga/blob/main/R-back.png?raw=true' 
         };
 
-        const NUM_TAGS = 14; /* Updated from 16 to 14 */
+        const NUM_TAGS = 16; /* REVERTED: Back to 16 tags (2 columns x 8 rows) */
         const previewContainer = document.getElementById('a4-preview');
         const textInputContainer = document.getElementById('text-input-container');
         
-        // Define new size for bottom icons (31px) and top icons (32px)
         const BOTTOM_ICON_SIZE = 31; 
         const TOP_ICON_SIZE = 32;
 
-        // Unique Tags Data Structure, now including individual icon state
+        // Unique Tags Data Structure
         let tags = Array.from({ length: NUM_TAGS }, (_, i) => ({
             id: i,
             line1: `Dish Title ${i + 1}`,
             line2: `Description ${i + 1}`,
             // Initial state for icons
-            dietaryStatus: i === 0 ? 'Vegetarian' : '', // Tag 1 is Veg by default
-            iconNuts: i % 3 === 0, // Every 3rd tag contains nuts
+            dietaryStatus: i % 4 === 0 ? 'Vegetarian' : (i % 4 === 1 ? 'Vegan' : ''), 
+            iconNuts: i % 3 === 0, 
             iconLactoseFree: true,
-            iconGlutenFree: i % 2 !== 0, // Odd tags are GF
+            iconGlutenFree: i % 2 !== 0, 
         }));
         
         // Function to create an image tag
         function createImageHTML(key, className, placeholderSize) {
             const path = IMAGE_PATHS[key];
-            // Use a short text version of the key for the placeholder
             const keyText = key.replace(/contains/i, '').replace(/free/i, '').substring(0, 3).toUpperCase();
             
-            // The onerror handler uses the passed placeholderSize
             return `<img 
                 src="${path}" 
                 alt="${key} icon" 
@@ -228,7 +214,7 @@
         }
 
         /**
-         * Renders the input fields and icon selectors for all 14 tags.
+         * Renders the input fields and icon selectors for all 16 tags.
          */
         function renderInputFields() {
             textInputContainer.innerHTML = tags.map((tag, index) => `
@@ -308,22 +294,18 @@
          * @returns {string} The HTML string for one block.
          */
         function createDishBlockHTML(tagData) {
-            // Destructure all text and icon properties from the specific tag's data
             const { line1, line2, dietaryStatus, iconNuts, iconLactoseFree, iconGlutenFree } = tagData;
             
             let topIconHTML = '';
-            // Determine the top-right icon based on the individual tag's state
             if (dietaryStatus === 'Vegetarian') {
-                // Use TOP_ICON_SIZE (32) for the top right icon
                 topIconHTML = createImageHTML('Vegetarian', 'veg-icon-container w-full h-full', TOP_ICON_SIZE);
             } else if (dietaryStatus === 'Vegan') {
-                // Use TOP_ICON_SIZE (32) for the top right icon
                 topIconHTML = createImageHTML('Vegan', 'veg-icon-container w-full h-full', TOP_ICON_SIZE);
             }
             
             return `
                 <div class="dish-block">
-                    <!-- Custom 'R' Image Background (Left) - Left position is 0px now -->
+                    <!-- Custom 'R' Image Background (Left) -->
                     <img 
                         src="${IMAGE_PATHS.CustomR}" 
                         alt="Custom R" 
@@ -334,20 +316,20 @@
                     <div class="absolute left-0 top-0 bottom-0 w-[40px] bg-maroon-text opacity-10 z-10"></div>
 
 
-                    <!-- Text Content (Center) - Increased left padding to pl-[70px] to avoid overlap with repositioned 'R' -->
+                    <!-- Text Content (Center) -->
                     <div class="flex flex-col pl-[70px] pr-2 w-full h-full justify-center z-20 relative">
                         <span class="line1 maroon-text truncate">${line1}</span>
                         <span class="line2 truncate">${line2}</span>
                     </div>
 
                     <!-- Right Icons -->
-                    <div class="absolute right-4 top-4 veg-icon-container flex items-center justify-center z-20">
-                        <!-- Top Right Icon (Vegetarian/Vegan) -->
+                    <!-- Top Right Icon: UPDATED: Less margin (top-2 right-2) -->
+                    <div class="absolute right-2 top-2 veg-icon-container flex items-center justify-center z-20">
                         ${topIconHTML}
                     </div>
 
-                    <div class="absolute right-4 bottom-4 flex space-x-3 items-end z-20">
-                        <!-- Bottom Right Icons (using BOTTOM_ICON_SIZE of 31px) -->
+                    <!-- Bottom Right Icons: UPDATED: Less margin (bottom-2 right-2) and reduced spacing (space-x-1) -->
+                    <div class="absolute right-2 bottom-2 flex space-x-1 items-end z-20">
                         
                         <!-- Contains Nuts -->
                         ${iconNuts ? createImageHTML('ContainsNuts', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
@@ -364,7 +346,7 @@
 
 
         /**
-         * Generates and renders all 14 dish blocks into the A4 preview.
+         * Generates and renders all 16 dish blocks into the A4 preview.
          */
         function renderA4Page() {
             let html = '';
