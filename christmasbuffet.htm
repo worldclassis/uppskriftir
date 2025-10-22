@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4 Dish Tag Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Font Definition: Silk Serif Regular */
+        @font-face {
+            font-family: 'SilkSerif';
+            src: url('https://raw.githubusercontent.com/worldclassis/hotelranga/refs/heads/main/SilkSerif-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        /* Fallback for bold/heavy version in case it's not synthesized well */
+        @font-face {
+            font-family: 'SilkSerif';
+            src: url('https://raw.githubusercontent.com/worldclassis/hotelranga/refs/heads/main/SilkSerif-Regular.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        
+        body {
+            font-family: 'SilkSerif', serif; /* Use the new elegant font */
+        }
+
+        /* Define A4 aspect ratio (210mm x 297mm) */
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: white;
+            /* 2x8 grid for 16 blocks (2 columns, 8 rows) */
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+        }
+
+        /* Set the 'R' color to a deep maroon matching the image */
+        .maroon-text {
+            color: #8B0000; 
+        }
+
+        .dish-block {
+            border: 1px solid #eee; /* Subtle border to show separation */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Styling for the text lines */
+        .line1 {
+            font-family: 'SilkSerif', serif;
+            font-size: 28px; /* Larger, more elegant font */
+            font-weight: 700;
+            line-height: 1.1;
+        }
+        .line2 {
+            font-family: 'SilkSerif', serif;
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 1.1;
+            color: #333;
+        }
+        
+        /* Style for the image icons (Allergic icons are now 31px, up 30% from 24px) */
+        .dish-icon {
+            width: 31px; /* Standard size for bottom icons (30% bigger) */
+            height: 31px;
+            object-fit: contain;
+        }
+        .veg-icon-container {
+            width: 32px; /* Slightly larger container for the top right icon (remains 32px) */
+            height: 32px;
+        }
+
+        /* Style for the custom 'R' image */
+        .custom-r-background {
+            position: absolute;
+            left: -10px; /* Adjust as needed */
+            top: 50%;
+            transform: translateY(-50%);
+            height: 100%; /* Make it fill the height of the block */
+            width: auto; /* Maintain aspect ratio */
+            opacity: 1.0; /* Updated to 100% opacity, no longer a watermark */
+            user-select: none;
+            object-fit: contain;
+            object-position: left center;
+            z-index: 0; /* Ensure it stays in the background */
+        }
+        /* Custom scrollbar styling for the input panel */
+        #text-input-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        #text-input-container::-webkit-scrollbar-thumb {
+            background-color: #e5e7eb; /* Light gray */
+            border-radius: 4px;
+        }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            /* Hide the entire body except for the A4 container */
+            body {
+                background-color: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                /* Ensure print doesn't rely on flex row layout */
+                flex-direction: column; 
+            }
+            
+            /* Hide the Control Panel and the Print Button */
+            .lg\:w-1\/3, #print-button {
+                display: none !important;
+            }
+
+            /* Make the A4 preview the full width and height of the printed area */
+            .lg\:w-2\/3 {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                /* Adjust alignment for print */
+                justify-content: flex-start !important; 
+                align-items: flex-start !important;
+            }
+
+            .a4-page {
+                /* Override potential browser margins/paddings on print */
+                width: 210mm !important;
+                height: 297mm !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            /* Ensure borders are visible on print (use black border for cutting) */
+            .dish-block {
+                border: 1px solid #000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col lg:flex-row p-4 lg:p-10 gap-8">
+
+    <!-- Control Panel -->
+    <div class="lg:w-1/3 w-full bg-white p-6 rounded-xl shadow-lg h-fit border border-gray-100">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Dish Tag Editor</h2>
+
+        <!-- Text Inputs for all 16 tags -->
+        <h3 class="text-lg font-semibold mb-4 text-gray-800 border-t pt-4">Dish Details (16 Instances)</h3>
+        <p class="text-sm text-gray-500 mb-4">Set the text and icons individually for each tag below.</p>
+        
+        <div id="text-input-container" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            <!-- Input fields and icon selectors will be generated here by JS -->
+        </div>
+
+        <!-- Print Button -->
+        <button id="print-button" class="mt-6 w-full bg-[#8B0000] text-white py-3 rounded-lg font-bold hover:bg-red-800 transition shadow-md">
+            Print Dish Tags
+        </button>
+
+        <p class="mt-6 text-xs text-gray-500">
+            *The preview simulates an A4 page (210mm x 297mm) with 16 unique tags.
+        </p>
+    </div>
+
+    <!-- A4 Preview Panel -->
+    <div class="lg:w-2/3 w-full flex justify-center items-start pt-4 lg:pt-0">
+        <div id="a4-preview" class="a4-page">
+            <!-- Dish Blocks will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        // File paths for the dish tag icons. All paths now use reliable raw GitHub links.
+        const IMAGE_PATHS = {
+            Vegetarian: 'https://github.com/worldclassis/hotelranga/blob/main/HR_VEGETARIAN.png?raw=true',
+            Vegan: 'https://github.com/worldclassis/hotelranga/blob/main/HR_VEGAN.png?raw=true', 
+            ContainsNuts: 'https://github.com/worldclassis/hotelranga/blob/main/HR_NUTS.png?raw=true',
+            LactoseFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_LACTOSEFREE.png?raw=true',
+            // Updated to new GitHub raw links:
+            GlutenFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_GLUTENFREE.png?raw=true',
+            CustomR: 'https://github.com/worldclassis/hotelranga/blob/main/R-back.png?raw=true' 
+        };
+
+        const NUM_TAGS = 16;
+        const previewContainer = document.getElementById('a4-preview');
+        const textInputContainer = document.getElementById('text-input-container');
+        
+        // Define new size for bottom icons (31px) and top icons (32px)
+        const BOTTOM_ICON_SIZE = 31; 
+        const TOP_ICON_SIZE = 32;
+
+        // Unique Tags Data Structure, now including individual icon state
+        let tags = Array.from({ length: NUM_TAGS }, (_, i) => ({
+            id: i,
+            line1: `Dish Title ${i + 1}`,
+            line2: `Description ${i + 1}`,
+            // Initial state for icons
+            dietaryStatus: i === 0 ? 'Vegetarian' : '', // Tag 1 is Veg by default
+            iconNuts: i % 3 === 0, // Every 3rd tag contains nuts
+            iconLactoseFree: true,
+            iconGlutenFree: i % 2 !== 0, // Odd tags are GF
+        }));
+        
+        // Function to create an image tag
+        function createImageHTML(key, className, placeholderSize) {
+            const path = IMAGE_PATHS[key];
+            // Use a short text version of the key for the placeholder
+            const keyText = key.replace(/contains/i, '').replace(/free/i, '').substring(0, 3).toUpperCase();
+            
+            // The onerror handler uses the passed placeholderSize
+            return `<img 
+                src="${path}" 
+                alt="${key} icon" 
+                class="${className} object-center"
+                onerror="this.onerror=null; this.src='https://placehold.co/${placeholderSize}x${placeholderSize}/CCCCCC/000000?text=${keyText}'; this.classList.remove('dish-icon', 'veg-icon-container'); this.classList.add('p-1', 'bg-gray-200', 'rounded', 'text-xs', 'font-bold', 'text-center');"
+            />`;
+        }
+
+        /**
+         * Renders the input fields and icon selectors for all 16 tags.
+         */
+        function renderInputFields() {
+            textInputContainer.innerHTML = tags.map((tag, index) => `
+                <div class="p-3 border rounded-lg bg-gray-100">
+                    <p class="text-sm font-bold text-gray-800 mb-2">Tag ${index + 1}</p>
+                    <label class="block mb-2">
+                        <span class="text-xs font-medium text-gray-500">Title (Max 30)</span>
+                        <input 
+                            type="text" 
+                            class="input-field mt-1 line1-input" 
+                            value="${tag.line1}" 
+                            data-index="${index}"
+                            maxlength="30"
+                        >
+                    </label>
+                    <label class="block mb-4">
+                        <span class="text-xs font-medium text-gray-500">Description (Max 40)</span>
+                        <input 
+                            type="text" 
+                            class="input-field mt-1 line2-input" 
+                            value="${tag.line2}" 
+                            data-index="${index}"
+                            maxlength="40"
+                        >
+                    </label>
+
+                    <p class="text-xs font-bold text-gray-600 mb-2">Dietary Icons:</p>
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-700">
+                        <!-- Top Right: Vegetarian / Vegan / None Radio Buttons (Grouped by name="dietaryStatus-${index}") -->
+                        <div class="flex items-center space-x-1">
+                            <input type="radio" name="dietaryStatus-${index}" value="Vegetarian" ${tag.dietaryStatus === 'Vegetarian' ? 'checked' : ''} data-index="${index}" data-icon-type="dietaryStatus" class="form-radio h-3 w-3 text-green-600 icon-radio">
+                            <span>Veg</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <input type="radio" name="dietaryStatus-${index}" value="Vegan" ${tag.dietaryStatus === 'Vegan' ? 'checked' : ''} data-index="${index}" data-icon-type="dietaryStatus" class="form-radio h-3 w-3 text-green-600 icon-radio">
+                            <span>Vegan</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <input type="radio" name="dietaryStatus-${index}" value="" ${tag.dietaryStatus === '' ? 'checked' : ''} data-index="${index}" data-icon-type="dietaryStatus" class="form-radio h-3 w-3 text-gray-400 icon-radio">
+                            <span>None</span>
+                        </div>
+                        
+                        <!-- Separator -->
+                        <span class="text-gray-300">|</span>
+
+                        <!-- Bottom Icons: Allergen Checkboxes -->
+                        <div class="flex items-center space-x-1">
+                            <input type="checkbox" ${tag.iconNuts ? 'checked' : ''} data-index="${index}" data-icon-type="iconNuts" class="form-checkbox h-3 w-3 text-red-600 icon-checkbox">
+                            <span>Nuts</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <input type="checkbox" ${tag.iconLactoseFree ? 'checked' : ''} data-index="${index}" data-icon-type="iconLactoseFree" class="form-checkbox h-3 w-3 text-blue-600 icon-checkbox">
+                            <span>LF</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <input type="checkbox" ${tag.iconGlutenFree ? 'checked' : ''} data-index="${index}" data-icon-type="iconGlutenFree" class="form-checkbox h-3 w-3 text-yellow-600 icon-checkbox">
+                            <span>GF</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Attach event listeners to the dynamically created inputs
+            document.querySelectorAll('.line1-input').forEach(input => {
+                input.addEventListener('input', handleTagInput);
+            });
+            document.querySelectorAll('.line2-input').forEach(input => {
+                input.addEventListener('input', handleTagInput);
+            });
+            document.querySelectorAll('.icon-radio, .icon-checkbox').forEach(input => {
+                input.addEventListener('change', handleIconInput);
+            });
+        }
+
+        /**
+         * Renders a single dish tag block HTML string based on the tag's data.
+         * @returns {string} The HTML string for one block.
+         */
+        function createDishBlockHTML(tagData) {
+            // Destructure all text and icon properties from the specific tag's data
+            const { line1, line2, dietaryStatus, iconNuts, iconLactoseFree, iconGlutenFree } = tagData;
+            
+            let topIconHTML = '';
+            // Determine the top-right icon based on the individual tag's state
+            if (dietaryStatus === 'Vegetarian') {
+                // Use TOP_ICON_SIZE (32) for the top right icon
+                topIconHTML = createImageHTML('Vegetarian', 'veg-icon-container w-full h-full', TOP_ICON_SIZE);
+            } else if (dietaryStatus === 'Vegan') {
+                // Use TOP_ICON_SIZE (32) for the top right icon
+                topIconHTML = createImageHTML('Vegan', 'veg-icon-container w-full h-full', TOP_ICON_SIZE);
+            }
+            
+            // NOTE ON CUSTOMR FIX: Added onerror fallback to a placeholder image to resolve repeated console errors when the asset fails to load.
+            return `
+                <div class="dish-block">
+                    <!-- Custom 'R' Image Background (Left) -->
+                    <img 
+                        src="${IMAGE_PATHS.CustomR}" 
+                        alt="Custom R" 
+                        class="custom-r-background" 
+                        onerror="this.onerror=null; this.src='https://placehold.co/100x297/8B0000/FFFFFF?text=R'; this.style.opacity='0.2';"
+                    >
+                    <div class="absolute left-0 top-0 bottom-0 w-[40px] bg-maroon-text opacity-10 z-10"></div>
+
+
+                    <!-- Text Content (Center) -->
+                    <div class="flex flex-col pl-[60px] pr-2 w-full h-full justify-center z-20 relative">
+                        <span class="line1 maroon-text truncate">${line1}</span>
+                        <span class="line2 truncate">${line2}</span>
+                    </div>
+
+                    <!-- Right Icons -->
+                    <div class="absolute right-4 top-4 veg-icon-container flex items-center justify-center z-20">
+                        <!-- Top Right Icon (Vegetarian/Vegan) -->
+                        ${topIconHTML}
+                    </div>
+
+                    <div class="absolute right-4 bottom-4 flex space-x-3 items-end z-20">
+                        <!-- Bottom Right Icons (using BOTTOM_ICON_SIZE of 31px) -->
+                        
+                        <!-- Contains Nuts -->
+                        ${iconNuts ? createImageHTML('ContainsNuts', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
+
+                        <!-- Lactose Free -->
+                        ${iconLactoseFree ? createImageHTML('LactoseFree', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
+                        
+                        <!-- Gluten Free -->
+                        ${iconGlutenFree ? createImageHTML('GlutenFree', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+
+        /**
+         * Generates and renders all 16 dish blocks into the A4 preview.
+         */
+        function renderA4Page() {
+            let html = '';
+            tags.forEach(tag => {
+                html += createDishBlockHTML(tag);
+            });
+            previewContainer.innerHTML = html;
+        }
+
+        /**
+         * Event handler for individual tag text inputs.
+         */
+        function handleTagInput(event) {
+            const index = parseInt(event.target.dataset.index);
+            const value = event.target.value;
+            
+            if (event.target.classList.contains('line1-input')) {
+                tags[index].line1 = value;
+            } else if (event.target.classList.contains('line2-input')) {
+                tags[index].line2 = value;
+            }
+            
+            renderA4Page();
+        }
+        
+        /**
+         * Event handler for individual tag icon changes.
+         */
+        function handleIconInput(event) {
+            const index = parseInt(event.target.dataset.index);
+            const iconType = event.target.dataset.iconType;
+            let value;
+
+            if (event.target.type === 'checkbox') {
+                value = event.target.checked;
+            } else if (event.target.type === 'radio') {
+                value = event.target.value;
+            }
+
+            // For radio buttons (dietaryStatus)
+            if (iconType === 'dietaryStatus') {
+                tags[index].dietaryStatus = value;
+            } else {
+                // For checkboxes (allergens)
+                tags[index][iconType] = value;
+            }
+            
+            renderA4Page();
+        }
+
+
+        // --- Initialization ---
+
+        // Initial render on load
+        window.onload = function() {
+            // Initialize input fields and preview
+            renderInputFields();
+            renderA4Page();
+
+            const printButton = document.getElementById('print-button');
+
+            if (printButton) {
+                printButton.addEventListener('click', () => {
+                    console.log('Attempting to trigger print dialogue with a small delay...');
+                    // FIX: Using setTimeout to attempt to work around iframe restrictions
+                    setTimeout(() => {
+                        window.print();
+                    }, 100); 
+                });
+            } else {
+                console.error("Print button element not found!");
+            }
+        };
+
+    </script>
+</body>
+</html>
