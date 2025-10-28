@@ -34,7 +34,7 @@
             /* 2x8 grid for 16 blocks (2 columns, 8 rows) */
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(8, 1fr); /* UPDATED: 8 rows for 16 tags */
+            grid-template-rows: repeat(8, 1fr); /* 8 rows for 16 tags */
         }
 
         /* Set the 'R' color to a deep maroon matching the image */
@@ -43,53 +43,53 @@
         }
 
         .dish-block {
-            /* REMOVED: border: 1px solid #eee; */
             overflow: hidden;
             display: flex;
             align-items: center;
             position: relative;
         }
 
-        /* Styling for the text lines */
+        /* Styling for the text lines - UPDATED for new design */
         .line1 {
             font-family: 'SilkSerif', serif;
-            font-size: 28px; /* Larger, more elegant font */
-            font-weight: 700;
-            line-height: 1.3; /* FIX: Increased line height to prevent letter descenders (g, j, y) from being cut off */
+            font-size: 32px; /* Larger for prominence */
+            font-weight: 700; /* Bolder */
+            line-height: 1.1; /* Reduced spacing */
         }
         .line2 {
             font-family: 'SilkSerif', serif;
-            font-size: 24px;
+            font-size: 26px; /* Slightly larger than previous desc */
             font-weight: 400;
-            line-height: 1.3; /* FIX: Increased line height to prevent letter descenders (g, j, y) from being cut off */
+            line-height: 1.1; /* Reduced spacing */
             color: #333;
         }
         
         /* Style for the image icons (Allergic icons are now 31px) */
         .dish-icon {
-            width: 31px; /* Standard size for bottom icons */
+            width: 31px; 
             height: 31px;
             object-fit: contain;
         }
         .veg-icon-container {
-            width: 32px; /* Container for the top right icon */
+            width: 32px; 
             height: 32px;
         }
 
-        /* Style for the custom 'R' image */
+        /* Style for the custom 'R' image - ADJUSTED for margin from top/bottom (height: 70%) and left edge (left: 10px) */
         .custom-r-background {
             position: absolute;
-            left: 0px; 
+            left: 10px; /* Increased padding from the left edge */
             top: 50%;
             transform: translateY(-50%);
-            height: 100%; 
-            width: auto; 
+            height: 70%; /* Reduced height to make it smaller */
+            width: auto; /* Maintain aspect ratio */
             opacity: 1.0; 
             user-select: none;
-            object-fit: contain;
-            object-position: left center;
-            z-index: 0; 
+            object-fit: cover; /* Cover the available space, allowing slight crop */
+            object-position: left center; /* Align to the left center */
+            z-index: 10; /* Set a lower z-index than text and other icons */
         }
+        
         /* Custom scrollbar styling for the input panel */
         #text-input-container::-webkit-scrollbar {
             width: 8px;
@@ -127,13 +127,12 @@
                 border: none !important;
                 display: grid !important; 
                 grid-template-columns: repeat(2, 1fr) !important;
-                grid-template-rows: repeat(8, 1fr) !important; /* UPDATED: 8 rows for print */
+                grid-template-rows: repeat(8, 1fr) !important; /* 8 rows for print */
                 transform: scale(0.98); 
                 transform-origin: top left;
             }
 
             .dish-block {
-                /* REMOVED: border: 1px solid #000 !important; */
                 page-break-inside: avoid !important; 
             }
         }
@@ -165,17 +164,18 @@
     </div>
 
     <script>
-        // File paths for the dish tag icons. All paths now use reliable raw GitHub links.
+        // File paths for the dish tag icons. 
         const IMAGE_PATHS = {
             Vegetarian: 'https://github.com/worldclassis/hotelranga/blob/main/HR_VEGETARIAN.png?raw=true',
             Vegan: 'https://github.com/worldclassis/hotelranga/blob/main/HR_VEGAN.png?raw=true', 
             ContainsNuts: 'https://github.com/worldclassis/hotelranga/blob/main/HR_NUTS.png?raw=true',
             LactoseFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_LACTOSEFREE.png?raw=true',
             GlutenFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_GLUTENFREE.png?raw=true',
-            CustomR: 'https://github.com/worldclassis/hotelranga/blob/main/R-back.png?raw=true' 
+            // UPDATED: Using the simplified path and a new cache-busting version v=4 to force fresh download
+            CustomR: 'https://raw.githubusercontent.com/worldclassis/hotelranga/main/HotelRanga_R.png?v=4' 
         };
 
-        const NUM_TAGS = 16; /* REVERTED: Back to 16 tags (2 columns x 8 rows) */
+        const NUM_TAGS = 16; 
         const previewContainer = document.getElementById('a4-preview');
         const textInputContainer = document.getElementById('text-input-container');
         
@@ -300,18 +300,18 @@
                         src="${IMAGE_PATHS.CustomR}" 
                         alt="Custom R" 
                         class="custom-r-background" 
-                        onerror="this.onerror=null; this.src='https://placehold.co/100x297/8B0000/FFFFFF?text=R'; this.style.opacity='0.2';"
+                        onerror="this.onerror=null; this.src='https://placehold.co/100x297/8B0000/FFFFFF?text=R'; this.style.opacity='0.2'; this.style.objectFit='contain';" /* Changed objectFit for placeholder */
                     >
-                    <!-- Text Content (Center) - Increased left padding to add space --><div class="flex flex-col pl-[56px] pr-2 w-full h-full justify-center z-20 relative">
+                    <!-- Text Content (Center) --><div class="flex flex-col pl-[100px] pr-2 w-full h-full justify-start pt-6 z-20 relative">
                         <span class="line1 maroon-text truncate">${line1}</span>
                         <span class="line2 truncate">${line2}</span>
                     </div>
 
-                    <!-- Right Icons --><!-- Top Right Icon: UPDATED: Less margin (top-2 right-2) --><div class="absolute right-2 top-2 veg-icon-container flex items-center justify-center z-20">
+                    <!-- Right Icons --><!-- Top Right Icon: Less margin (top-2 right-2) --><div class="absolute right-2 top-2 veg-icon-container flex items-center justify-center z-20">
                         ${topIconHTML}
                     </div>
 
-                    <!-- Bottom Right Icons: UPDATED: Less margin (bottom-2 right-2) and reduced spacing (space-x-1) --><div class="absolute right-2 bottom-2 flex space-x-1 items-end z-20">
+                    <!-- Bottom Right Icons: Less margin (bottom-2 right-2) and reduced spacing (space-x-1) --><div class="absolute right-2 bottom-2 flex space-x-1 items-end z-20">
                         
                         <!-- Contains Nuts -->${iconNuts ? createImageHTML('ContainsNuts', 'dish-icon', BOTTOM_ICON_SIZE) : ''}
 
