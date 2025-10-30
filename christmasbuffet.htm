@@ -52,16 +52,42 @@
         /* Styling for the text lines - UPDATED for new design */
         .line1 {
             font-family: 'SilkSerif', serif;
-            font-size: 32px; /* Larger for prominence */
+            font-size: 32px; /* Default size for Title (Line 1) */
             font-weight: 700; /* Bolder */
             line-height: 1.1; /* Reduced spacing */
         }
+        /* First scaled down Title text */
+        .line1-sm {
+            font-size: 26px; 
+        }
+        /* Second, aggressively scaled down Title text */
+        .line1-xs {
+            font-size: 20px; 
+        }
+        /* NEW: Third, ultra-aggressively scaled down Title text */
+        .line1-xxs {
+            font-size: 16px; 
+        }
+
+
         .line2 {
             font-family: 'SilkSerif', serif;
-            font-size: 26px; /* Slightly larger than previous desc */
+            font-size: 26px; /* Default size for Description (Line 2) */
             font-weight: 400;
             line-height: 1.1; /* Reduced spacing */
             color: #333;
+        }
+        /* First scaled down Description text */
+        .line2-sm {
+            font-size: 22px; 
+        }
+        /* Second, aggressively scaled down Description text */
+        .line2-xs {
+            font-size: 18px; 
+        }
+        /* NEW: Third, ultra-aggressively scaled down Description text */
+        .line2-xxs {
+            font-size: 14px; 
         }
         
         /* Style for the image icons (Allergic icons are now 31px) */
@@ -171,7 +197,7 @@
             ContainsNuts: 'https://github.com/worldclassis/hotelranga/blob/main/HR_NUTS.png?raw=true',
             LactoseFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_LACTOSEFREE.png?raw=true',
             GlutenFree: 'https://github.com/worldclassis/hotelranga/blob/main/HR_GLUTENFREE.png?raw=true',
-            // UPDATED: Using the simplified path and a new cache-busting version v=4 to force fresh download
+            // Using the simplified path and a new cache-busting version v=4 to force fresh download
             CustomR: 'https://raw.githubusercontent.com/worldclassis/hotelranga/main/HotelRanga_R.png?v=4' 
         };
 
@@ -281,6 +307,48 @@
         }
 
         /**
+         * Determines the appropriate CSS class for the title based on length.
+         * @param {string} line1 - The title text.
+         * @returns {string} The CSS class(es) to apply.
+         */
+        function getLine1Class(line1) {
+            const length = line1.length;
+            if (length > 25) {
+                // Aggressive scale down to 16px for very long titles
+                return 'line1-xxs'; 
+            } else if (length > 20) {
+                // Moderate scale down to 20px
+                return 'line1-xs'; 
+            } else if (length > 15) {
+                // Slight scale down to 26px
+                return 'line1-sm'; 
+            }
+            // Default size (32px)
+            return '';
+        }
+
+        /**
+         * Determines the appropriate CSS class for the description based on length.
+         * @param {string} line2 - The description text.
+         * @returns {string} The CSS class(es) to apply.
+         */
+        function getLine2Class(line2) {
+            const length = line2.length;
+            if (length > 35) {
+                // Aggressive scale down to 14px for very long descriptions
+                return 'line2-xxs';
+            } else if (length > 30) {
+                // Moderate scale down to 18px
+                return 'line2-xs';
+            } else if (length > 20) {
+                 // Slight scale down to 22px
+                return 'line2-sm';
+            }
+            // Default size (26px)
+            return '';
+        }
+
+        /**
          * Renders a single dish tag block HTML string based on the tag's data.
          * @returns {string} The HTML string for one block.
          */
@@ -294,6 +362,10 @@
                 topIconHTML = createImageHTML('Vegan', 'veg-icon-container w-full h-full', TOP_ICON_SIZE);
             }
             
+            // --- FONT SCALING LOGIC (NOW MULTI-TIERED) ---
+            const line1Class = getLine1Class(line1); 
+            const line2Class = getLine2Class(line2);
+            
             return `
                 <div class="dish-block">
                     <!-- Custom 'R' Image Background (Left) --><img 
@@ -303,8 +375,8 @@
                         onerror="this.onerror=null; this.src='https://placehold.co/100x297/8B0000/FFFFFF?text=R'; this.style.opacity='0.2'; this.style.objectFit='contain';" /* Changed objectFit for placeholder */
                     >
                     <!-- Text Content (Center) --><div class="flex flex-col pl-[100px] pr-2 w-full h-full justify-start pt-6 z-20 relative">
-                        <span class="line1 maroon-text truncate">${line1}</span>
-                        <span class="line2 truncate">${line2}</span>
+                        <!-- Dynamic sizing applied here --><span class="line1 maroon-text ${line1Class}">${line1}</span>
+                        <!-- Dynamic sizing applied here --><span class="line2 ${line2Class}">${line2}</span>
                     </div>
 
                     <!-- Right Icons --><!-- Top Right Icon: Less margin (top-2 right-2) --><div class="absolute right-2 top-2 veg-icon-container flex items-center justify-center z-20">
