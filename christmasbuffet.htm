@@ -49,32 +49,32 @@
             position: relative;
         }
 
-        /* Styling for the text lines - DEFAULTS REDUCED */
+        /* Styling for the text lines - TITLE DEFAULT SIZE IS NOW 22PX (MATCHES DESCRIPTION) */
         .line1 {
             font-family: 'SilkSerif', serif;
-            font-size: 28px; /* Default size for Title (WAS 32px) */
-            font-weight: 700; /* Bolder */
-            line-height: 1.1; /* Reduced spacing */
+            font-size: 22px; /* New default size, matches line2 */
+            font-weight: 700; /* Remains Bolder */
+            line-height: 1.1;
         }
-        /* First scaled down Title text (from 28px) */
+        /* First scaled down Title text (from 22px) */
         .line1-sm {
-            font-size: 24px; 
+            font-size: 18px; 
         }
-        /* Second, aggressively scaled down Title text (from 24px) */
+        /* Second, aggressively scaled down Title text (from 18px) */
         .line1-xs {
-            font-size: 20px; 
-        }
-        /* Third, ultra-aggressively scaled down Title text (from 20px) */
-        .line1-xxs {
             font-size: 16px; 
+        }
+        /* Third, ultra-aggressively scaled down Title text (from 16px) */
+        .line1-xxs {
+            font-size: 14px; 
         }
 
 
         .line2 {
             font-family: 'SilkSerif', serif;
-            font-size: 22px; /* Default size for Description (WAS 26px) */
+            font-size: 22px; /* Default size for Description */
             font-weight: 400;
-            line-height: 1.1; /* Reduced spacing */
+            line-height: 1.1;
             color: #333;
         }
         /* First scaled down Description text (from 22px) */
@@ -308,45 +308,42 @@
 
         /**
          * Determines the appropriate CSS class for the title based on length.
-         * The thresholds are adjusted to trigger scaling earlier due to the smaller default font.
+         * The scaling thresholds are now more lenient (starting at 24 chars) 
+         * to reflect the leniency of the description scaling.
          * @param {string} line1 - The title text.
          * @returns {string} The CSS class(es) to apply.
          */
         function getLine1Class(line1) {
             const length = line1.length;
-            if (length > 25) {
-                // Aggressive scale down to 16px
+            // Line1 max length is 30.
+            if (length > 29) { // Trigger 14px for 30 characters
                 return 'line1-xxs'; 
-            } else if (length > 20) {
-                // Moderate scale down to 20px
+            } else if (length > 26) { // Trigger 16px for 27-29 characters
                 return 'line1-xs'; 
-            } else if (length > 15) {
-                // Slight scale down to 24px
+            } else if (length > 23) { // Trigger 18px for 24-26 characters
                 return 'line1-sm'; 
             }
-            // Default size (28px)
+            // Default size (22px) for 23 characters or less
             return '';
         }
 
         /**
          * Determines the appropriate CSS class for the description based on length.
-         * The thresholds are adjusted to trigger scaling earlier due to the smaller default font.
+         * The scaling thresholds have been increased significantly to delay shrinking.
          * @param {string} line2 - The description text.
          * @returns {string} The CSS class(es) to apply.
          */
         function getLine2Class(line2) {
             const length = line2.length;
-            if (length > 35) {
-                // Aggressive scale down to 14px
+            // Line2 max length is 40.
+            if (length > 39) { // Trigger 14px for 40 characters
                 return 'line2-xxs';
-            } else if (length > 30) {
-                // Moderate scale down to 16px
+            } else if (length > 35) { // Trigger 16px for 36-39 characters
                 return 'line2-xs';
-            } else if (length > 25) { // Adjusted from 20 to 25
-                 // Slight scale down to 18px
-                return 'line2-sm';
+            } else if (length > 30) { // Trigger 18px for 31-35 characters
+                 return 'line2-sm';
             }
-            // Default size (22px)
+            // Default size (22px) for 30 characters or less
             return '';
         }
 
