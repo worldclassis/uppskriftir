@@ -49,22 +49,22 @@
             position: relative;
         }
 
-        /* Styling for the text lines - UPDATED for new design */
+        /* Styling for the text lines - DEFAULTS REDUCED */
         .line1 {
             font-family: 'SilkSerif', serif;
-            font-size: 32px; /* Default size for Title (Line 1) */
+            font-size: 28px; /* Default size for Title (WAS 32px) */
             font-weight: 700; /* Bolder */
             line-height: 1.1; /* Reduced spacing */
         }
-        /* First scaled down Title text */
+        /* First scaled down Title text (from 28px) */
         .line1-sm {
-            font-size: 26px; 
+            font-size: 24px; 
         }
-        /* Second, aggressively scaled down Title text */
+        /* Second, aggressively scaled down Title text (from 24px) */
         .line1-xs {
             font-size: 20px; 
         }
-        /* NEW: Third, ultra-aggressively scaled down Title text */
+        /* Third, ultra-aggressively scaled down Title text (from 20px) */
         .line1-xxs {
             font-size: 16px; 
         }
@@ -72,20 +72,20 @@
 
         .line2 {
             font-family: 'SilkSerif', serif;
-            font-size: 26px; /* Default size for Description (Line 2) */
+            font-size: 22px; /* Default size for Description (WAS 26px) */
             font-weight: 400;
             line-height: 1.1; /* Reduced spacing */
             color: #333;
         }
-        /* First scaled down Description text */
+        /* First scaled down Description text (from 22px) */
         .line2-sm {
-            font-size: 22px; 
-        }
-        /* Second, aggressively scaled down Description text */
-        .line2-xs {
             font-size: 18px; 
         }
-        /* NEW: Third, ultra-aggressively scaled down Description text */
+        /* Second, aggressively scaled down Description text (from 18px) */
+        .line2-xs {
+            font-size: 16px; 
+        }
+        /* Third, ultra-aggressively scaled down Description text (from 16px) */
         .line2-xxs {
             font-size: 14px; 
         }
@@ -308,43 +308,45 @@
 
         /**
          * Determines the appropriate CSS class for the title based on length.
+         * The thresholds are adjusted to trigger scaling earlier due to the smaller default font.
          * @param {string} line1 - The title text.
          * @returns {string} The CSS class(es) to apply.
          */
         function getLine1Class(line1) {
             const length = line1.length;
             if (length > 25) {
-                // Aggressive scale down to 16px for very long titles
+                // Aggressive scale down to 16px
                 return 'line1-xxs'; 
             } else if (length > 20) {
                 // Moderate scale down to 20px
                 return 'line1-xs'; 
             } else if (length > 15) {
-                // Slight scale down to 26px
+                // Slight scale down to 24px
                 return 'line1-sm'; 
             }
-            // Default size (32px)
+            // Default size (28px)
             return '';
         }
 
         /**
          * Determines the appropriate CSS class for the description based on length.
+         * The thresholds are adjusted to trigger scaling earlier due to the smaller default font.
          * @param {string} line2 - The description text.
          * @returns {string} The CSS class(es) to apply.
          */
         function getLine2Class(line2) {
             const length = line2.length;
             if (length > 35) {
-                // Aggressive scale down to 14px for very long descriptions
+                // Aggressive scale down to 14px
                 return 'line2-xxs';
             } else if (length > 30) {
-                // Moderate scale down to 18px
+                // Moderate scale down to 16px
                 return 'line2-xs';
-            } else if (length > 20) {
-                 // Slight scale down to 22px
+            } else if (length > 25) { // Adjusted from 20 to 25
+                 // Slight scale down to 18px
                 return 'line2-sm';
             }
-            // Default size (26px)
+            // Default size (22px)
             return '';
         }
 
@@ -362,7 +364,7 @@
                 topIconHTML = createImageHTML('Vegan', 'veg-icon-container w-full h-full', TOP_ICON_SIZE);
             }
             
-            // --- FONT SCALING LOGIC (NOW MULTI-TIERED) ---
+            // --- FONT SCALING LOGIC ---
             const line1Class = getLine1Class(line1); 
             const line2Class = getLine2Class(line2);
             
@@ -374,7 +376,7 @@
                         class="custom-r-background" 
                         onerror="this.onerror=null; this.src='https://placehold.co/100x297/8B0000/FFFFFF?text=R'; this.style.opacity='0.2'; this.style.objectFit='contain';" /* Changed objectFit for placeholder */
                     >
-                    <!-- Text Content (Center) --><div class="flex flex-col pl-[100px] pr-2 w-full h-full justify-start pt-6 z-20 relative">
+                    <!-- Text Content (Center) --><div class="flex flex-col pl-[100px] pr-2 w-full h-full justify-start pt-10 z-20 relative">
                         <!-- Dynamic sizing applied here --><span class="line1 maroon-text ${line1Class}">${line1}</span>
                         <!-- Dynamic sizing applied here --><span class="line2 ${line2Class}">${line2}</span>
                     </div>
