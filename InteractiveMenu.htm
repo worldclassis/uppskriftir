@@ -61,14 +61,25 @@
             <p id="tagline" class="text-xl text-gray-500 font-medium">Heilsu & orku uppspretta | Health & Energy Source</p>
             
             <!-- Translate Button -->
-            <!-- The button will show the language it is CURRENTLY in (ÍS or EN) -->
             <button id="translate-button" onclick="toggleLanguage()" class="absolute top-0 right-0 sm:top-2 sm:right-2 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md transition-colors">
                 EN
             </button>
         </header>
 
-        <!-- Category Filter Tabs -->
+        <!-- Search Input & Category Filter Tabs (Sticky container) -->
         <div class="bg-white p-4 rounded-xl shadow-lg mb-8 sticky top-0 z-10">
+            
+            <!-- Search Input -->
+            <div class="mb-4">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Search menu items..."
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-700"
+                >
+            </div>
+            
+            <!-- Category Filter Tabs -->
             <nav id="category-tabs" class="flex flex-wrap gap-2 sm:gap-4 justify-center font-medium">
                 <!-- Buttons will be dynamically generated here -->
             </nav>
@@ -125,6 +136,7 @@
     <script>
         // --- TRANSLATION DATA ---
         const IS_LANG = {
+            searchTerm: 'Leita í matseðli...',
             tagline: 'Heilsu & orku uppspretta | Health & Energy Source',
             allThemes: 'Allar tegundir',
             noItemsFound: 'Engin atriði fundust fyrir valið þitt.',
@@ -154,15 +166,16 @@
             category_drykkir: 'DRYKKIR',
             category_salat: 'SALAT',
             category_grautur: 'GRAUTUR',
-            category_skal: 'SKÁL',
+            category_skal: 'SKÁL', // Retained for translation map, though items are removed
             category_krisp: 'KRISP',
             category_kaffi: 'KAFFI',
             category_grab_go: 'GRÍPTU MEÐ', // Displayed in Icelandic even when in Icelandic mode
         };
         const EN_LANG = {
+            searchTerm: 'Search menu items...',
             tagline: 'Health & Energy Source | Heilsu & orku uppspretta',
             allThemes: 'All Themes',
-            noItemsFound: 'No items found for this combination of category and theme.',
+            noItemsFound: 'No items found for this combination of category, theme, and search term.',
             descriptionHeading: 'Description / Ingredients',
             nutritionHeading: 'Nutrition Facts',
             macroInfo: 'Macro information not specified for this item in the menu.',
@@ -189,7 +202,7 @@
             category_drykkir: 'DRINKS',
             category_salat: 'SALADS',
             category_grautur: 'PORRIDGE',
-            category_skal: 'BOWLS',
+            category_skal: 'BOWLS', // Retained for translation map, though items are removed
             category_krisp: 'CRISPS',
             category_kaffi: 'COFFEE',
             category_grab_go: 'GRAB & GO', // Correct English Name
@@ -310,17 +323,17 @@
             },
 
             // --- GRAUTUR (Porridge) ---
-            { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', priceIs: '890 kr', priceEn: '890 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, cookies and cream prótein. Toppings: möndlusmjör, bláber, jarðarber', descriptionEn: 'Almond milk, oats, honey, cookies and cream protein. Toppings: almond butter, blueberries, strawberries', macros: { kcal: 641.6, protein: '37.23 g', fat: '16 g', carbs: '82.4 g', fiber: '11.4 g' } },
+            // Price updated to 990 kr
+            { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', priceIs: '990 kr', priceEn: '990 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, cookies and cream prótein. Toppings: möndlusmjör, bláber, jarðarber', descriptionEn: 'Almond milk, oats, honey, cookies and cream protein. Toppings: almond butter, blueberries, strawberries', macros: { kcal: 641.6, protein: '37.23 g', fat: '16 g', carbs: '82.4 g', fiber: '11.4 g' } },
+            // Price remains 990 kr
             { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', priceIs: '990 kr', priceEn: '990 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, vanillu prótein. Toppings: hnetusmjör, banani, döðlur', descriptionEn: 'Almond milk, oats, honey, vanilla protein. Toppings: peanut butter, banana, dates', macros: { kcal: 658, protein: '38.13 g', fat: '16.02 g', carbs: '97.2 g', fiber: '12.44 g' } },
-            { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'BALANCE', nameIs: 'Balance Grautur', nameEn: 'Balance Porridge', priceIs: '890 kr', priceEn: '890 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, collagen. Toppings: hampfræ, bláber, döðlur', descriptionEn: 'Almond milk, oats, honey, collagen. Toppings: hemp seeds, blueberries, dates', macros: { kcal: 533.6, protein: '49 g', fat: '9.72 g', carbs: '96.8 g', fiber: '11.54 g' } },
-            { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', priceIs: '790 kr', priceEn: '790 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang. Toppings: hampfræ, Jarðarber, kókosflögu', descriptionEn: 'Almond milk, oats, honey. Toppings: hemp seeds, strawberries, coconut flakes', macros: { kcal: 442.6, protein: '12.73 g', fat: '16.22 g', carbs: '66.4 g', fiber: '10.64 g' } },
+            // Price updated to 990 kr
+            { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'BALANCE', nameIs: 'Balance Grautur', nameEn: 'Balance Porridge', priceIs: '990 kr', priceEn: '990 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, collagen. Toppings: hampfræ, bláber, döðlur', descriptionEn: 'Almond milk, oats, honey, collagen. Toppings: hemp seeds, blueberries, dates', macros: { kcal: 533.6, protein: '49 g', fat: '9.72 g', carbs: '96.8 g', fiber: '11.54 g' } },
+            // Price updated to 890 kr
+            { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', priceIs: '890 kr', priceEn: '890 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang. Toppings: hampfræ, Jarðarber, kókosflögu', descriptionEn: 'Almond milk, oats, honey. Toppings: hemp seeds, strawberries, coconut flakes', macros: { kcal: 442.6, protein: '12.73 g', fat: '16.22 g', carbs: '66.4 g', fiber: '10.64 g' } },
 
-            // --- SKÁL (Bowls) ---
-            { categoryIs: 'SKÁL', categoryEn: 'BOWLS', theme: 'ENERGY', nameIs: 'Kraft skál', nameEn: 'Power Bowl', priceIs: '1.790 kr', priceEn: '1,790 ISK', descriptionIs: 'Kraft boost, möndlusmjör, bláber, jarðarber', descriptionEn: 'Power boost, almond butter, blueberries, strawberries', macros: { kcal: 1125.8, protein: '65.8 g', fat: '50.8 g', carbs: '113.4 g', fiber: '20.4 g' } },
-            { categoryIs: 'SKÁL', categoryEn: 'BOWLS', theme: 'STRENGTH', nameIs: 'Massa skál', nameEn: 'Bulk Bowl', priceIs: '1.890 kr', priceEn: '1,890 ISK', descriptionIs: 'Massa boost, hnetusmjör, banani, döðlur', descriptionEn: 'Bulk boost, peanut butter, banana, dates', macros: { kcal: 1671.2, protein: '73.2 g', fat: '86.8 g', carbs: '179.5 g', fiber: '31.5 g' } },
-            { categoryIs: 'SKÁL', categoryEn: 'BOWLS', theme: 'BALANCE', nameIs: 'Gleði skál', nameEn: 'Joy Bowl', priceIs: '1.790 kr', priceEn: '1,790 ISK', descriptionIs: 'Gleði boost, hampfræ, bláber, döðlur', descriptionEn: 'Joy boost, hemp seeds, blueberries, dates', macros: { kcal: 621.1, protein: '37.2 g', fat: '15.7 g', carbs: '95.9 g', fiber: '14.3 g' } },
-            { categoryIs: 'SKÁL', categoryEn: 'BOWLS', theme: 'LIGHT', nameIs: 'Brennslu skál', nameEn: 'Metabolism Bowl', priceIs: '1.790 kr', priceEn: '1,790 ISK', descriptionIs: 'Brennslu boost, hampfræ, jarðarber, kókosflögur', descriptionEn: 'Metabolism boost, hemp seeds, strawberries, coconut flakes', macros: { kcal: 616, protein: '36.6 g', fat: '22.7 g', carbs: '76.9 g', fiber: '14.5 g' } },
-
+            // --- SKÁL (Bowls) - REMOVED ---
+            
             // --- KRISP (Crisps) ---
             // PRICE CHANGE: 1.190 kr -> 1.290 kr (Updated in previous turn)
             { 
@@ -379,12 +392,14 @@
         let isIcelandic = false; // Tracks the current language (false = English, true = Icelandic)
         let activeCategory = 'DRYKKIR'; 
         let activeTheme = 'All';
+        let searchTerm = ''; // NEW: State for search input
         let modalActiveSize = 'M'; // Default size for macro display for drinks
 
         const menuGrid = document.getElementById('menu-grid');
         const categoryTabs = document.getElementById('category-tabs');
         const themeFilterButtons = document.querySelectorAll('#theme-filters button');
         const translateButton = document.getElementById('translate-button');
+        const searchInput = document.getElementById('search-input'); // NEW: Get search input element
         const modal = document.getElementById('item-modal');
         const modalTitle = document.getElementById('modal-title');
         const modalTheme = document.getElementById('modal-theme');
@@ -410,7 +425,7 @@
             return lang[`theme${themeKey}`] || themeKey;
         };
 
-        // NEW LOGIC: Always return Icelandic name with English translation appended if available
+        // Always return Icelandic name with English translation appended if available
         const getDisplayName = (item) => {
             // If the Icelandic and English names are the same (e.g., Americano), just return the name.
             if (item.nameIs === item.nameEn) {
@@ -430,7 +445,6 @@
                 lookupKey = 'category_grab_go'; 
             } else {
                 // Category keys are simplified in the Lang objects (e.g., 'DRYKKIR' -> 'category_drykkir')
-                // This original logic works for the simpler Icelandic names like DRYKKIR, SALAT
                 lookupKey = 'category_' + categoryKey.toLowerCase().replace(/[^a-z]/g, '');
             }
             
@@ -446,18 +460,21 @@
             // 2. Update Translate Button Text (shows the current language)
             translateButton.textContent = isIcelandic ? 'ÍS' : 'EN';
             
-            // 3. Update Theme Filter Button Texts
+            // 3. Update Search Placeholder (NEW)
+            searchInput.placeholder = lang.searchTerm;
+
+            // 4. Update Theme Filter Button Texts
             document.getElementById('theme-all').textContent = lang.themeAll;
             document.getElementById('theme-energy').textContent = lang.themeENERGY;
             document.getElementById('theme-strength').textContent = lang.themeSTRENGTH;
             document.getElementById('theme-balance').textContent = lang.themeBALANCE;
             document.getElementById('theme-light').textContent = lang.themeLIGHT;
 
-            // 4. Update Modal Headings
+            // 5. Update Modal Headings
             modalDescHeading.textContent = lang.descriptionHeading;
             modalMacroHeading.textContent = lang.nutritionHeading;
             
-            // 5. Re-render everything to update category labels, item descriptions, and macro data
+            // 6. Re-render everything to update category labels, item descriptions, and macro data
             renderCategoryTabs();
             renderMenu();
             // Note: Modal text updates are handled in openModal and renderModalMacros
@@ -471,10 +488,25 @@
         // --- FILTERING AND RENDERING ---
 
         const filterItems = () => {
+            const lang = getLang();
+            const term = searchTerm.toLowerCase(); // NEW: Get the search term
+            
             return menuData.filter(item => {
                 const categoryMatch = item.categoryIs === activeCategory;
                 const themeMatch = activeTheme === 'All' || item.theme === activeTheme;
-                return categoryMatch && themeMatch;
+
+                // NEW: Search Logic (matches against name or description in both languages)
+                const nameIsMatch = item.nameIs.toLowerCase().includes(term);
+                const nameEnMatch = item.nameEn.toLowerCase().includes(term);
+                const descIsMatch = item.descriptionIs.toLowerCase().includes(term);
+                const descEnMatch = item.descriptionEn.toLowerCase().includes(term);
+                
+                const searchMatch = !term || nameIsMatch || nameEnMatch || descIsMatch || descEnMatch;
+
+                // IMPORTANT: Filter out the removed SKÁL category if somehow included
+                const categoryIsRemoved = item.categoryIs === 'SKÁL'; 
+
+                return categoryMatch && themeMatch && searchMatch && !categoryIsRemoved;
             });
         };
 
@@ -542,7 +574,7 @@
         };
 
         const renderCategoryTabs = () => {
-            const categories = [...new Set(menuData.map(item => item.categoryIs))];
+            const categories = [...new Set(menuData.map(item => item.categoryIs))].filter(c => c !== 'SKÁL');
             categoryTabs.innerHTML = '';
             
             categories.forEach(categoryKey => {
@@ -580,6 +612,12 @@
 
         themeFilterButtons.forEach(button => {
             button.onclick = () => setActiveTheme(button.getAttribute('data-theme-key'));
+        });
+        
+        // NEW: Search Input Listener
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value.trim();
+            renderMenu();
         });
 
 
@@ -748,8 +786,11 @@
         // --- INITIALIZATION ---
         const init = () => {
             updateStaticText(); 
+            // Ensure category starts at a valid non-removed category
+            if (activeCategory === 'SKÁL') {
+                 activeCategory = 'DRYKKIR';
+            }
             setActiveTheme('All');
-            activeCategory = 'DRYKKIR'; // Ensure the default category is set
             renderCategoryTabs();
             renderMenu();
         };
