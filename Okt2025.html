@@ -122,19 +122,7 @@
                     { name: { en: "Endurnýjun", is: "Endurnýjun" }, ingredients: { en: ["90ml Beetroot Juice", "130g Avocado", "30g Celery", "40g Strawberries", "155g Apple", "30ml Lemon Juice", "3g Spirulina"], is: ["90 ml rauðrófusafi", "130 g avókadó", "30 g sellerí", "40 g jarðaber", "155 g epli", "30 ml sítrónusafi", "3 g spirulina"] }, instructions: { en: "Blend until the texture is smooth.", is: "Blandaðu þar til áferðin er slétt." } }
                 ]
             },
-            {
-                // Simple Icelandic category name
-                category: { en: "Bowls", is: "Skálar" }, 
-                icon: "🥣",
-                color: "bg-gray-200",
-                borderColor: "border-gray-500",
-                items: [
-                    { name: { en: "Kraftur Bowl", is: "Energy Bowl (Kraftur)" }, ingredients: { en: ["Base: 40g Granola", "Blend: 110g Skyr, 100g Banana, 60g Strawberries, 30g Vanilla Protein", "Topping: 40g Blueberries, 50g Strawberries, 50g Almond Butter"], is: ["Grunnur: 40 g granóla", "Blanda: 110 g Skyr, 100 g Banani, 60 g Jarðaber, 30 g Vanillu Prótein", "Ofan á: 40 g Bláber, 50 g Jarðaber, 50 g Möndlusmjör"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } },
-                    { name: { en: "Massi Bowl", is: "Strength Bowl (Massi)" }, ingredients: { en: ["Base: 40g Granola", "Blend: 140g Strawberries", "40g Dates", "60g Banana", "60g Peanut Butter", "8g Cocoa", "200ml Almond Milk", "30g Cookie Protein"], is: ["Grunnur: 40 g granóla", "Blanda: 140 g Jarðaber", "40 g Döðlur", "60 g Banani", "60 g Hnetusmjör", "8 g Kakó", "200 ml Möndlumjólk", "30 g Cookie Prótein"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } },
-                    { name: { en: "Gleði Bowl", is: "Balance Bowl (Gleði)" }, ingredients: { en: ["Base: 40g Granola", "Blend: 20ml Lemon Juice", "30g Ginger", "60g Strawberries", "155g Apple", "30g Strawberry Protein"], is: ["Grunnur: 40 g granóla", "Blanda: 20 ml Sítrónusafi", "30 g Engifer", "60 g Jarðaber", "155 g Epli", "30 g Jarðaberja Prótein"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } },
-                    { name: { en: "Brennsla Bowl", is: "Light Bowl (Brennsla)" }, ingredients: { en: ["Base: 40g Granola", "Blend: 155g Apple", "60g Mango", "60g Blueberries", "30g Ginger", "30g Whey Protein"], is: ["Grunnur: 40 g granóla", "Blanda: 155 g Epli", "60 g Mangó", "60 g Bláber", "30 g Engifer", "30 g Whey Prótein"] }, instructions: { en: "Blend boost until smooth and pour over granola.", is: "Blandaðu grunninum þar til slétt og helltu yfir granóla." } }
-                ]
-            },
+            // Bowls section removed
             {
                 // Simple Icelandic category name
                 category: { en: "Porridges", is: "Grautar" },
@@ -239,17 +227,7 @@
                     const instructionsTitle = lang === 'en' ? 'Method/Topping' : 'Aðferð/Álegg';
                     const ingredientsTitle = lang === 'en' ? 'Ingredients' : 'Hráefni';
 
-                    // For Bowls, Porridges, Salads, and Crispbreads, use the simple English name for the name in English,
-                    // but maintain the Icelandic name where provided (like Kraftur or Massi)
                     let recipeDisplayName = item.name[lang];
-                    // If the recipe is a bowl and we are in English, we append the English word "Bowl" to the original Icelandic name
-                    if (lang === 'en' && section.category.en === 'Bowls' && item.name.is.includes('(')) {
-                        recipeDisplayName = item.name.is.replace(/.*\((.*)\).*/, '$1') + ' Bowl';
-                    } else if (lang === 'en' && section.category.en === 'Bowls') {
-                         // Default case for bowls if no specific Icelandic name is in parenthesis (e.g. Energy Bowl)
-                         recipeDisplayName = item.name.en;
-                    }
-
 
                     recipesHtml += `
                         <div class="p-4 sm:p-5 bg-white rounded-lg shadow-md mb-4 border-l-4 border-gray-300">
