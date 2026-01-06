@@ -168,6 +168,7 @@
             category_skal: 'SKÁL',
             category_krisp: 'KRISP',
             category_kaffi: 'KAFFI',
+            category_skot: 'SKOT', // Nýr flokkur
             category_grab_go: 'GRÍPTU MEÐ',
         };
         const EN_LANG = {
@@ -201,6 +202,7 @@
             category_skal: 'BOWLS',
             category_krisp: 'CRISPS',
             category_kaffi: 'COFFEE',
+            category_skot: 'SHOTS', // New category
             category_grab_go: 'GRAB & GO',
         };
 
@@ -220,6 +222,7 @@
         // --- CATEGORY IMAGES ---
         const CATEGORY_IMAGES = {
             'DRYKKIR': 'https://images.prismic.io/worldclass/aVxY43NYClf9ozUz_menu_21920.jpg?auto=format,compress',
+            'SKOT': 'https://images.prismic.io/worldclass/aVxY43NYClf9ozUz_menu_21920.jpg?auto=format,compress', // Nota sömu mynd og drykki til bráðabirgða
             'SALAT': 'https://images.prismic.io/worldclass/aVxTN3NYClf9ozUA_menu_11920.jpg',
             'GRAUTUR': 'https://images.prismic.io/worldclass/aVxTOnNYClf9ozUD_menu_41920.jpg',
             'KRISP': 'https://images.prismic.io/worldclass/aVxTOXNYClf9ozUC_menu_31920.jpg',
@@ -359,6 +362,15 @@
             { categoryIs: 'KRISP', categoryEn: 'CRISPS', theme: 'BALANCE', nameIs: 'Hummus krisp', nameEn: 'Hummus Crisp', priceIs: '1.190 kr', priceEn: '1,190 ISK', descriptionIs: 'Fin crisp, hummus, tómatar', descriptionEn: 'Thin crisp, hummus, tomatoes', macros: { kcal: 263, protein: '10.8 g', fat: '7.5 g', carbs: '49.9 g', fiber: '18.6 g' }, isVegan: true },
             { categoryIs: 'KRISP', categoryEn: 'CRISPS', theme: 'LIGHT', nameIs: 'Kjúklinga krisp', nameEn: 'Chicken Crisp', priceIs: '1.190 kr', priceEn: '1,190 ISK', descriptionIs: 'Fin crisp, kjúklingasalat', descriptionEn: 'Thin crisp, chicken salad', macros: { kcal: 288, protein: '28.8 g', fat: '12.5 g', carbs: '14.9 g', fiber: '4.1 g' } },
 
+            // --- SKOT (Shots) ---
+            { categoryIs: 'SKOT', categoryEn: 'SHOTS', theme: 'ENERGY', nameIs: 'Orkuskot', nameEn: 'Energy Shot', priceIs: '450 kr', priceEn: '450 ISK', descriptionIs: 'Rauðrófa, túrmerik, engifer, sítróna, epli', descriptionEn: 'Beetroot, turmeric, ginger, lemon, apple', macros: {}, isVegan: true },
+            { categoryIs: 'SKOT', categoryEn: 'SHOTS', theme: 'STRENGTH', nameIs: 'Kraftskot', nameEn: 'Power Shot', priceIs: '450 kr', priceEn: '450 ISK', descriptionIs: 'Kreatín, epli', descriptionEn: 'Creatine, apple', macros: {}, isVegan: true },
+            { categoryIs: 'SKOT', categoryEn: 'SHOTS', theme: 'LIGHT', nameIs: 'Ofurskot', nameEn: 'Super Shot', priceIs: '450 kr', priceEn: '450 ISK', descriptionIs: 'Túrmerik, engifer, sítróna, epli, kanill', descriptionEn: 'Turmeric, ginger, lemon, apple, cinnamon', macros: {}, isVegan: true },
+            { categoryIs: 'SKOT', categoryEn: 'SHOTS', theme: 'BALANCE', nameIs: 'Spirulína', nameEn: 'Spirulina', priceIs: '350 kr', priceEn: '350 ISK', descriptionIs: '', descriptionEn: '', macros: {}, isVegan: true },
+            { categoryIs: 'SKOT', categoryEn: 'SHOTS', theme: 'BALANCE', nameIs: 'Engifer', nameEn: 'Ginger', priceIs: '350 kr', priceEn: '350 ISK', descriptionIs: '', descriptionEn: '', macros: {}, isVegan: true },
+            { categoryIs: 'SKOT', categoryEn: 'SHOTS', theme: 'BALANCE', nameIs: 'Túrmerik', nameEn: 'Turmeric', priceIs: '350 kr', priceEn: '350 ISK', descriptionIs: '', descriptionEn: '', macros: {}, isVegan: true },
+            { categoryIs: 'SKOT', categoryEn: 'SHOTS', theme: 'BALANCE', nameIs: 'Rauðrófu', nameEn: 'Beetroot', priceIs: '350 kr', priceEn: '350 ISK', descriptionIs: '', descriptionEn: '', macros: {}, isVegan: true },
+
             // --- KAFFI (Coffee) --- 
             { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Americano', nameEn: 'Americano', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Standard kaffi, svart.', descriptionEn: 'Standard coffee, black.', macros: {}, isVegan: true },
             { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Espresso', nameEn: 'Espresso', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Stakur skammtur af espresso.', descriptionEn: 'Single shot of espresso.', macros: {}, isVegan: true },
@@ -425,9 +437,9 @@
 
         // Always return Icelandic name with English translation appended if available
         const getDisplayName = (item) => {
-            // EXCEPTION: User requested single names for SALAT and GRAUTUR
-            // If category is Salad or Porridge, always toggle strictly between languages
-            if (item.categoryIs === 'SALAT' || item.categoryIs === 'GRAUTUR') {
+            // EXCEPTION: User requested single names for SALAT, GRAUTUR, and SKOT
+            // If category is Salad, Porridge, or Shots, always toggle strictly between languages
+            if (item.categoryIs === 'SALAT' || item.categoryIs === 'GRAUTUR' || item.categoryIs === 'SKOT') {
                  return isIcelandic ? item.nameIs : item.nameEn;
             }
 
