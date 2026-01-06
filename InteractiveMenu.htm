@@ -60,9 +60,16 @@
             <img src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress" alt="World Class Logo" class="h-12 sm:h-16 mx-auto mb-4">
             <p id="tagline" class="text-xl text-gray-500 font-medium">þín orka, þinn árangur.</p>
             
-            <!-- Translate Button -->
-            <button id="translate-button" onclick="toggleLanguage()" class="absolute top-0 right-0 sm:top-2 sm:right-2 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md transition-colors">
-                EN
+            <!-- Language Toggle Switch -->
+            <button onclick="toggleLanguage()" class="absolute top-0 right-0 sm:top-2 sm:right-2 bg-white rounded-full p-1 shadow-md border border-gray-200 focus:outline-none" aria-label="Change Language">
+                <div class="relative flex w-24 h-9">
+                    <!-- Slider background -->
+                    <div id="lang-slider" class="absolute top-0 left-0 w-1/2 h-full bg-red-500 rounded-full shadow-sm transition-transform duration-300 ease-out"></div>
+                    
+                    <!-- Labels -->
+                    <div id="text-is" class="relative z-10 w-1/2 flex items-center justify-center text-sm font-bold transition-colors duration-300">ÍS</div>
+                    <div id="text-en" class="relative z-10 w-1/2 flex items-center justify-center text-sm font-bold transition-colors duration-300">EN</div>
+                </div>
             </button>
         </header>
 
@@ -375,7 +382,11 @@
 
         const menuGrid = document.getElementById('menu-grid');
         const categoryTabs = document.getElementById('category-tabs');
-        const translateButton = document.getElementById('translate-button');
+        // const translateButton = document.getElementById('translate-button'); // Removed old button ref
+        const langSlider = document.getElementById('lang-slider'); // New refs
+        const textIs = document.getElementById('text-is');
+        const textEn = document.getElementById('text-en');
+        
         const categoryBanner = document.getElementById('category-banner'); 
         const modal = document.getElementById('item-modal');
         const modalTitle = document.getElementById('modal-title');
@@ -453,9 +464,28 @@
             // 1. Update Header Tagline
             document.getElementById('tagline').textContent = lang.tagline;
 
-            // 2. Update Translate Button Text (shows the language you can switch TO)
-            // If isIcelandic is true, show 'EN' (switch to English). If false, show 'ÍS' (switch to Icelandic).
-            translateButton.textContent = isIcelandic ? 'EN' : 'ÍS';
+            // 2. Update Language Toggle Visuals
+            if (isIcelandic) {
+                // Slide to Left (IS)
+                langSlider.classList.remove('translate-x-full');
+                langSlider.classList.add('translate-x-0');
+                
+                // Colors
+                textIs.classList.remove('text-gray-500');
+                textIs.classList.add('text-white');
+                textEn.classList.remove('text-white');
+                textEn.classList.add('text-gray-500');
+            } else {
+                // Slide to Right (EN)
+                langSlider.classList.remove('translate-x-0');
+                langSlider.classList.add('translate-x-full');
+                
+                // Colors
+                textIs.classList.remove('text-white');
+                textIs.classList.add('text-gray-500');
+                textEn.classList.remove('text-gray-500');
+                textEn.classList.add('text-white');
+            }
             
             // 3. Update Modal Headings
             modalDescHeading.textContent = lang.descriptionHeading;
