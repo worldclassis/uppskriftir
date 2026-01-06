@@ -32,6 +32,7 @@
             color: white;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
+        /* Special styling for Vegan active state if needed, sharing base styles for now */
         .item-card {
             transition: transform 0.2s, box-shadow 0.2s;
         }
@@ -57,8 +58,8 @@
     <div class="max-w-4xl mx-auto">
         
         <header class="text-center mb-8 sm:mb-12 relative">
-            <h1 id="main-title" class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Laugar Cafe Menu</h1>
-            <p id="tagline" class="text-xl text-gray-500 font-medium">Heilsu & orku uppspretta | Health & Energy Source</p>
+            <img src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress" alt="World Class Logo" class="h-12 sm:h-16 mx-auto mb-4">
+            <p id="tagline" class="text-xl text-gray-500 font-medium">þín orka, þinn árangur.</p>
             
             <!-- Translate Button -->
             <button id="translate-button" onclick="toggleLanguage()" class="absolute top-0 right-0 sm:top-2 sm:right-2 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-2 px-4 rounded-lg shadow-md transition-colors">
@@ -69,29 +70,15 @@
         <!-- Search Input & Category Filter Tabs (Sticky container) -->
         <div class="bg-white p-4 rounded-xl shadow-lg mb-8 sticky top-0 z-10">
             
-            <!-- Search Input -->
-            <div class="mb-4">
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    placeholder="Search menu items..."
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all text-gray-700"
-                >
-            </div>
-            
             <!-- Category Filter Tabs -->
             <nav id="category-tabs" class="flex flex-wrap gap-2 sm:gap-4 justify-center font-medium">
                 <!-- Buttons will be dynamically generated here -->
             </nav>
         </div>
 
-        <!-- Theme Filters -->
-        <div id="theme-filters" class="flex flex-wrap justify-center gap-3 mb-8">
-            <button data-theme-key="All" id="theme-all" class="theme-filter-button bg-gray-200 text-gray-700 active">All Themes</button>
-            <button data-theme-key="ENERGY" id="theme-energy" class="theme-filter-button bg-gray-200 text-gray-700">ENERGY</button>
-            <button data-theme-key="STRENGTH" id="theme-strength" class="theme-filter-button bg-gray-200 text-gray-700">STRENGTH</button>
-            <button data-theme-key="BALANCE" id="theme-balance" class="theme-filter-button bg-gray-200 text-gray-700">BALANCE</button>
-            <button data-theme-key="LIGHT" id="theme-light" class="theme-filter-button bg-gray-200 text-gray-700">LIGHT</button>
+        <!-- Category Banner Image -->
+        <div id="category-banner" class="hidden mb-8">
+            <!-- Image will be injected here via JavaScript -->
         </div>
 
         <!-- Menu Item Grid -->
@@ -103,14 +90,23 @@
 
     <!-- Modal for Item Details -->
     <div id="item-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden items-center justify-center p-4" onclick="closeModal()">
-        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 sm:p-8" onclick="event.stopPropagation()">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 sm:p-8 overflow-y-auto max-h-[90vh]" onclick="event.stopPropagation()">
+            <!-- Modal Image -->
+            <div id="modal-image-container" class="hidden mb-6 rounded-lg overflow-hidden shadow-sm">
+                <img id="modal-image" class="w-full h-56 object-cover" src="" alt="Item Image">
+            </div>
+
             <div class="flex justify-between items-start mb-4">
                 <h2 id="modal-title" class="text-3xl font-bold text-gray-900"></h2>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <p id="modal-theme" class="text-lg font-semibold mb-3 px-3 py-1 inline-block rounded-full text-white"></p>
+            <div class="flex gap-2 mb-3">
+                <p id="modal-theme" class="text-lg font-semibold px-3 py-1 inline-block rounded-full text-white"></p>
+                <!-- Vegan badge for modal -->
+                <p id="modal-vegan-badge" class="hidden text-lg font-semibold px-3 py-1 bg-green-500 text-white rounded-full">VEGAN</p>
+            </div>
             
             <div id="modal-price-display" class="mb-4">
                 <!-- Prices will be injected here -->
@@ -136,10 +132,8 @@
     <script>
         // --- TRANSLATION DATA ---
         const IS_LANG = {
-            searchTerm: 'Leita í matseðli...',
-            tagline: 'Heilsu & orku uppspretta | Health & Energy Source',
-            allThemes: 'Allar tegundir',
-            noItemsFound: 'Engin atriði fundust fyrir valið þitt.',
+            tagline: 'þín orka, þinn árangur.',
+            noItemsFound: 'Engin atriði fundust.',
             descriptionHeading: 'Lýsing / Innihald',
             nutritionHeading: 'Næringargildi',
             macroInfo: 'Næringargildi ekki tilgreind fyrir þennan rétt.',
@@ -155,8 +149,7 @@
             sizeMedium: 'Miðstærð',
             sizeLarge: 'Stór',
             
-            // Theme Translations
-            themeAll: 'Allar tegundir',
+            // Theme Translations (Used for card badges)
             themeENERGY: 'ORKA',
             themeSTRENGTH: 'KRAFTUR',
             themeBALANCE: 'JAFNVÆGI',
@@ -166,16 +159,14 @@
             category_drykkir: 'DRYKKIR',
             category_salat: 'SALAT',
             category_grautur: 'GRAUTUR',
-            category_skal: 'SKÁL', // Retained for translation map, though items are removed
+            category_skal: 'SKÁL',
             category_krisp: 'KRISP',
             category_kaffi: 'KAFFI',
-            category_grab_go: 'GRÍPTU MEÐ', // Displayed in Icelandic even when in Icelandic mode
+            category_grab_go: 'GRÍPTU MEÐ',
         };
         const EN_LANG = {
-            searchTerm: 'Search menu items...',
-            tagline: 'Health & Energy Source | Heilsu & orku uppspretta',
-            allThemes: 'All Themes',
-            noItemsFound: 'No items found for this combination of category, theme, and search term.',
+            tagline: 'Your energy, your success.',
+            noItemsFound: 'No items found.',
             descriptionHeading: 'Description / Ingredients',
             nutritionHeading: 'Nutrition Facts',
             macroInfo: 'Macro information not specified for this item in the menu.',
@@ -191,8 +182,7 @@
             sizeMedium: 'Medium',
             sizeLarge: 'Large',
 
-            // Theme Translations
-            themeAll: 'All Themes',
+            // Theme Translations (Used for card badges)
             themeENERGY: 'ENERGY',
             themeSTRENGTH: 'STRENGTH',
             themeBALANCE: 'BALANCE',
@@ -202,28 +192,35 @@
             category_drykkir: 'DRINKS',
             category_salat: 'SALADS',
             category_grautur: 'PORRIDGE',
-            category_skal: 'BOWLS', // Retained for translation map, though items are removed
+            category_skal: 'BOWLS',
             category_krisp: 'CRISPS',
             category_kaffi: 'COFFEE',
-            category_grab_go: 'GRAB & GO', // Correct English Name
+            category_grab_go: 'GRAB & GO',
         };
 
         
-        // --- DRINK PRICE CONSTANTS (Themed) ---
+        // --- DRINK PRICE CONSTANTS ---
 
-        // Prices for ENERGY, BALANCE, LIGHT (1.290 kr, 1.490 kr, 1.590 kr)
         const PRICES_THEMED_DRINKS = {
             is: { S: '1.290 kr', M: '1.490 kr', L: '1.590 kr' },
             en: { S: '1,290 ISK', M: '1,490 ISK', L: '1,590 ISK' },
         };
 
-        // Prices for STRENGTH (1.390 kr, 1.590 kr, 1.690 kr)
         const PRICES_STRENGTH_DRINKS = {
             is: { S: '1.390 kr', M: '1.590 kr', L: '1.690 kr' },
             en: { S: '1,390 ISK', M: '1,590 ISK', L: '1,690 ISK' },
         };
 
-        // --- DRINK MACRO DATA (Size S, M, L) ---
+        // --- CATEGORY IMAGES ---
+        const CATEGORY_IMAGES = {
+            'DRYKKIR': 'https://images.prismic.io/worldclass/aVxTOHNYClf9ozUB_menu_21920.jpg',
+            'SALAT': 'https://images.prismic.io/worldclass/aVxTN3NYClf9ozUA_menu_11920.jpg',
+            'GRAUTUR': 'https://images.prismic.io/worldclass/aVxTOnNYClf9ozUD_menu_41920.jpg',
+            'KRISP': 'https://images.prismic.io/worldclass/aVxTOXNYClf9ozUC_menu_31920.jpg',
+            'GRÍPTU MEÐ': 'https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg?auto=format,compress'
+        };
+
+        // --- DRINK MACRO DATA ---
         const DRINK_MACROS = {
             // ENERGY
             Kraftur: { S: { kcal: 282.7, protein: 26.8, fat: 1.9, carbs: 36.5, fiber: 1.7 }, M: { kcal: 314, protein: 29.8, fat: 2.1, carbs: 40.5, fiber: 1.9 }, L: { kcal: 345.4, protein: 32.8, fat: 2.3, carbs: 44.6, fiber: 2.1 } },
@@ -245,29 +242,23 @@
 
         const initialMenuData = [
             // --- DRYKKIR (Drinks) ---
-            // ENERGY uses PRICES_THEMED_DRINKS (1.290/1.490/1.590)
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Vanillu skyr, banani, jarðarber, prótein', descriptionEn: 'Vanilla Skyr, banana, strawberries, protein powder', macros: {} },
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía, prótein', descriptionEn: 'Double espresso, almond milk, olive oil, protein powder', macros: {} },
-            { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Jarðarber, banani, epli, Peach Mango Tango Amino Energy', descriptionEn: 'Strawberries, banana, apple, Peach Mango Tango Amino Energy', macros: {} },
+            { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Jarðarber, banani, epli, Peach Mango Tango Amino Energy', descriptionEn: 'Strawberries, banana, apple, Peach Mango Tango Amino Energy', macros: {}, isVegan: true },
             
-            // BALANCE uses PRICES_THEMED_DRINKS (1.290/1.490/1.590)
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Sítróna, engifer, jarðarber, epli, jarðarberjaprótein', descriptionEn: 'Lemon, ginger, strawberries, apple, strawberry protein powder', macros: {} },
-            { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Avókadó, epli, ananas, engifer', descriptionEn: 'Avocado, apple, pineapple, ginger', macros: {} },
-            { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Rauðrófusafi, avókadó, sellerí, jarðarber, epli, sítróna', descriptionEn: 'Beetroot juice, avocado, celery, strawberries, apple, lemon', macros: {} },
+            { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Avókadó, epli, ananas, engifer', descriptionEn: 'Avocado, apple, pineapple, ginger', macros: {}, isVegan: true },
+            { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Rauðrófusafi, avókadó, sellerí, jarðarber, epli, sítróna', descriptionEn: 'Beetroot juice, avocado, celery, strawberries, apple, lemon', macros: {}, isVegan: true },
 
-            // LIGHT uses PRICES_THEMED_DRINKS (1.290/1.490/1.590)
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Spínat, mangó, epli, sellerí, engifer, collagen prótein', descriptionEn: 'Spinach, mango, apple, celery, ginger, collagen protein', macros: {} },
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Epli, mangó, bláber, engifer, prótein', descriptionEn: 'Apple, mango, blueberries, ginger, protein powder', macros: {} },
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', prices: PRICES_THEMED_DRINKS, descriptionIs: 'Vanillu skyr, jarðarber, mangó, ananas', descriptionEn: 'Vanilla Skyr, strawberries, mango, pineapple', macros: {} },
 
-            // STRENGTH uses PRICES_STRENGTH_DRINKS (1.390/1.590/1.690)
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', prices: PRICES_STRENGTH_DRINKS, descriptionIs: 'Jarðarber, döðlur, banani, hnetusmjör, kakóduft, möndlu-mjólk, Cookies & Cream prótein', descriptionEn: 'Strawberries, dates, banana, peanut butter, cocoa powder, almond milk, Cookies & Cream protein', macros: {} },
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', prices: PRICES_STRENGTH_DRINKS, descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör, Whey prótein', descriptionEn: 'Banana, oatmeal, oat milk, almond butter, Whey protein', macros: {} },
             { categoryIs: 'DRYKKIR', categoryEn: 'DRINKS', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', prices: PRICES_STRENGTH_DRINKS, descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk, prótein', descriptionEn: 'Raspberries, blueberries, olive oil, coconut milk, protein powder', macros: {} },
 
             // --- SALAT (Salads) ---
-            
-            // NOTE: Energy Salad now uses the OLD Strength Salad data (Pesto)
             { 
                 categoryIs: 'SALAT', 
                 categoryEn: 'SALADS', 
@@ -278,10 +269,8 @@
                 priceEn: '2,190 ISK', 
                 descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur, fetaostur', 
                 descriptionEn: 'Pesto pasta, tomatoes, spinach, dates, cashews, feta cheese', 
-                macros: { kcal: 991, protein: '32.2 g', fat: '49.4 g', carbs: '102 g', fiber: '17 g' } 
+                macros: { kcal: 991, protein: '32.2 g', fat: '49.4 g', carbs: '102 g', fiber: '17 g' },
             },
-            
-            // NOTE: Strength Salad now uses the OLD Energy Salad data (Cesar)
             { 
                 categoryIs: 'SALAT', 
                 categoryEn: 'SALADS', 
@@ -292,10 +281,8 @@
                 priceEn: '2,190 ISK', 
                 descriptionIs: 'Pasta, salat, kjúklingur, vínber, döðlur, parmesan ostur, cesar dressing', 
                 descriptionEn: 'Pasta, lettuce, chicken, grapes, dates, Parmesan cheese, Caesar dressing', 
-                macros: { kcal: 869, protein: '66.4 g', fat: '32.4 g', carbs: '86.2 g', fiber: '12 g' } 
+                macros: { kcal: 869, protein: '66.4 g', fat: '32.4 g', carbs: '86.2 g', fiber: '12 g' },
             },
-            
-            // UPDATED MACROS FOR BALANCE SALAD
             { 
                 categoryIs: 'SALAT', 
                 categoryEn: 'SALADS', 
@@ -306,9 +293,9 @@
                 priceEn: '2,190 ISK', 
                 descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar, vinegar dressing', 
                 descriptionEn: 'Lettuce, veggie patty, avocado, red onion, cucumber, tomatoes, vinegar dressing', 
-                macros: { kcal: 539, protein: '11.4 g', fat: '37.6 g', carbs: '42.2 g', fiber: '9.5 g' } 
+                macros: { kcal: 539, protein: '11.4 g', fat: '37.6 g', carbs: '42.2 g', fiber: '9.5 g' },
+                isVegan: true,
             },
-            
             { 
                 categoryIs: 'SALAT', 
                 categoryEn: 'SALADS', 
@@ -319,23 +306,16 @@
                 priceEn: '1,890 ISK', 
                 descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur, gúrka, kotasæludressing', 
                 descriptionEn: 'Lettuce, tuna, egg, red onion, cucumber, cottage cheese dressing', 
-                macros: { kcal: 452, protein: '48.5 g', fat: '16.5 g', carbs: '14.7 g', fiber: '3.5 g' } 
+                macros: { kcal: 452, protein: '48.5 g', fat: '16.5 g', carbs: '14.7 g', fiber: '3.5 g' },
             },
 
             // --- GRAUTUR (Porridge) ---
-            // Price updated to 990 kr
             { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', priceIs: '990 kr', priceEn: '990 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, cookies and cream prótein. Toppings: möndlusmjör, bláber, jarðarber', descriptionEn: 'Almond milk, oats, honey, cookies and cream protein. Toppings: almond butter, blueberries, strawberries', macros: { kcal: 641.6, protein: '37.23 g', fat: '16 g', carbs: '82.4 g', fiber: '11.4 g' } },
-            // Price remains 990 kr
             { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', priceIs: '990 kr', priceEn: '990 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, vanillu prótein. Toppings: hnetusmjör, banani, döðlur', descriptionEn: 'Almond milk, oats, honey, vanilla protein. Toppings: peanut butter, banana, dates', macros: { kcal: 658, protein: '38.13 g', fat: '16.02 g', carbs: '97.2 g', fiber: '12.44 g' } },
-            // Price updated to 990 kr
             { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'BALANCE', nameIs: 'Balance Grautur', nameEn: 'Balance Porridge', priceIs: '990 kr', priceEn: '990 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang, collagen. Toppings: hampfræ, bláber, döðlur', descriptionEn: 'Almond milk, oats, honey, collagen. Toppings: hemp seeds, blueberries, dates', macros: { kcal: 533.6, protein: '49 g', fat: '9.72 g', carbs: '96.8 g', fiber: '11.54 g' } },
-            // Price updated to 890 kr
             { categoryIs: 'GRAUTUR', categoryEn: 'PORRIDGE', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', priceIs: '890 kr', priceEn: '890 ISK', descriptionIs: 'Möndlumjólk, hafrar, hunang. Toppings: hampfræ, Jarðarber, kókosflögu', descriptionEn: 'Almond milk, oats, honey. Toppings: hemp seeds, strawberries, coconut flakes', macros: { kcal: 442.6, protein: '12.73 g', fat: '16.22 g', carbs: '66.4 g', fiber: '10.64 g' } },
 
-            // --- SKÁL (Bowls) - REMOVED ---
-            
             // --- KRISP (Crisps) ---
-            // PRICE CHANGE: 1.190 kr -> 1.290 kr (Updated in previous turn)
             { 
                 categoryIs: 'KRISP', 
                 categoryEn: 'CRISPS', 
@@ -343,12 +323,11 @@
                 nameIs: 'Kjúklinga & avacado krisp', 
                 nameEn: 'Chicken & Avocado Crisp', 
                 priceIs: '1.290 kr', 
-                priceEn: '1,290 ISK', // Updated Price
+                priceEn: '1,290 ISK', 
                 descriptionIs: 'Fin crisp, kjúklingur, avocado, sesamfræ', 
                 descriptionEn: 'Thin crisp, chicken, avocado, sesame seeds', 
                 macros: { kcal: 290, protein: '22.8 g', fat: '14.5 g', carbs: '21.9 g', fiber: '6.6 g' } 
             },
-            // PRICE CHANGE: 1.190 kr -> 1.290 kr (Updated in previous turn)
             { 
                 categoryIs: 'KRISP', 
                 categoryEn: 'CRISPS', 
@@ -356,26 +335,26 @@
                 nameIs: 'Túnfisk & egg krisp', 
                 nameEn: 'Tuna & Egg Crisp', 
                 priceIs: '1.290 kr', 
-                priceEn: '1,290 ISK', // Updated Price
+                priceEn: '1,290 ISK', 
                 descriptionIs: 'Fin crisp, túnfisksalat', 
                 descriptionEn: 'Thin crisp, tuna salad', 
                 macros: { kcal: 313, protein: '31.8 g', fat: '15.5 g', carbs: '16.9 g', fiber: '4.6 g' } 
             },
-            { categoryIs: 'KRISP', categoryEn: 'CRISPS', theme: 'BALANCE', nameIs: 'Hummus krisp', nameEn: 'Hummus Crisp', priceIs: '1.190 kr', priceEn: '1,190 ISK', descriptionIs: 'Fin crisp, hummus, tómatar', descriptionEn: 'Thin crisp, hummus, tomatoes', macros: { kcal: 263, protein: '10.8 g', fat: '7.5 g', carbs: '49.9 g', fiber: '18.6 g' } },
+            { categoryIs: 'KRISP', categoryEn: 'CRISPS', theme: 'BALANCE', nameIs: 'Hummus krisp', nameEn: 'Hummus Crisp', priceIs: '1.190 kr', priceEn: '1,190 ISK', descriptionIs: 'Fin crisp, hummus, tómatar', descriptionEn: 'Thin crisp, hummus, tomatoes', macros: { kcal: 263, protein: '10.8 g', fat: '7.5 g', carbs: '49.9 g', fiber: '18.6 g' }, isVegan: true },
             { categoryIs: 'KRISP', categoryEn: 'CRISPS', theme: 'LIGHT', nameIs: 'Kjúklinga krisp', nameEn: 'Chicken Crisp', priceIs: '1.190 kr', priceEn: '1,190 ISK', descriptionIs: 'Fin crisp, kjúklingasalat', descriptionEn: 'Thin crisp, chicken salad', macros: { kcal: 288, protein: '28.8 g', fat: '12.5 g', carbs: '14.9 g', fiber: '4.1 g' } },
 
             // --- KAFFI (Coffee) --- 
-            { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Americano', nameEn: 'Americano', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Standard kaffi, svart.', descriptionEn: 'Standard coffee, black.', macros: {} },
-            { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Espresso', nameEn: 'Espresso', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Stakur skammtur af espresso.', descriptionEn: 'Single shot of espresso.', macros: {} },
-            { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Tvöfaldur Espresso', nameEn: 'Double Espresso', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Tvöfaldur skammtur af espresso.', descriptionEn: 'Double shot of espresso.', macros: {} },
+            { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Americano', nameEn: 'Americano', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Standard kaffi, svart.', descriptionEn: 'Standard coffee, black.', macros: {}, isVegan: true },
+            { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Espresso', nameEn: 'Espresso', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Stakur skammtur af espresso.', descriptionEn: 'Single shot of espresso.', macros: {}, isVegan: true },
+            { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Tvöfaldur Espresso', nameEn: 'Double Espresso', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Tvöfaldur skammtur af espresso.', descriptionEn: 'Double shot of espresso.', macros: {}, isVegan: true },
             { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Cappucino', nameEn: 'Cappuccino', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Espresso með mjólk og freyði.', descriptionEn: 'Espresso with steamed milk and foam.', macros: {} },
             { categoryIs: 'KAFFI', categoryEn: 'COFFEE', theme: 'All', nameIs: 'Latte', nameEn: 'Latte', priceIs: '500 kr', priceEn: '500 ISK', descriptionIs: 'Espresso með heitri mjólk.', descriptionEn: 'Espresso with hot milk.', macros: {} },
 
              // --- GRÍPTU MEÐ (Grab & Go) ---
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Prótein muffins', nameEn: 'Protein Muffin', priceIs: '590 kr', priceEn: '590 ISK', descriptionIs: 'High protein muffin for a quick snack.', descriptionEn: 'High protein muffin for a quick snack.', macros: {} },
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Egg', nameEn: 'Egg', priceIs: '250 kr', priceEn: '250 ISK', descriptionIs: 'Hard-boiled egg.', descriptionEn: 'Hard-boiled egg.', macros: {} },
-            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Epli', nameEn: 'Apple', priceIs: '150 kr', priceEn: '150 ISK', descriptionIs: 'Epli.', descriptionEn: 'Apple.', macros: {} },
-            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Banani', nameEn: 'Banana', priceIs: '170 kr', priceEn: '170 ISK', descriptionIs: 'Banani.', descriptionEn: 'Banana.', macros: {} },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Epli', nameEn: 'Apple', priceIs: '150 kr', priceEn: '150 ISK', descriptionIs: 'Epli.', descriptionEn: 'Apple.', macros: {}, isVegan: true },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Banani', nameEn: 'Banana', priceIs: '170 kr', priceEn: '170 ISK', descriptionIs: 'Banani.', descriptionEn: 'Banana.', macros: {}, isVegan: true },
         ];
         
         // --- PROCESS MENU DATA (Add size-based macros to drinks) ---
@@ -391,15 +370,12 @@
         // --- STATE VARIABLES ---
         let isIcelandic = false; // Tracks the current language (false = English, true = Icelandic)
         let activeCategory = 'DRYKKIR'; 
-        let activeTheme = 'All';
-        let searchTerm = ''; // NEW: State for search input
         let modalActiveSize = 'M'; // Default size for macro display for drinks
 
         const menuGrid = document.getElementById('menu-grid');
         const categoryTabs = document.getElementById('category-tabs');
-        const themeFilterButtons = document.querySelectorAll('#theme-filters button');
         const translateButton = document.getElementById('translate-button');
-        const searchInput = document.getElementById('search-input'); // NEW: Get search input element
+        const categoryBanner = document.getElementById('category-banner'); // NEW: Get banner element
         const modal = document.getElementById('item-modal');
         const modalTitle = document.getElementById('modal-title');
         const modalTheme = document.getElementById('modal-theme');
@@ -410,6 +386,9 @@
         const modalDescHeading = document.getElementById('modal-desc-heading');
         const modalMacroHeading = document.getElementById('modal-macro-heading');
         const modalSizeSelector = document.getElementById('modal-size-selector');
+        const modalVeganBadge = document.getElementById('modal-vegan-badge');
+        const modalImageContainer = document.getElementById('modal-image-container');
+        const modalImage = document.getElementById('modal-image');
 
 
         // --- TRANSLATION FUNCTIONALITY ---
@@ -419,9 +398,6 @@
         // Helper to get translated theme name
         const getTranslatedThemeName = (themeKey) => {
             const lang = getLang();
-            if (themeKey === 'All') {
-                return lang.themeAll;
-            }
             return lang[`theme${themeKey}`] || themeKey;
         };
 
@@ -460,24 +436,13 @@
             // 2. Update Translate Button Text (shows the current language)
             translateButton.textContent = isIcelandic ? 'ÍS' : 'EN';
             
-            // 3. Update Search Placeholder (NEW)
-            searchInput.placeholder = lang.searchTerm;
-
-            // 4. Update Theme Filter Button Texts
-            document.getElementById('theme-all').textContent = lang.themeAll;
-            document.getElementById('theme-energy').textContent = lang.themeENERGY;
-            document.getElementById('theme-strength').textContent = lang.themeSTRENGTH;
-            document.getElementById('theme-balance').textContent = lang.themeBALANCE;
-            document.getElementById('theme-light').textContent = lang.themeLIGHT;
-
-            // 5. Update Modal Headings
+            // 3. Update Modal Headings
             modalDescHeading.textContent = lang.descriptionHeading;
             modalMacroHeading.textContent = lang.nutritionHeading;
             
-            // 6. Re-render everything to update category labels, item descriptions, and macro data
+            // 4. Re-render everything to update category labels, item descriptions, and macro data
             renderCategoryTabs();
             renderMenu();
-            // Note: Modal text updates are handled in openModal and renderModalMacros
         };
 
         const toggleLanguage = () => {
@@ -488,25 +453,10 @@
         // --- FILTERING AND RENDERING ---
 
         const filterItems = () => {
-            const lang = getLang();
-            const term = searchTerm.toLowerCase(); // NEW: Get the search term
-            
             return menuData.filter(item => {
                 const categoryMatch = item.categoryIs === activeCategory;
-                const themeMatch = activeTheme === 'All' || item.theme === activeTheme;
-
-                // NEW: Search Logic (matches against name or description in both languages)
-                const nameIsMatch = item.nameIs.toLowerCase().includes(term);
-                const nameEnMatch = item.nameEn.toLowerCase().includes(term);
-                const descIsMatch = item.descriptionIs.toLowerCase().includes(term);
-                const descEnMatch = item.descriptionEn.toLowerCase().includes(term);
-                
-                const searchMatch = !term || nameIsMatch || nameEnMatch || descIsMatch || descEnMatch;
-
-                // IMPORTANT: Filter out the removed SKÁL category if somehow included
                 const categoryIsRemoved = item.categoryIs === 'SKÁL'; 
-
-                return categoryMatch && themeMatch && searchMatch && !categoryIsRemoved;
+                return categoryMatch && !categoryIsRemoved;
             });
         };
 
@@ -525,6 +475,16 @@
             const lang = getLang();
             menuGrid.innerHTML = ''; 
 
+            // Handle Category Banner
+            const categoryImage = CATEGORY_IMAGES[activeCategory];
+            if (categoryImage) {
+                categoryBanner.innerHTML = `<img src="${categoryImage}" class="w-full h-48 sm:h-64 object-cover rounded-xl shadow-md" alt="${getCategoryDisplayName(activeCategory)}">`;
+                categoryBanner.classList.remove('hidden');
+            } else {
+                categoryBanner.innerHTML = '';
+                categoryBanner.classList.add('hidden');
+            }
+
             if (filteredItems.length === 0) {
                 menuGrid.innerHTML = `<div class="md:col-span-2 text-center py-12 text-gray-500 text-xl">
                     ${lang.noItemsFound}
@@ -538,35 +498,40 @@
                 const themeColor = getThemeColor(item.theme);
                 const themeName = getTranslatedThemeName(item.theme);
                 
-                // Get the displayed price for the card (either the single price or the medium size with label)
-                let cardPriceHtml = ''; // Use HTML string to include size label if applicable
+                // Generate Vegan icon HTML if applicable
+                const veganIconHtml = item.isVegan ? `<span class="ml-2 text-xs font-bold bg-green-100 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">VEGAN</span>` : '';
+
+                let cardPriceHtml = ''; 
                 
                 if (item.prices) {
-                    // Item is a DRINK, show Medium price with size label
                     const priceString = isIcelandic ? item.prices.is.M : item.prices.en.M;
                     const sizeLabel = lang.sizeMedium;
                     
-                    // Structure: <span class="text-xs text-gray-500 mr-1">Medium:</span><span class="text-xl font-bold text-red-500">1.490 ISK</span>
                     cardPriceHtml = `
                         <span class="text-xs text-gray-500 font-normal mr-1">${sizeLabel}:</span>
                         <span class="text-xl font-bold text-red-500">${priceString}</span>
                     `;
                 } else {
-                    // Item has a flat price (Salads, Porridge, etc.), show price alone
                     const flatPrice = isIcelandic ? item.priceIs : item.priceEn;
                     cardPriceHtml = `<span class="text-xl font-bold text-red-500">${flatPrice}</span>`;
                 }
 
+                // Changed structure: No longer rendering item image in card
                 const itemHtml = `
-                    <div class="item-card bg-white p-6 rounded-xl shadow-md flex flex-col cursor-pointer" onclick="openModal(${menuData.indexOf(item)})">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-semibold px-3 py-1 ${themeColor} rounded-full text-white">${themeName}</span>
-                            <div class="flex items-baseline">
-                                ${cardPriceHtml}
+                    <div class="item-card bg-white rounded-xl shadow-md flex flex-col cursor-pointer overflow-hidden" onclick="openModal(${menuData.indexOf(item)})">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center">
+                                    <span class="text-sm font-semibold px-3 py-1 ${themeColor} rounded-full text-white">${themeName}</span>
+                                    ${veganIconHtml}
+                                </div>
+                                <div class="flex items-baseline">
+                                    ${cardPriceHtml}
+                                </div>
                             </div>
+                            <h3 class="text-2xl font-extrabold text-gray-900 mb-2">${displayName}</h3>
+                            <p class="text-gray-500 text-sm mt-auto">${isDescription}</p>
                         </div>
-                        <h3 class="text-2xl font-extrabold text-gray-900 mb-2">${displayName}</h3>
-                        <p class="text-gray-500 text-sm mt-auto">${isDescription}</p>
                     </div>
                 `;
                 menuGrid.innerHTML += itemHtml;
@@ -596,29 +561,6 @@
                 categoryTabs.appendChild(button);
             });
         };
-
-        const setActiveTheme = (theme) => {
-            activeTheme = theme;
-            themeFilterButtons.forEach(button => {
-                button.classList.remove('active', 'bg-red-500', 'text-white');
-                button.classList.add('bg-gray-200', 'text-gray-700');
-                if (button.getAttribute('data-theme-key') === theme) {
-                    button.classList.add('active', 'bg-red-500', 'text-white');
-                    button.classList.remove('bg-gray-200', 'text-gray-700');
-                }
-            });
-            renderMenu();
-        };
-
-        themeFilterButtons.forEach(button => {
-            button.onclick = () => setActiveTheme(button.getAttribute('data-theme-key'));
-        });
-        
-        // NEW: Search Input Listener
-        searchInput.addEventListener('input', (e) => {
-            searchTerm = e.target.value.trim();
-            renderMenu();
-        });
 
 
         // --- MODAL FUNCTIONALITY ---
@@ -709,6 +651,7 @@
         
         const renderModalPriceDisplay = (item) => {
             const lang = getLang();
+            const itemIndex = menuData.indexOf(item); // Get index for onclick handler
             modalPriceDisplay.innerHTML = '';
 
             if (item.prices) {
@@ -718,15 +661,15 @@
                 const priceHtml = `
                     <h3 class="text-xl font-semibold text-gray-700 mb-2">${lang.priceHeading}</h3>
                     <div class="grid grid-cols-3 gap-3 font-bold text-lg text-center">
-                        <div class="bg-red-100 p-2 rounded-lg ${modalActiveSize === 'S' ? 'ring-2 ring-red-500' : ''}">
+                        <div onclick="setModalSize(${itemIndex}, 'S')" class="cursor-pointer transition-all p-2 rounded-lg ${modalActiveSize === 'S' ? 'bg-red-200 ring-2 ring-red-500' : 'bg-red-100 hover:bg-red-200'}">
                             <span class="text-sm block text-gray-600">${lang.sizeSmall}</span>
                             <span class="text-red-600">${currentPrices.S}</span>
                         </div>
-                        <div class="bg-red-200 p-2 rounded-lg ${modalActiveSize === 'M' ? 'ring-2 ring-red-500' : ''}">
+                        <div onclick="setModalSize(${itemIndex}, 'M')" class="cursor-pointer transition-all p-2 rounded-lg ${modalActiveSize === 'M' ? 'bg-red-200 ring-2 ring-red-500' : 'bg-red-100 hover:bg-red-200'}">
                             <span class="text-sm block text-gray-700">${lang.sizeMedium}</span>
                             <span class="text-red-700">${currentPrices.M}</span>
                         </div>
-                        <div class="bg-red-100 p-2 rounded-lg ${modalActiveSize === 'L' ? 'ring-2 ring-red-500' : ''}">
+                        <div onclick="setModalSize(${itemIndex}, 'L')" class="cursor-pointer transition-all p-2 rounded-lg ${modalActiveSize === 'L' ? 'bg-red-200 ring-2 ring-red-500' : 'bg-red-100 hover:bg-red-200'}">
                             <span class="text-sm block text-gray-600">${lang.sizeLarge}</span>
                             <span class="text-red-600">${currentPrices.L}</span>
                         </div>
@@ -763,7 +706,25 @@
             modalDescription.textContent = isDescription;
             
             modalTheme.textContent = themeName;
-            modalTheme.className = `text-lg font-semibold mb-3 px-3 py-1 inline-block rounded-full text-white ${themeColor}`;
+            modalTheme.className = `text-lg font-semibold px-3 py-1 inline-block rounded-full text-white ${themeColor}`;
+
+            // Show/Hide Vegan Badge in Modal
+            if (item.isVegan) {
+                modalVeganBadge.classList.remove('hidden');
+                modalVeganBadge.classList.add('inline-block');
+            } else {
+                modalVeganBadge.classList.add('hidden');
+                modalVeganBadge.classList.remove('inline-block');
+            }
+            
+            // Show/Hide Image in Modal
+            if (item.image) {
+                modalImageContainer.classList.remove('hidden');
+                modalImage.src = item.image;
+            } else {
+                modalImageContainer.classList.add('hidden');
+                modalImage.src = '';
+            }
 
             // 2. Render Price Display (with size selection rings if applicable)
             renderModalPriceDisplay(item);
@@ -790,7 +751,6 @@
             if (activeCategory === 'SKÁL') {
                  activeCategory = 'DRYKKIR';
             }
-            setActiveTheme('All');
             renderCategoryTabs();
             renderMenu();
         };
