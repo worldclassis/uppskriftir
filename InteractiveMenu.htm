@@ -354,11 +354,8 @@
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Egg', nameEn: 'Egg', priceIs: '250 kr', priceEn: '250 ISK', descriptionIs: 'Hard-boiled egg.', descriptionEn: 'Hard-boiled egg.', macros: {} },
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Epli', nameEn: 'Apple', priceIs: '150 kr', priceEn: '150 ISK', descriptionIs: 'Epli.', descriptionEn: 'Apple.', macros: {}, isVegan: true },
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Banani', nameEn: 'Banana', priceIs: '170 kr', priceEn: '170 ISK', descriptionIs: 'Banani.', descriptionEn: 'Banana.', macros: {}, isVegan: true },
-            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Hleðsla', nameEn: 'Hleðsla', priceIs: '590 kr', priceEn: '590 ISK', descriptionIs: 'Íslenskur próteindrykkur.', descriptionEn: 'Icelandic protein drink.', macros: {} },
-            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Nocco', nameEn: 'Nocco', priceIs: '650 kr', priceEn: '650 ISK', descriptionIs: 'BCAA drykkur með koffíni.', descriptionEn: 'BCAA drink with caffeine.', macros: {}, isVegan: true },
-            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Collab', nameEn: 'Collab', priceIs: '650 kr', priceEn: '650 ISK', descriptionIs: 'Kollagen drykkur.', descriptionEn: 'Collagen drink.', macros: {} },
-            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Barebells', nameEn: 'Barebells', priceIs: '550 kr', priceEn: '550 ISK', descriptionIs: 'Próteinstykki.', descriptionEn: 'Protein bar.', macros: {} },
-            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Vitamin Well', nameEn: 'Vitamin Well', priceIs: '550 kr', priceEn: '550 ISK', descriptionIs: 'Vítamíndrykkur.', descriptionEn: 'Vitamin drink.', macros: {}, isVegan: true },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Harðfiskur', nameEn: 'Dried Fish', priceIs: '990 kr', priceEn: '990 ISK', descriptionIs: 'Íslenskur harðfiskur.', descriptionEn: 'Icelandic dried fish.', macros: {} },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Hnetumix', nameEn: 'Nut Mix', priceIs: '390 kr', priceEn: '390 ISK', descriptionIs: 'Blandaðar hnetur.', descriptionEn: 'Mixed nuts.', macros: {}, isVegan: true },
         ];
         
         // --- PROCESS MENU DATA (Add size-based macros to drinks) ---
@@ -772,6 +769,12 @@
 
         // --- INITIALIZATION ---
         const init = () => {
+            // Check URL parameters for language preference
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('lang') === 'is') {
+                isIcelandic = true;
+            }
+
             updateStaticText(); 
             // Ensure category starts at a valid non-removed category
             if (activeCategory === 'SKÁL') {
