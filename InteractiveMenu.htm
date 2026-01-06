@@ -453,8 +453,9 @@
             // 1. Update Header Tagline
             document.getElementById('tagline').textContent = lang.tagline;
 
-            // 2. Update Translate Button Text (shows the current language)
-            translateButton.textContent = isIcelandic ? 'ÍS' : 'EN';
+            // 2. Update Translate Button Text (shows the language you can switch TO)
+            // If isIcelandic is true, show 'EN' (switch to English). If false, show 'ÍS' (switch to Icelandic).
+            translateButton.textContent = isIcelandic ? 'EN' : 'ÍS';
             
             // 3. Update Modal Headings
             modalDescHeading.textContent = lang.descriptionHeading;
@@ -465,7 +466,7 @@
             renderMenu();
         };
 
-        const toggleLanguage = () => {
+        window.toggleLanguage = () => {
             isIcelandic = !isIcelandic;
             updateStaticText();
         };
