@@ -32,7 +32,6 @@
             color: white;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
-        /* Special styling for Vegan active state if needed, sharing base styles for now */
         .item-card {
             transition: transform 0.2s, box-shadow 0.2s;
         }
@@ -355,6 +354,11 @@
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Egg', nameEn: 'Egg', priceIs: '250 kr', priceEn: '250 ISK', descriptionIs: 'Hard-boiled egg.', descriptionEn: 'Hard-boiled egg.', macros: {} },
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Epli', nameEn: 'Apple', priceIs: '150 kr', priceEn: '150 ISK', descriptionIs: 'Epli.', descriptionEn: 'Apple.', macros: {}, isVegan: true },
             { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Banani', nameEn: 'Banana', priceIs: '170 kr', priceEn: '170 ISK', descriptionIs: 'Banani.', descriptionEn: 'Banana.', macros: {}, isVegan: true },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Hleðsla', nameEn: 'Hleðsla', priceIs: '590 kr', priceEn: '590 ISK', descriptionIs: 'Íslenskur próteindrykkur.', descriptionEn: 'Icelandic protein drink.', macros: {} },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Nocco', nameEn: 'Nocco', priceIs: '650 kr', priceEn: '650 ISK', descriptionIs: 'BCAA drykkur með koffíni.', descriptionEn: 'BCAA drink with caffeine.', macros: {}, isVegan: true },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Collab', nameEn: 'Collab', priceIs: '650 kr', priceEn: '650 ISK', descriptionIs: 'Kollagen drykkur.', descriptionEn: 'Collagen drink.', macros: {} },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Barebells', nameEn: 'Barebells', priceIs: '550 kr', priceEn: '550 ISK', descriptionIs: 'Próteinstykki.', descriptionEn: 'Protein bar.', macros: {} },
+            { categoryIs: 'GRÍPTU MEÐ', categoryEn: 'GRAB & GO', theme: 'All', nameIs: 'Vitamin Well', nameEn: 'Vitamin Well', priceIs: '550 kr', priceEn: '550 ISK', descriptionIs: 'Vítamíndrykkur.', descriptionEn: 'Vitamin drink.', macros: {}, isVegan: true },
         ];
         
         // --- PROCESS MENU DATA (Add size-based macros to drinks) ---
@@ -375,7 +379,7 @@
         const menuGrid = document.getElementById('menu-grid');
         const categoryTabs = document.getElementById('category-tabs');
         const translateButton = document.getElementById('translate-button');
-        const categoryBanner = document.getElementById('category-banner'); // NEW: Get banner element
+        const categoryBanner = document.getElementById('category-banner'); 
         const modal = document.getElementById('item-modal');
         const modalTitle = document.getElementById('modal-title');
         const modalTheme = document.getElementById('modal-theme');
@@ -403,12 +407,31 @@
 
         // Always return Icelandic name with English translation appended if available
         const getDisplayName = (item) => {
-            // If the Icelandic and English names are the same (e.g., Americano), just return the name.
-            if (item.nameIs === item.nameEn) {
-                return item.nameIs;
+            // EXCEPTION: User requested single names for SALAT and GRAUTUR
+            // If category is Salad or Porridge, always toggle strictly between languages
+            if (item.categoryIs === 'SALAT' || item.categoryIs === 'GRAUTUR') {
+                 return isIcelandic ? item.nameIs : item.nameEn;
             }
-            // Otherwise, use the original (Icelandic) name and append the English translation in parentheses.
-            return `${item.nameIs} (${item.nameEn})`;
+
+            // Check if the name contains specific keywords to keep dual display
+            // Keywords are essentially the theme names often found in item names
+            const keywords = ['energy', 'strength', 'balance', 'light'];
+            
+            // Check if the English name contains any of these keywords
+            const nameLower = item.nameEn.toLowerCase();
+            const isThemedItem = keywords.some(keyword => nameLower.includes(keyword));
+
+            if (isThemedItem) {
+                // If names are identical, just return one
+                if (item.nameIs === item.nameEn) {
+                    return item.nameIs;
+                }
+                // Always show both for these specific items (mostly Drinks)
+                return `${item.nameIs} (${item.nameEn})`;
+            }
+
+            // Default: Show only the active language name
+            return isIcelandic ? item.nameIs : item.nameEn;
         };
         
         // Helper to get translated category name
@@ -717,7 +740,10 @@
                 modalVeganBadge.classList.remove('inline-block');
             }
             
-            // Show/Hide Image in Modal
+            // Show/Hide Image in Modal - NOTE: We removed item.image earlier for cards, 
+            // but if we want images in modals we might need to put them back in data.
+            // For now, based on instructions, we rely on category banners.
+            // But let's keep the logic clean just in case.
             if (item.image) {
                 modalImageContainer.classList.remove('hidden');
                 modalImage.src = item.image;
