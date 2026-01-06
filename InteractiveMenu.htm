@@ -226,6 +226,16 @@
             'GRÍPTU MEÐ': 'https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg?auto=format,compress'
         };
 
+        // --- THEME COLORS ---
+        const THEME_COLORS = {
+            'ENERGY': 'bg-orange-500',
+            'STRENGTH': 'bg-red-600',
+            'BALANCE': 'bg-blue-500',
+            'LIGHT': 'bg-green-500',
+            'VEGAN': 'bg-green-700',
+            'All': 'bg-gray-800' // Default color for "All Themes" active state
+        };
+
         // --- DRINK MACRO DATA ---
         const DRINK_MACROS = {
             // ENERGY
@@ -506,19 +516,15 @@
         const filterItems = () => {
             return menuData.filter(item => {
                 const categoryMatch = item.categoryIs === activeCategory;
+                // Removed theme filtering logic as the selector is gone
                 const categoryIsRemoved = item.categoryIs === 'SKÁL'; 
                 return categoryMatch && !categoryIsRemoved;
             });
         };
 
         const getThemeColor = (theme) => {
-            switch (theme) {
-                case 'ENERGY': return 'bg-red-500';
-                case 'STRENGTH': return 'bg-blue-500';
-                case 'BALANCE': return 'bg-green-500';
-                case 'LIGHT': return 'bg-yellow-500';
-                default: return 'bg-gray-500';
-            }
+            // Use the shared THEME_COLORS object, fallback to gray if undefined
+            return THEME_COLORS[theme] || 'bg-gray-500';
         };
 
         const renderMenu = () => {
@@ -599,6 +605,7 @@
 
                 const button = document.createElement('button');
                 button.textContent = categoryDisplayName;
+                // Reverted to standard Red/Gray styling for Category Tabs
                 button.className = `px-4 py-2 rounded-lg font-semibold transition-colors ${
                     isActive 
                         ? 'bg-red-500 text-white shadow-lg' 
@@ -613,7 +620,7 @@
             });
         };
 
-
+        
         // --- MODAL FUNCTIONALITY ---
 
         const renderSizeSelector = (itemIndex) => {
