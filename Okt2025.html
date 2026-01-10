@@ -264,7 +264,7 @@
                 section.items.forEach(item => {
                     const ingredientsList = item.ingredients[lang].map(ing => `<li class="mb-1 text-sm text-gray-700">${ing}</li>`).join('');
                     
-                    const instructionsTitle = lang === 'en' ? 'Method/Topping' : 'Aðferð/Álegg';
+                    const instructionsTitle = lang === 'en' ? 'Topping' : 'Álegg';
                     const ingredientsTitle = lang === 'en' ? 'Ingredients' : 'Hráefni';
 
                     let recipeDisplayName = item.name[lang];
