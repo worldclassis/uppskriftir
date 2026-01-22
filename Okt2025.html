@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Class Recipes</title>
+    <title>World Class+ Recipes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -50,9 +50,9 @@
         <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="text-center sm:text-left">
                 <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
-                    World Class Recipes
+                    World Class+ Recipes
                 </h1>
-                <p id="subheading" class="text-slate-500 font-medium">Fueling Your Body</p>
+                <p id="subheading" class="text-slate-500 font-medium italic">þín orka, þinn árangur</p>
             </div>
             
             <button id="translate-button" onclick="toggleLanguage()" class="px-5 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl shadow-sm hover:bg-indigo-700 active:scale-95 transition-all text-sm flex items-center gap-2">
@@ -97,7 +97,7 @@
     <script>
         const translations = {
             is: {
-                subheading: "Fueling Your Body",
+                subheading: "þín orka, þinn árangur",
                 translateBtn: "Translate to English",
                 flag: "🇬🇧",
                 searchPlaceholder: "Leita að uppskriftum eða hráefnum...",
@@ -109,7 +109,7 @@
                 all: "Allt"
             },
             en: {
-                subheading: "Fueling Your Body",
+                subheading: "your energy, your results",
                 translateBtn: "Túlka á Íslensku",
                 flag: "🇮🇸",
                 searchPlaceholder: "Search recipes or ingredients...",
@@ -393,7 +393,10 @@
             let visibleSections = 0;
 
             recipes.forEach((section, index) => {
-                if (selectedCategory && section.category[lang] !== selectedCategory) return;
+                const isSelectedCategory = selectedCategory && section.category[lang] === selectedCategory;
+                
+                // Filtering
+                if (selectedCategory && !isSelectedCategory) return;
 
                 const filteredItems = section.items.filter(item => {
                     const nameMatch = item.name[lang].toLowerCase().includes(searchQuery);
@@ -405,6 +408,10 @@
 
                 visibleSections++;
                 const sectionId = `section-${index}`;
+                
+                // Determine if this section should be expanded by default
+                const shouldBeExpanded = searchQuery !== '' || isSelectedCategory;
+
                 const card = document.createElement('div');
                 card.className = `recipe-card border border-slate-200 shadow-sm rounded-2xl overflow-hidden bg-white mb-4`;
 
@@ -420,14 +427,14 @@
                             ${filteredItems.length}
                         </span>
                     </div>
-                    <svg id="arrow-${sectionId}" class="w-5 h-5 text-slate-400 transform transition-transform duration-300 ${searchQuery ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <svg id="arrow-${sectionId}" class="w-5 h-5 text-slate-400 transform transition-transform duration-300 ${shouldBeExpanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 `;
                 title.onclick = () => toggleAccordion(sectionId);
                 card.appendChild(title);
 
                 const content = document.createElement('div');
                 content.id = sectionId;
-                content.className = `accordion-content ${searchQuery ? 'open' : ''}`;
+                content.className = `accordion-content ${shouldBeExpanded ? 'open' : ''}`;
 
                 let recipesHtml = '';
                 filteredItems.forEach(item => {
