@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Class+ Staff Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .answer-btn {
+            transition: all 0.2s ease;
+        }
+        .answer-btn:active {
+            transform: scale(0.98);
+        }
+        .progress-bar {
+            height: 8px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen px-4 pb-12">
+
+    <!-- Header -->
+    <header class="max-w-4xl mx-auto py-8 text-center">
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+            World Class+ <span class="text-red-600">Training Quiz</span>
+        </h1>
+        <p class="text-slate-500 font-medium italic">þín orka, þinn árangur</p>
+    </header>
+
+    <main class="quiz-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 text-center">
+            <div class="text-6xl mb-4">🏆</div>
+            <h2 class="text-2xl font-bold mb-2">Staff Training</h2>
+            <p class="text-slate-500 mb-8">Test your knowledge of the recipes to ensure world-class quality for every customer.</p>
+            
+            <input type="text" id="username" placeholder="Nafn starfsmanns" class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-500 outline-none transition-all">
+            
+            <button onclick="startQuiz()" class="w-full py-4 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 shadow-lg shadow-red-200 transition-all">
+                Hefja próf
+            </button>
+
+            <div class="mt-8 pt-8 border-t border-slate-100">
+                <h3 class="font-bold text-slate-700 mb-4">Top Starfsmenn (Live)</h3>
+                <div id="mini-leaderboard" class="space-y-2 text-sm">
+                    <p class="text-slate-400 italic">Sæki gögn...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="mb-4 flex justify-between items-center text-sm font-bold text-slate-400 uppercase tracking-widest">
+                <span id="question-count">Spurning 1 af 10</span>
+                <span id="current-score">Stig: 0</span>
+            </div>
+            
+            <div class="w-full bg-slate-200 rounded-full mb-8 overflow-hidden">
+                <div id="progress" class="progress-bar bg-red-600 w-0"></div>
+            </div>
+
+            <div id="question-card" class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 mb-6">
+                <h2 id="question-text" class="text-xl font-bold text-slate-800 leading-snug">
+                    Hleð spurningu...
+                </h2>
+            </div>
+
+            <div id="options-container" class="space-y-3">
+                <!-- Options injected by JS -->
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen" class="hidden bg-white p-8 rounded-3xl shadow-xl border border-slate-100 text-center">
+            <h2 class="text-3xl font-black mb-2">Vel gert!</h2>
+            <p id="final-stats" class="text-slate-500 mb-8">Þú fékkst 8 af 10 rétt.</p>
+            
+            <div class="p-6 bg-slate-50 rounded-2xl mb-8">
+                <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Þitt skor</p>
+                <div id="final-score-big" class="text-5xl font-black text-red-600">800</div>
+            </div>
+
+            <button onclick="resetQuiz()" class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-black transition-all">
+                Reyna aftur
+            </button>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let user = null;
+
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token).catch(() => signInAnonymously(auth));
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            if (user) listenToLeaderboard();
+        });
+
+        initAuth();
+
+        const recipes = [
+            { category: "Energy Drykkir", name: "Kraftur", ingredients: ["110 g vanilluskyr", "100 g banana", "60 g jarðaber", "30 g vanilluprótein"] },
+            { category: "Energy Drykkir", name: "Protein Ískaffi", ingredients: ["200 ml tvöfaldur espresso", "10 ml ólífuolía", "30 g salted caramel prótein"] },
+            { category: "Energy Drykkir", name: "Snerpa", ingredients: ["60 g jarðaber", "100 g banana", "90 ml eplasafi", "30 g P/M Tango prótein"] },
+            { category: "Strength Drykkir", name: "Massi", ingredients: ["140 g jarðaber", "40 g döðlur", "60 g banana", "60 g hnetusmjör", "8 g kakóduft", "200 ml möndlumjólk", "30 g cookie prótein"] },
+            { category: "Strength Drykkir", name: "Orka", ingredients: ["60 g banana", "80 g haframjöl", "200 ml haframjólk", "60 g möndlusmjör", "30 g whey prótein"] },
+            { category: "Strength Drykkir", name: "Berjabomba", ingredients: ["60 g hindber", "60 g bláber", "50 ml ólífuolía", "200 ml kókosmjólk", "30 g whey prótein"] },
+            { category: "Light Drykkir", name: "Græn heilsa", ingredients: ["100 g spínat", "30 g mangó", "155 g epli", "40 g sellerí", "20 ml engifersafi", "30 g collagen prótein"] },
+            { category: "Light Drykkir", name: "Brennsla", ingredients: ["155 g epli", "60 g mangó", "60 g bláber", "30 ml engifer", "30 g whey prótein"] },
+            { category: "Light Drykkir", name: "Upphitun", ingredients: ["110 g vanilluskyr", "60 g jarðaber", "60 g mangó", "60 g ananas"] },
+            { category: "Balance Drykkir", name: "Gleði", ingredients: ["20 ml sítrónusafi", "30 g engifer", "60 g jarðaber", "155 g epli", "30 g jarðaberja prótein"] },
+            { category: "Balance Drykkir", name: "Líf", ingredients: ["130 g avókadó", "200 g epli", "140 g ananas", "30 g engifer"] },
+            { category: "Balance Drykkir", name: "Endurnýjun", ingredients: ["90 ml rauðrófusafi", "130 g avókadó", "30 g sellerí", "40 g jarðaber", "155 g epli", "30 ml sítrónusafi", "3 g spirulina"] },
+            { category: "Grautar", name: "Energy Porridge", ingredients: ["Grunnur 270 g", "Cookies & Cream prótein 30 g"] },
+            { category: "Grautar", name: "Strength Porridge", ingredients: ["Grunnur 270 g", "Vanillu Prótein 30 g"] },
+            { category: "Grautar", name: "Balance Porridge", ingredients: ["Grunnur 270 g", "Collagen 30 g"] },
+            { category: "Salat", name: "Energy Salat", ingredients: ["100 g pasta", "70 g kirsuberjatómatar", "90 g spínat", "20 g döðlur", "50 g kasjúhnetur", "70 g fetaostur", "100 ml pestó"] },
+            { category: "Salat", name: "Strength Salat", ingredients: ["100 g pasta", "50 g salat mix", "120 g kjúklingur", "20 g döðlur", "15 g parmesan", "50 g vínber", "100 ml Worldclass+ dressing"] },
+            { category: "Salat", name: "Balance Salat", ingredients: ["100 g salat mix", "60 g kjúklingabaunir", "80 g avókadó", "40 g rauðlaukur", "70 g gúrka", "70 g kirsuberjatómatar", "80 ml frönsk dressing"] },
+            { category: "Krisp", name: "Kjúklinga Krisp", ingredients: ["4 stk Finn Crisp", "80 g Kjúklingur", "15 g Rauðlaukur", "40 ml Worldclass+ dressing"] }
+        ];
+
+        let state = {
+            currentQuestion: 0,
+            score: 0,
+            questions: [],
+            totalQuestions: 10,
+            playerName: ""
+        };
+
+        window.startQuiz = () => {
+            const nameInput = document.getElementById('username');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('border-red-500');
+                return;
+            }
+            state.playerName = nameInput.value.trim();
+            generateQuestions();
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        };
+
+        function generateQuestions() {
+            state.questions = [];
+            // Removed 'instruction' (áferð) from types
+            const types = ['ingredient', 'category', 'measurement', 'reverse'];
+            
+            for (let i = 0; i < state.totalQuestions; i++) {
+                const recipe = recipes[Math.floor(Math.random() * recipes.length)];
+                let type = types[Math.floor(Math.random() * types.length)];
+                
+                // Logic: Don't ask category if name contains "Energy" or "Strength"
+                if (type === 'category' && (recipe.name.toLowerCase().includes('energy') || recipe.name.toLowerCase().includes('strength'))) {
+                    const fallbackTypes = types.filter(t => t !== 'category');
+                    type = fallbackTypes[Math.floor(Math.random() * fallbackTypes.length)];
+                }
+
+                let qText = "";
+                let correct = "";
+                let options = [];
+
+                if (type === 'category') {
+                    qText = `Í hvaða flokki er ${recipe.name}?`;
+                    correct = recipe.category;
+                    const others = [...new Set(recipes.map(r => r.category))].filter(c => c !== correct);
+                    options = [correct, ...shuffle(others).slice(0, 3)];
+                } else if (type === 'ingredient') {
+                    qText = `Hvaða hráefni er í ${recipe.name}?`;
+                    correct = recipe.ingredients[Math.floor(Math.random() * recipe.ingredients.length)];
+                    const otherRecipes = recipes.filter(r => r.name !== recipe.name);
+                    const allOtherIng = otherRecipes.flatMap(r => r.ingredients);
+                    options = [correct, ...shuffle([...new Set(allOtherIng)]).slice(0, 3)];
+                } else if (type === 'reverse') {
+                    const ing = recipe.ingredients[Math.floor(Math.random() * recipe.ingredients.length)];
+                    qText = `Hvaða uppskrift inniheldur: "${ing}"?`;
+                    correct = recipe.name;
+                    const others = recipes.filter(r => r.name !== correct).map(r => r.name);
+                    options = [correct, ...shuffle(others).slice(0, 3)];
+                } else {
+                    const ing = recipe.ingredients[Math.floor(Math.random() * recipe.ingredients.length)];
+                    const match = ing.match(/(\d+)\s*(g|ml)/);
+                    if (match) {
+                        const baseName = ing.split(match[0])[1].trim() || ing;
+                        qText = `Hvað eiga að vera mörg ${match[2]} af ${baseName} í ${recipe.name}?`;
+                        correct = match[1] + " " + match[2];
+                        options = [correct, (parseInt(match[1]) + 20) + " " + match[2], (Math.max(0, parseInt(match[1]) - 15)) + " " + match[2], (parseInt(match[1]) * 2) + " " + match[2]];
+                    } else {
+                        qText = `Hvað af þessu er í ${recipe.name}?`;
+                        correct = recipe.ingredients[0];
+                        options = [correct, "100 g Epli", "30 g Spínat", "60 g Banani"];
+                    }
+                }
+
+                state.questions.push({ text: qText, correct: correct, options: shuffle(options) });
+            }
+        }
+
+        function showQuestion() {
+            const q = state.questions[state.currentQuestion];
+            document.getElementById('question-text').textContent = q.text;
+            document.getElementById('question-count').textContent = `Spurning ${state.currentQuestion + 1} af ${state.totalQuestions}`;
+            document.getElementById('progress').style.width = `${(state.currentQuestion / state.totalQuestions) * 100}%`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "answer-btn w-full p-4 text-left bg-white border border-slate-200 rounded-2xl font-medium hover:border-red-500 hover:bg-red-50 transition-all";
+                btn.textContent = opt;
+                btn.onclick = () => handleAnswer(opt, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selected, btn) {
+            const q = state.questions[state.currentQuestion];
+            const allBtns = document.querySelectorAll('.answer-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selected === q.correct) {
+                btn.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
+                state.score += 100;
+                document.getElementById('current-score').textContent = `Stig: ${state.score}`;
+            } else {
+                btn.classList.add('border-red-500', 'bg-red-50', 'text-red-700');
+                allBtns.forEach(b => {
+                    if (b.textContent === q.correct) b.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
+                });
+            }
+
+            setTimeout(() => {
+                state.currentQuestion++;
+                if (state.currentQuestion < state.totalQuestions) {
+                    showQuestion();
+                } else {
+                    finishQuiz();
+                }
+            }, 1500);
+        }
+
+        const finishQuiz = async () => {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+            document.getElementById('final-stats').textContent = `Þú svaraðir ${state.score/100} af ${state.totalQuestions} spurningum rétt.`;
+            document.getElementById('final-score-big').textContent = state.score;
+            
+            if (user) {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard'), {
+                    name: state.playerName,
+                    score: state.score,
+                    date: new Date().toISOString()
+                }).catch(e => console.error("Error saving score:", e));
+            }
+        };
+
+        function listenToLeaderboard() {
+            const q = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+            onSnapshot(q, (snapshot) => {
+                const data = snapshot.docs.map(doc => doc.data());
+                data.sort((a, b) => b.score - a.score);
+                const container = document.getElementById('mini-leaderboard');
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<p class="text-slate-400 italic">Engin gögn ennþá</p>';
+                    return;
+                }
+
+                container.innerHTML = data.slice(0, 10).map((entry, i) => `
+                    <div class="flex justify-between items-center p-3 ${i === 0 ? 'bg-red-50 rounded-xl border border-red-100' : ''}">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 font-bold text-slate-400">${i + 1}.</span>
+                            <span class="font-bold text-slate-700">${entry.name}</span>
+                        </div>
+                        <span class="font-black text-red-600">${entry.score}</span>
+                    </div>
+                `).join('');
+            }, (error) => console.error("Leaderboard error:", error));
+        }
+
+        window.resetQuiz = () => {
+            state = { currentQuestion: 0, score: 0, questions: [], totalQuestions: 10, playerName: state.playerName };
+            document.getElementById('current-score').textContent = `Stig: 0`;
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        };
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+    </script>
+</body>
+</html>
