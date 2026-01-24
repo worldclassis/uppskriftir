@@ -221,14 +221,17 @@
                 
                 <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-4"></h2>
                 
+                <!-- Verð í popup -->
                 <div id="modal-price-container" class="mb-8"></div>
 
+                <!-- Innihaldslýsing -->
                 <div class="mb-8">
                     <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300 mb-1.5">Innihaldslýsing</h4>
                     <p id="modal-description" class="text-gray-600 leading-relaxed text-base font-medium"></p>
                 </div>
 
                 <div class="space-y-6">
+                    <!-- Næringargildi Section -->
                     <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100/50 hidden">
                         <div class="flex justify-between items-center mb-3">
                             <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300">Næringargildi</h4>
@@ -309,7 +312,7 @@
 
             { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur og fetaostur.', descriptionEn: 'Pesto pasta, spinach, dates and feta.', macros: { kcal: 991, protein: 32, fat: 49, carbs: 102 } },
             { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur, parmesanostur og World Class+ dressing.', descriptionEn: 'Chicken, pasta and Parmesan.', macros: { kcal: 905, protein: 57, fat: 33, carbs: 97 } },
-            { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar og frönsk dressing.', descriptionEn: 'Veggie patty and avocado.', macros: { kcal: 424, protein: 11, font: 27, carbs: 39 }, isVegan: true },
+            { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar og frönsk dressing.', descriptionEn: 'Veggie patty and avocado.', macros: { kcal: 424, protein: 11, fat: 27, carbs: 39 }, isVegan: true },
             { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur, gúrka og kotasæludressing.', descriptionEn: 'Tuna, egg and cucumber.', macros: { kcal: 452, protein: 48, fat: 16, carbs: 14 } },
 
             { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein. Toppað með: möndlusmjör, bláber, jarðarber og banani.', descriptionEn: 'Almond milk, oats and protein.', macros: { kcal: 720, protein: 42, fat: 13, carbs: 110 } },
@@ -523,7 +526,6 @@
                 const price = item.prices ? item.prices.M : item.price;
                 const kcal = item.macros ? (item.prices ? item.macros.M.kcal : item.macros.kcal) : null;
                 
-                // Aukamerki fyrir flokk ef þema er virkt
                 const categoryTag = state.activeTheme ? `
                     <span class="text-[8px] font-bold text-gray-300 uppercase tracking-widest mb-1.5 block">
                         ${state.isIcelandic ? catInfo.is : catInfo.en}
