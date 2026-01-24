@@ -468,23 +468,22 @@
             const l = getLang();
             let items = [...rawData];
             
-            // 1. Filter
+            // Filter elements based on selection
             if (state.activeTheme) {
                 items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             } else {
                 items = items.filter(i => i.category === state.activeCategory);
             }
             
-            // Helper to get value
             const getVal = (item, key) => {
                 if (!item.macros) return null;
                 const m = item.prices ? item.macros.M : item.macros;
                 return m[key] ?? null;
             };
 
-            // 2. Sort Logic
+            // Enhanced sorting logic
             if (['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
-                // Ascending order (vaxandi) - minnsta fyrst
+                // Ascending order (minnsta fyrst)
                 items.sort((a, b) => {
                     const valA = getVal(a, state.sortBy);
                     const valB = getVal(b, state.sortBy);
@@ -493,10 +492,12 @@
                     return valA - valB;
                 });
             } else {
-                // Default: Sort by THEME_ORDER (Light, Balance, Energy, Strength)
+                // Default: Sort by THEME_ORDER strictly: LIGHT -> BALANCE -> ENERGY -> STRENGTH
                 items.sort((a, b) => {
                     const themeIdxA = THEME_ORDER.indexOf(a.theme);
                     const themeIdxB = THEME_ORDER.indexOf(b.theme);
+                    
+                    // Put "ALL" theme items (Coffee/Kids) at the end if not in specific theme view
                     const effectiveIdxA = themeIdxA === -1 ? 99 : themeIdxA;
                     const effectiveIdxB = themeIdxB === -1 ? 99 : themeIdxB;
 
