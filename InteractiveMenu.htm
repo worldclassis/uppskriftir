@@ -68,16 +68,6 @@
             transition: transform 0.1s ease-out;
         }
 
-        .theme-btn {
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-        }
-        .theme-btn.active {
-            border-color: currentColor;
-            background-color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
         .sort-btn {
             transition: all 0.2s ease;
             white-space: nowrap;
@@ -277,7 +267,7 @@
             labelIngredients: 'Ingredients',
             labelNutrition: 'Nutrition Facts',
             labelSortBy: 'Sort by:',
-            sortKcal: 'Kcal',
+            sortKcal: 'Calories',
             sortProtein: 'Protein',
             sortCarbs: 'Carbs',
             sortFat: 'Fat',
@@ -584,22 +574,7 @@
             }).join('');
         }
 
-        function animateValue(id, start, end, duration, suffix = "") {
-            const obj = document.getElementById(id);
-            if (!obj) return;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * (end - start) + start) + suffix;
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        // --- Samstillt Animation Logic (Uppfært fyrir eitt heildar-ease) ---
+        // --- Samstillt Animation Logic ---
         function animateSynchronized(macros, lang) {
             const p = macros.protein || 0; 
             const c = macros.carbs || 0; 
@@ -635,34 +610,38 @@
                 if (!startTime) startTime = timestamp;
                 const progress = Math.min((timestamp - startTime) / totalTime, 1);
                 
-                // Ein mjúk ease-in-out kúfa fyrir alla hreyfinguna
                 const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-                // 1. Kcal miðja telja
-                valK.textContent = Math.floor(ease * macros.kcal);
+                // Telja upp tölurnar (með Math.round fyrir betra flæði)
+                valK.textContent = Math.round(ease * macros.kcal);
 
-                // 2. Prótein
                 const pEnd = pRatio;
                 const pEase = Math.min(ease, pEnd);
                 cP.style.strokeDashoffset = circumference - (pEase * circumference);
-                valP.textContent = Math.floor((pEase / pEnd || 0) * p) + 'g';
+                valP.textContent = Math.round((pEase / pEnd || 0) * p) + 'g';
 
-                // 3. Kolvetni
                 const cStart = pRatio;
                 const cEnd = pRatio + cRatio;
                 if (ease > cStart) {
                     const cEase = Math.min(ease, cEnd) - cStart;
                     cC.style.strokeDashoffset = circumference - (cEase * circumference);
-                    valC.textContent = Math.floor((cEase / cRatio || 0) * c) + 'g';
+                    valC.textContent = Math.round((cEase / cRatio || 0) * c) + 'g';
                 }
 
-                // 4. Fita
                 const fStart = pRatio + cRatio;
                 const fEnd = 1;
                 if (ease > fStart) {
                     const fEase = Math.min(ease, fEnd) - fStart;
                     cF.style.strokeDashoffset = circumference - (fEase * circumference);
-                    valF.textContent = Math.floor((fEase / fRatio || 0) * f) + 'g';
+                    valF.textContent = Math.round((fEase / fRatio || 0) * f) + 'g';
+                }
+
+                // Tryggja nákvæm loka-gildi
+                if (progress === 1) {
+                    valK.textContent = macros.kcal;
+                    valP.textContent = p + 'g';
+                    valC.textContent = c + 'g';
+                    valF.textContent = f + 'g';
                 }
 
                 if (progress < 1) requestAnimationFrame(step);
