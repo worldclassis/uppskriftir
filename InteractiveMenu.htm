@@ -58,15 +58,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .category-scroll-track {
-            height: 4px;
-            width: 48px;
-            background-color: #e5e7eb;
-            border-radius: 99px;
-            overflow: hidden;
-            position: relative;
-        }
-        #category-scroll-thumb {
+        .category-scroll-thumb {
             height: 100%;
             width: 40%;
             background-color: var(--primary);
@@ -130,6 +122,10 @@
             -webkit-transform: translateZ(0);
             overflow: hidden;
         }
+
+        .macro-circle {
+            transform-origin: center;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-600">
@@ -149,7 +145,6 @@
             </div>
             
             <div class="logo-animated mb-4"></div>
-            
             <p id="tagline" class="text-gray-400 font-semibold text-xs sm:text-sm text-center tracking-[0.1em] uppercase"></p>
         </header>
 
@@ -159,11 +154,6 @@
                 <div class="scroll-mask-container">
                     <nav id="category-tabs" class="flex overflow-x-auto no-scrollbar gap-2 w-full py-4 px-8" onscroll="updateCategoryScroll()">
                     </nav>
-                </div>
-            </div>
-            <div class="flex justify-center sm:hidden pt-1">
-                <div class="category-scroll-track">
-                    <div id="category-scroll-thumb"></div>
                 </div>
             </div>
         </div>
@@ -184,7 +174,7 @@
             </div>
         </div>
 
-        <!-- Röðunarstika undir mynd -->
+        <!-- Röðunarstika -->
         <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-10 px-1">
             <span id="sort-label" class="text-[9px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Raða eftir:</span>
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
@@ -234,18 +224,31 @@
 
                 <div class="space-y-6">
                     <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100/50 hidden">
-                        <div class="flex justify-between items-center mb-3">
+                        <div class="flex justify-between items-center mb-6">
                             <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300">Næringargildi</h4>
                             <div id="modal-sizes" class="flex gap-1"></div>
                         </div>
                         
-                        <div id="modal-macro-bar" class="w-full h-1.5 rounded-full bg-gray-100 overflow-hidden flex mb-5 hidden">
-                            <div id="bar-protein" class="h-full bg-red-400 transition-all duration-700 w-0"></div>
-                            <div id="bar-carbs" class="h-full bg-orange-300 transition-all duration-700 w-0"></div>
-                            <div id="bar-fat" class="h-full bg-sky-300 transition-all duration-700 w-0"></div>
-                        </div>
+                        <div class="flex items-center justify-between gap-6 mb-2">
+                            <div class="relative flex-shrink-0">
+                                <svg width="130" height="130" viewBox="0 0 150 150" class="transform -rotate-90">
+                                    <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
+                                    <circle id="circle-protein" cx="75" cy="75" r="65" stroke="#f87171" stroke-width="14" fill="transparent" 
+                                        stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
+                                    <circle id="circle-carbs" cx="75" cy="75" r="65" stroke="#fdba74" stroke-width="14" fill="transparent" 
+                                        stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
+                                    <circle id="circle-fat" cx="75" cy="75" r="65" stroke="#7dd3fc" stroke-width="14" fill="transparent" 
+                                        stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span id="val-kcal-center" class="text-2xl font-black text-gray-900 leading-none">0</span>
+                                    <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1">kcal</span>
+                                </div>
+                            </div>
 
-                        <div id="modal-macros" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+                            <div id="modal-macros" class="flex-grow flex flex-col gap-3">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -274,7 +277,7 @@
             labelIngredients: 'Ingredients',
             labelNutrition: 'Nutrition Facts',
             labelSortBy: 'Sort by:',
-            sortKcal: 'Calories',
+            sortKcal: 'Kcal',
             sortProtein: 'Protein',
             sortCarbs: 'Carbs',
             sortFat: 'Fat',
@@ -285,7 +288,6 @@
             S: 'Small', M: 'Medium', L: 'Large'
         };
 
-        // Föst röðun fyrir þemu
         const THEME_ORDER = ['LIGHT', 'BALANCE', 'ENERGY', 'STRENGTH'];
 
         const THEMES = {
@@ -422,7 +424,7 @@
             const thumb = document.getElementById('category-scroll-thumb');
             if(!thumb || !nav) return;
             const scrollPercent = nav.scrollLeft / (nav.scrollWidth - nav.clientWidth);
-            thumb.style.transform = `translateX(${scrollPercent * 150}%)`;
+            if (thumb) thumb.style.transform = `translateX(${scrollPercent * 150}%)`;
         }
 
         function render() {
@@ -518,7 +520,6 @@
                 items = items.filter(i => i.category === state.activeCategory);
             }
 
-            // Raða
             if (['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
                 items.sort((a, b) => {
                     const getVal = (item, key) => {
@@ -526,11 +527,9 @@
                         const m = item.prices ? item.macros.M : item.macros;
                         return m[key] || 0;
                     };
-                    // Alltaf vaxandi röð (minnst -> stærst)
                     return getVal(a, state.sortBy) - getVal(b, state.sortBy);
                 });
             } else {
-                // Föst röðun eftir þemum: Light -> Balance -> Energy -> Strength
                 items.sort((a, b) => {
                     const orderA = THEME_ORDER.indexOf(a.theme);
                     const orderB = THEME_ORDER.indexOf(b.theme);
@@ -550,7 +549,6 @@
                 const price = item.prices ? item.prices.M : item.price;
                 const lang = getLang();
 
-                // Birta það gildi sem verið er að sía eftir
                 const activeSort = ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy) ? state.sortBy : 'kcal';
                 const macros = item.macros ? (item.prices ? item.macros.M : item.macros) : null;
                 
@@ -601,6 +599,78 @@
             window.requestAnimationFrame(step);
         }
 
+        // --- Samstillt Animation Logic (Uppfært fyrir eitt heildar-ease) ---
+        function animateSynchronized(macros, lang) {
+            const p = macros.protein || 0; 
+            const c = macros.carbs || 0; 
+            const f = macros.fat || 0; 
+            const total = p + c + f;
+            const circumference = 408.4; 
+            const totalTime = 2000; 
+
+            const cP = document.getElementById('circle-protein');
+            const cC = document.getElementById('circle-carbs');
+            const cF = document.getElementById('circle-fat');
+            const valP = document.getElementById('val-protein');
+            const valC = document.getElementById('val-carbs');
+            const valF = document.getElementById('val-fat');
+            const valK = document.getElementById('val-kcal-center');
+
+            [cP, cC, cF].forEach(circle => { circle.style.strokeDashoffset = circumference; circle.style.transition = 'none'; });
+            [valP, valC, valF, valK].forEach(el => el.textContent = '0' + (el.id === 'val-kcal-center' ? '' : 'g'));
+
+            const pRatio = total > 0 ? p / total : 0;
+            const cRatio = total > 0 ? c / total : 0;
+            const fRatio = total > 0 ? f / total : 0;
+
+            cP.style.transform = 'rotate(0deg)';
+            cC.style.transform = `rotate(${pRatio * 360}deg)`;
+            cF.style.transform = `rotate(${(pRatio + cRatio) * 360}deg)`;
+
+            void cP.offsetWidth; 
+
+            let startTime = null;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / totalTime, 1);
+                
+                // Ein mjúk ease-in-out kúfa fyrir alla hreyfinguna
+                const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+                // 1. Kcal miðja telja
+                valK.textContent = Math.floor(ease * macros.kcal);
+
+                // 2. Prótein
+                const pEnd = pRatio;
+                const pEase = Math.min(ease, pEnd);
+                cP.style.strokeDashoffset = circumference - (pEase * circumference);
+                valP.textContent = Math.floor((pEase / pEnd || 0) * p) + 'g';
+
+                // 3. Kolvetni
+                const cStart = pRatio;
+                const cEnd = pRatio + cRatio;
+                if (ease > cStart) {
+                    const cEase = Math.min(ease, cEnd) - cStart;
+                    cC.style.strokeDashoffset = circumference - (cEase * circumference);
+                    valC.textContent = Math.floor((cEase / cRatio || 0) * c) + 'g';
+                }
+
+                // 4. Fita
+                const fStart = pRatio + cRatio;
+                const fEnd = 1;
+                if (ease > fStart) {
+                    const fEase = Math.min(ease, fEnd) - fStart;
+                    cF.style.strokeDashoffset = circumference - (fEase * circumference);
+                    valF.textContent = Math.floor((fEase / fRatio || 0) * f) + 'g';
+                }
+
+                if (progress < 1) requestAnimationFrame(step);
+            }
+
+            if (total > 0 || macros.kcal > 0) requestAnimationFrame(step);
+        }
+
         function openModal(idx) {
             const item = rawData[idx];
             state.modalItem = item;
@@ -621,10 +691,7 @@
             updateModalUI();
             
             modal.classList.replace('hidden', 'flex');
-            setTimeout(() => { 
-                content.classList.replace('scale-95', 'scale-100'); 
-                content.classList.replace('opacity-0', 'opacity-100'); 
-            }, 10);
+            setTimeout(() => { content.classList.replace('scale-95', 'scale-100'); content.classList.replace('opacity-0', 'opacity-100'); }, 10);
         }
 
         function updateModalUI() {
@@ -640,58 +707,30 @@
             }
             
             const mContainer = document.getElementById('modal-macros');
-            const macroBar = document.getElementById('modal-macro-bar');
             const macros = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
             
             if (macros && (macros.kcal || macros.protein || macros.fat || macros.carbs)) {
                 nutritionSection.classList.remove('hidden');
-                const styleMap = { kcal: { bg: 'bg-gray-50', label: 'text-gray-400' }, protein: { bg: 'bg-red-500/5', label: 'text-red-500' }, carbs: { bg: 'bg-orange-500/5', label: 'text-orange-500' }, fat: { bg: 'bg-sky-500/5', label: 'text-sky-600' } };
                 
-                mContainer.innerHTML = [
-                    { k: 'kcal', l: lang.kcal, v: macros.kcal || 0, u: '' }, 
-                    { k: 'protein', l: lang.protein, v: macros.protein || 0, u: 'g' }, 
-                    { k: 'carbs', l: lang.carbs, v: macros.carbs || 0, u: 'g' }, 
-                    { k: 'fat', l: lang.fat, v: macros.fat || 0, u: 'g' }
-                ].map(m => { 
-                    const style = styleMap[m.k]; 
-                    return `<div class="${style.bg} p-3 rounded-xl flex flex-col items-center transition-all border border-gray-100/10">
-                        <span class="text-[7px] font-black uppercase tracking-widest mb-1 ${style.label}">${m.l}</span>
-                        <span id="val-${m.k}" class="text-base font-black text-gray-800">0${m.u}</span>
-                    </div>`; 
+                const macroStyles = { 
+                    protein: { bg: 'bg-red-500/5', label: lang.protein, color: 'text-red-500' }, 
+                    carbs: { bg: 'bg-orange-500/5', label: lang.carbs, color: 'text-orange-500' }, 
+                    fat: { bg: 'bg-sky-500/5', label: lang.fat, color: 'text-sky-600' } 
+                };
+
+                mContainer.innerHTML = Object.entries(macroStyles).map(([key, style]) => {
+                    return `
+                    <div class="${style.bg} px-4 py-2.5 rounded-xl flex items-center justify-between border border-gray-100/10">
+                        <span class="text-[8px] font-black uppercase tracking-widest ${style.color}">${style.label}</span>
+                        <span id="val-${key}" class="text-sm font-black text-gray-800">0g</span>
+                    </div>`;
                 }).join('');
                 
-                setTimeout(() => {
-                    animateValue("val-kcal", 0, macros.kcal || 0, 800, "");
-                    animateValue("val-protein", 0, macros.protein || 0, 800, "g");
-                    animateValue("val-carbs", 0, macros.carbs || 0, 800, "g");
-                    animateValue("val-fat", 0, macros.fat || 0, 800, "g");
-                }, 100);
+                animateSynchronized(macros, lang);
 
-                const p = macros.protein || 0; 
-                const c = macros.carbs || 0; 
-                const f = macros.fat || 0; 
-                const total = p + c + f;
-
-                if (total > 0) { 
-                    macroBar.classList.remove('hidden'); 
-                    const bP = document.getElementById('bar-protein');
-                    const bC = document.getElementById('bar-carbs');
-                    const bF = document.getElementById('bar-fat');
-                    
-                    bP.style.width = "0%";
-                    bC.style.width = "0%";
-                    bF.style.width = "0%";
-
-                    setTimeout(() => { bP.style.width = `${(p/total) * 100}%`; }, 200);
-                    setTimeout(() => { bC.style.width = `${(c/total) * 100}%`; }, 500);
-                    setTimeout(() => { bF.style.width = `${(f/total) * 100}%`; }, 800);
-                } else { 
-                    macroBar.classList.add('hidden'); 
-                }
             } else { 
                 nutritionSection.classList.add('hidden');
                 mContainer.innerHTML = ''; 
-                macroBar.classList.add('hidden'); 
             }
         }
 
