@@ -197,8 +197,9 @@
             <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Heilsutvenna" class="w-full h-auto object-cover">
         </section>
         
+        <!-- Fótur með copyright texta -->
         <footer class="mt-20 text-center pb-12">
-            <p class="text-gray-300 text-[10px] font-bold tracking-[0.2em] uppercase">Laugar Cafe &copy; 2024</p>
+            <p class="text-gray-300 text-[10px] font-bold tracking-[0.2em] uppercase">World Class 2026</p>
         </footer>
     </div>
 
@@ -221,7 +222,7 @@
             </div>
             
             <!-- Innihald sem á að taka screenshot af -->
-            <div class="p-6 sm:p-10 bg-white" id="share-capture-area">
+            <div class="p-6 sm:p-10 bg-white rounded-[2rem]" id="share-capture-area">
                 <div class="flex items-center gap-2 mb-4">
                     <span id="modal-tag" class="text-[9px] font-extrabold px-3 py-1 inline-flex items-center justify-center rounded-md text-white uppercase tracking-widest leading-none"></span>
                     <span id="modal-vegan" class="hidden text-[9px] font-extrabold px-3 py-1 inline-flex items-center justify-center bg-green-500/10 text-green-600 rounded-md uppercase tracking-widest border border-green-500/20 leading-none">Vegan</span>
@@ -267,7 +268,7 @@
                     </div>
                 </div>
 
-                <!-- Branding neðst á Story myndina (falið á skjánum nema í screenshot mode) -->
+                <!-- Branding neðst á Story myndina -->
                 <div id="screenshot-footer" class="hidden mt-10 pt-6 border-t border-gray-100 items-center justify-between">
                     <div class="flex flex-col">
                         <span class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">World Class+</span>
@@ -340,7 +341,7 @@
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', descriptionEn: 'Double espresso, almond milk and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:154, protein:26, fat:4, carbs:1}, M:{kcal:172, protein:29, fat:4, carbs:1}, L:{kcal:189, protein:32, fat:5, carbs:2} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', descriptionEn: 'Strawberries, banana, apple and Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232, protein:1, fat:0, carbs:54}, M:{kcal:258, protein:1, fat:1, carbs:60}, L:{kcal:283, protein:1, fat:1, carbs:66} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', descriptionEn: 'Lemon, ginger, apple and strawberry protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:227, protein:24, fat:1, carbs:28}, M:{kcal:253, protein:27, fat:2, carbs:31}, L:{kcal:278, protein:29, fat:2, carbs:34} } },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', descriptionEn: 'Avocado, apple, pineapple and ginger.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:216, protein:1, fat: 8, carbs: 35}, M:{kcal:241, protein:1, fat: 10, carbs: 43}, L:{kcal:266, protein:1, fat: 12, carbs: 51} }, isVegan: true },
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', descriptionEn: 'Avocado, apple, pineapple and ginger.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:216, protein:1, fat: 8, carbs: 35}, M:{kcal:241, protein:1, fat: 10, carbs: 43}, L:{kcal:216, protein:1, fat: 12, carbs: 51} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', descriptionEn: 'Beetroot juice, avocado, celery and lemon.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:255, protein:1, fat:1, carbs:57}, M:{kcal:284, protein:1, fat:1, carbs:64}, L:{kcal:312, protein:1, fat:1, carbs:70} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', descriptionEn: 'Spinach, mango, apple and collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:12, fat:1, carbs:27}, M:{kcal:200, protein:13, fat:1, carbs:30}, L:{kcal:180, protein:12, fat:1, carbs:27}, fat: 1 } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', descriptionEn: 'Apple, mango, blueberries and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283, protein:23, fat:1, carbs:43}, M:{kcal:300, protein:25, fat:1, carbs:48}, L:{kcal:347, protein:28, fat: 2, carbs: 53} } },
@@ -372,8 +373,8 @@
             { category: 'SKOT', theme: 'BALANCE', nameIs: 'Túrmerik', nameEn: 'Turmeric', price: '350 kr', descriptionIs: 'Hreint túrmerikskot.', descriptionEn: 'Pure turmeric shot.', isVegan: true },
             { category: 'SKOT', theme: 'BALANCE', nameIs: 'Rauðrófa', nameEn: 'Beetroot', price: '350 kr', descriptionIs: 'Hreint rauðrófuskot.', descriptionEn: 'Pure beetroot shot.', isVegan: true },
 
-            { category: 'BÖRN', theme: 'ALL', nameIs: 'Jarðarberjaboost', nameEn: 'Strawberry Boost', price: '890 kr', descriptionIs: 'Jarðarber, banani og epli.', descriptionEn: 'Strawberry, banana and apple.', isVegan: true },
-            { category: 'BÖRN', theme: 'ALL', nameIs: 'Bláberjaboost', nameEn: 'Blueberry Boost', price: '890 kr', descriptionIs: 'Bláber, banani og epli.', descriptionEn: 'Blueberry, banana and apple.', isVegan: true },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'Jarðarberjaboost', nameEn: 'Strawberry Boost', price: '890 kr', descriptionIs: 'Jarðarber, banani og epli.', descriptionEn: 'Strawberry, banner and apple.', isVegan: true },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'Bláberjaboost', nameEn: 'Blueberry Boost', price: '890 kr', descriptionIs: 'Bláber, banani og epli.', descriptionEn: 'Blueberry, banner and apple.', isVegan: true },
             { category: 'BÖRN', theme: 'ALL', nameIs: 'Fruit minis', nameEn: 'Fruit Minis', price: '190 kr', descriptionIs: 'Smábitar með hindberja og bláberjabragði.', descriptionEn: 'Small fruit bites.', isVegan: true },
             { category: 'BÖRN', theme: 'ALL', nameIs: 'BEAR ávaxtarúlla', nameEn: 'BEAR Fruit Roll', price: '190 kr', descriptionIs: 'Jarðarberja ávaxtarúlla.', descriptionEn: 'Strawberry fruit roll.', isVegan: true },
 
@@ -689,24 +690,30 @@
             shareBtn.innerHTML = `<span class="text-[8px] font-black">${getLang().sharing}</span>`;
             
             try {
+                // Stillingar fyrir rounded transparent horn í html2canvas
                 const canvas = await html2canvas(captureArea, {
-                    backgroundColor: '#ffffff',
+                    backgroundColor: null, // Gerir hornin transparent
                     scale: 4, 
                     useCORS: true,
-                    borderRadius: 32,
+                    borderRadius: 32, // Viðhalda rúnnun
                     logging: false,
                     onclone: (clonedDoc) => {
                         const tag = clonedDoc.getElementById('modal-tag');
                         const vegan = clonedDoc.getElementById('modal-vegan');
+                        const footer = clonedDoc.getElementById('screenshot-footer');
                         
+                        // Sýna branding tímabundið í klóninu
+                        if(footer) footer.style.display = 'flex';
+
                         const applyCleanStyle = (el) => {
                             if (!el) return;
                             el.style.display = 'inline-flex';
                             el.style.alignItems = 'center';
                             el.style.justifyContent = 'center';
                             el.style.height = 'auto';
-                            el.style.padding = '6px 14px'; // Aukið padding í screenshot mode
-                            el.style.lineHeight = '1';
+                            el.style.padding = '4px 12px'; 
+                            el.style.lineHeight = '1.4'; // Meira loft í kringum texta
+                            el.style.verticalAlign = 'middle';
                         };
 
                         applyCleanStyle(tag);
