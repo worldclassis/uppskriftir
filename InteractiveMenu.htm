@@ -128,7 +128,7 @@
 
     <div class="max-w-4xl mx-auto px-4 pt-4 pb-8 sm:pt-8 sm:pb-12">
         
-        <!-- Haus: Allt miðjað -->
+        <!-- Haus -->
         <header class="flex flex-col items-center mb-10">
             <div class="w-full flex justify-end items-center mb-4 sm:mb-8">
                 <div class="flex items-center gap-3">
@@ -145,7 +145,7 @@
             <p id="tagline" class="text-gray-400 font-semibold text-xs sm:text-sm text-center tracking-[0.1em] uppercase"></p>
         </header>
 
-        <!-- Flokkar (Stiky bar) -->
+        <!-- Flokkar -->
         <div class="sticky top-4 z-40 mb-6 space-y-3">
             <div class="glass rounded-2xl shadow-sm overflow-hidden border border-gray-100/50">
                 <div class="scroll-mask-container">
@@ -164,7 +164,7 @@
         <div id="theme-filters" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
         </div>
 
-        <!-- Hero mynd - Færð aftur hingað niður fyrir síurnar. Hækkuð í h-36 á mobile. -->
+        <!-- Hero mynd -->
         <div class="mb-12">
             <div id="category-hero" class="rounded-2xl overflow-hidden shadow-xl relative h-36 sm:h-64 hidden animate-slide-up">
                 <img id="hero-img" src="" class="w-full h-full object-cover" alt="Borðamynd">
@@ -190,7 +190,7 @@
         </footer>
     </div>
 
-    <!-- Upplýsingagluggi (Modal) -->
+    <!-- Upplýsingagluggi -->
     <div id="item-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-gray-950/25 backdrop-blur-sm transition-opacity duration-300" onclick="closeModal()">
         <div class="bg-white rounded-[2rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-content" onclick="event.stopPropagation()">
             <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-gray-50 p-2 rounded-full hover:bg-white transition-all text-gray-400 hover:text-red-500 border border-gray-100">
@@ -214,6 +214,7 @@
                         <p id="modal-description" class="text-gray-600 leading-relaxed text-base font-medium"></p>
                     </div>
 
+                    <!-- Næringargildi Section -->
                     <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100/50 hidden">
                         <div class="flex justify-between items-center mb-3">
                             <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300">Næringargildi</h4>
@@ -221,9 +222,9 @@
                         </div>
                         
                         <div id="modal-macro-bar" class="w-full h-1.5 rounded-full bg-gray-100 overflow-hidden flex mb-5 hidden">
-                            <div id="bar-protein" class="h-full bg-red-400 transition-all duration-500"></div>
-                            <div id="bar-carbs" class="h-full bg-orange-300 transition-all duration-500"></div>
-                            <div id="bar-fat" class="h-full bg-sky-300 transition-all duration-500"></div>
+                            <div id="bar-protein" class="h-full bg-red-400 transition-all duration-700 w-0"></div>
+                            <div id="bar-carbs" class="h-full bg-orange-300 transition-all duration-700 w-0"></div>
+                            <div id="bar-fat" class="h-full bg-sky-300 transition-all duration-700 w-0"></div>
                         </div>
 
                         <div id="modal-macros" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
@@ -496,6 +497,22 @@
             }).join('');
         }
 
+        // Animation fall fyrir tölur
+        function animateValue(id, start, end, duration, suffix = "") {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start) + suffix;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
         function openModal(idx) {
             const item = rawData[idx];
             state.modalItem = item;
@@ -512,9 +529,14 @@
             tag.textContent = state.isIcelandic ? theme.is : theme.en;
             tag.style.backgroundColor = theme.color;
             document.getElementById('modal-vegan').style.display = item.isVegan ? 'block' : 'none';
+            
             updateModalUI();
+            
             modal.classList.replace('hidden', 'flex');
-            setTimeout(() => { content.classList.replace('scale-95', 'scale-100'); content.classList.replace('opacity-0', 'opacity-100'); }, 10);
+            setTimeout(() => { 
+                content.classList.replace('scale-95', 'scale-100'); 
+                content.classList.replace('opacity-0', 'opacity-100'); 
+            }, 10);
         }
 
         function updateModalUI() {
@@ -534,9 +556,52 @@
             if (macros && (macros.kcal || macros.protein || macros.fat || macros.carbs)) {
                 nutritionSection.classList.remove('hidden');
                 const styleMap = { kcal: { bg: 'bg-gray-50', label: 'text-gray-400' }, protein: { bg: 'bg-red-500/5', label: 'text-red-500' }, carbs: { bg: 'bg-orange-500/5', label: 'text-orange-500' }, fat: { bg: 'bg-sky-500/5', label: 'text-sky-600' } };
-                mContainer.innerHTML = [{ k: 'kcal', l: lang.kcal, v: macros.kcal || 0, u: '' }, { k: 'protein', l: lang.protein, v: macros.protein || 0, u: 'g' }, { k: 'carbs', l: lang.carbs, v: macros.carbs || 0, u: 'g' }, { k: 'fat', l: lang.fat, v: macros.fat || 0, u: 'g' }].map(m => { const style = styleMap[m.k]; return `<div class="${style.bg} p-3 rounded-xl flex flex-col items-center transition-all border border-gray-100/10"><span class="text-[7px] font-black uppercase tracking-widest mb-1 ${style.label}">${m.l}</span><span class="text-base font-black text-gray-800">${m.v}${m.u}</span></div>`; }).join('');
-                const p = macros.protein || 0; const c = macros.carbs || 0; const f = macros.fat || 0; const total = p + c + f;
-                if (total > 0) { macroBar.classList.remove('hidden'); document.getElementById('bar-protein').style.width = `${(p/total) * 100}%`; document.getElementById('bar-carbs').style.width = `${(c/total) * 100}%`; document.getElementById('bar-fat').style.width = `${(f/total) * 100}%`; } else { macroBar.classList.add('hidden'); }
+                
+                // Setja upp HTML fyrir macros með ID fyrir animation
+                mContainer.innerHTML = [
+                    { k: 'kcal', l: lang.kcal, v: macros.kcal || 0, u: '' }, 
+                    { k: 'protein', l: lang.protein, v: macros.protein || 0, u: 'g' }, 
+                    { k: 'carbs', l: lang.carbs, v: macros.carbs || 0, u: 'g' }, 
+                    { k: 'fat', l: lang.fat, v: macros.fat || 0, u: 'g' }
+                ].map(m => { 
+                    const style = styleMap[m.k]; 
+                    return `<div class="${style.bg} p-3 rounded-xl flex flex-col items-center transition-all border border-gray-100/10">
+                        <span class="text-[7px] font-black uppercase tracking-widest mb-1 ${style.label}">${m.l}</span>
+                        <span id="val-${m.k}" class="text-base font-black text-gray-800">0${m.u}</span>
+                    </div>`; 
+                }).join('');
+                
+                // Ræsa animation fyrir tölur
+                setTimeout(() => {
+                    animateValue("val-kcal", 0, macros.kcal || 0, 800, "");
+                    animateValue("val-protein", 0, macros.protein || 0, 800, "g");
+                    animateValue("val-carbs", 0, macros.carbs || 0, 800, "g");
+                    animateValue("val-fat", 0, macros.fat || 0, 800, "g");
+                }, 100);
+
+                const p = macros.protein || 0; 
+                const c = macros.carbs || 0; 
+                const f = macros.fat || 0; 
+                const total = p + c + f;
+
+                if (total > 0) { 
+                    macroBar.classList.remove('hidden'); 
+                    const bP = document.getElementById('bar-protein');
+                    const bC = document.getElementById('bar-carbs');
+                    const bF = document.getElementById('bar-fat');
+                    
+                    // Reset widths
+                    bP.style.width = "0%";
+                    bC.style.width = "0%";
+                    bF.style.width = "0%";
+
+                    // Sequential growth animation
+                    setTimeout(() => { bP.style.width = `${(p/total) * 100}%`; }, 200);
+                    setTimeout(() => { bC.style.width = `${(c/total) * 100}%`; }, 500);
+                    setTimeout(() => { bF.style.width = `${(f/total) * 100}%`; }, 800);
+                } else { 
+                    macroBar.classList.add('hidden'); 
+                }
             } else { 
                 nutritionSection.classList.add('hidden');
                 mContainer.innerHTML = ''; 
