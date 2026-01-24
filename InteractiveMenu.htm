@@ -58,7 +58,6 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Skrunvísir fyrir farsíma */
         .category-scroll-track {
             height: 4px;
             width: 48px;
@@ -87,7 +86,15 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* Animated Logo */
+        .sort-btn {
+            transition: all 0.2s ease;
+        }
+        .sort-btn.active {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
         .logo-animated {
             width: 280px;
             height: 60px;
@@ -165,7 +172,7 @@
         </div>
 
         <!-- Hero mynd -->
-        <div class="mb-12">
+        <div class="mb-6">
             <div id="category-hero" class="rounded-2xl overflow-hidden shadow-xl relative h-36 sm:h-64 hidden animate-slide-up">
                 <img id="hero-img" src="" class="w-full h-full object-cover" alt="Borðamynd">
                 <div id="hero-color-overlay" class="absolute inset-0 transition-all duration-300 pointer-events-none mix-blend-multiply opacity-0 z-10"></div>
@@ -173,6 +180,15 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 z-20">
                     <h2 id="hero-title" class="text-white text-xl sm:text-4xl font-black uppercase tracking-tight"></h2>
                 </div>
+            </div>
+        </div>
+
+        <!-- Röðunarstika -->
+        <div class="flex items-center gap-3 mb-10 px-1 overflow-x-auto no-scrollbar">
+            <span id="sort-label" class="text-[9px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Raða eftir:</span>
+            <div class="flex gap-2">
+                <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Kaloríur</button>
+                <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Flokkar</button>
             </div>
         </div>
 
@@ -203,18 +219,16 @@
                     <span id="modal-vegan" class="hidden text-[8px] font-black px-2 py-0.5 bg-green-500/10 text-green-600 rounded-md uppercase tracking-widest border border-green-500/20">Vegan</span>
                 </div>
                 
-                <!-- Heiti og Innihald -->
                 <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-4"></h2>
                 
+                <div id="modal-price-container" class="mb-8"></div>
+
                 <div class="mb-8">
                     <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300 mb-1.5">Innihaldslýsing</h4>
                     <p id="modal-description" class="text-gray-600 leading-relaxed text-base font-medium"></p>
                 </div>
 
-                <div id="modal-price-container" class="mb-8"></div>
-
                 <div class="space-y-6">
-                    <!-- Næringargildi Section -->
                     <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100/50 hidden">
                         <div class="flex justify-between items-center mb-3">
                             <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300">Næringargildi</h4>
@@ -239,6 +253,9 @@
             tagline: 'þín orka, þinn árangur.',
             labelIngredients: 'Innihaldslýsing',
             labelNutrition: 'Næringargildi',
+            labelSortBy: 'Raða eftir:',
+            sortKcal: 'Kaloríur',
+            sortCategory: 'Flokkar',
             noResults: 'Engar niðurstöður fundust.',
             kcal: 'Kcal', protein: 'Prótein', fat: 'Fita', carbs: 'Kolvetni',
             noMacros: 'Næringargildi ekki tilgreind.',
@@ -249,6 +266,9 @@
             tagline: 'Your energy, your success.',
             labelIngredients: 'Ingredients',
             labelNutrition: 'Nutrition Facts',
+            labelSortBy: 'Sort by:',
+            sortKcal: 'Calories',
+            sortCategory: 'Categories',
             noResults: 'No items found.',
             kcal: 'Kcal', protein: 'Protein', fat: 'Fat', carbs: 'Carbs',
             noMacros: 'Nutrition facts not available.',
@@ -289,7 +309,7 @@
 
             { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur og fetaostur.', descriptionEn: 'Pesto pasta, spinach, dates and feta.', macros: { kcal: 991, protein: 32, fat: 49, carbs: 102 } },
             { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur, parmesanostur og World Class+ dressing.', descriptionEn: 'Chicken, pasta and Parmesan.', macros: { kcal: 905, protein: 57, fat: 33, carbs: 97 } },
-            { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar og frönsk dressing.', descriptionEn: 'Veggie patty and avocado.', macros: { kcal: 424, protein: 11, fat: 27, carbs: 39 }, isVegan: true },
+            { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar og frönsk dressing.', descriptionEn: 'Veggie patty and avocado.', macros: { kcal: 424, protein: 11, font: 27, carbs: 39 }, isVegan: true },
             { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur, gúrka og kotasæludressing.', descriptionEn: 'Tuna, egg and cucumber.', macros: { kcal: 452, protein: 48, fat: 16, carbs: 14 } },
 
             { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein. Toppað með: möndlusmjör, bláber, jarðarber og banani.', descriptionEn: 'Almond milk, oats and protein.', macros: { kcal: 720, protein: 42, fat: 13, carbs: 110 } },
@@ -332,7 +352,8 @@
             activeCategory: 'DRYKKIR', 
             activeTheme: null, 
             selectedSize: 'M', 
-            modalItem: null
+            modalItem: null,
+            sortBy: 'category' 
         };
         
         const getLang = () => state.isIcelandic ? IS_LANG : EN_LANG;
@@ -378,6 +399,11 @@
             render();
         }
 
+        function setSort(type) {
+            state.sortBy = type;
+            render();
+        }
+
         function updateCategoryScroll() {
             const nav = document.getElementById('category-tabs');
             const thumb = document.getElementById('category-scroll-thumb');
@@ -389,6 +415,14 @@
         function render() {
             const lang = getLang();
             document.getElementById('tagline').textContent = lang.tagline;
+            document.getElementById('sort-label').textContent = lang.labelSortBy;
+            document.getElementById('sort-kcal').textContent = lang.sortKcal;
+            document.getElementById('sort-category').textContent = lang.sortCategory;
+            
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`sort-${state.sortBy}`);
+            if(activeBtn) activeBtn.classList.add('active');
+
             renderNav();
             renderThemeButtons();
             renderHero();
@@ -460,26 +494,54 @@
 
         function renderGrid() {
             const container = document.getElementById('menu-grid');
-            let items = rawData;
+            let items = [...rawData];
+
             if (state.activeTheme) {
-                items = rawData.filter(i => i.theme === state.activeTheme);
+                items = items.filter(i => i.theme === state.activeTheme);
             } else {
-                items = rawData.filter(i => i.category === state.activeCategory);
+                items = items.filter(i => i.category === state.activeCategory);
             }
-            if (items.length === 0) { container.innerHTML = `<div class="col-span-full py-20 text-center text-gray-300 font-bold uppercase tracking-widest">${getLang().noResults}</div>`; return; }
+
+            if (state.sortBy === 'kcal') {
+                items.sort((a, b) => {
+                    const kcalA = a.macros ? (a.prices ? a.macros.M.kcal : a.macros.kcal) : 0;
+                    const kcalB = b.macros ? (b.prices ? b.macros.M.kcal : b.macros.kcal) : 0;
+                    return kcalA - kcalB;
+                });
+            } else {
+                items.sort((a, b) => a.category.localeCompare(b.category));
+            }
+
+            if (items.length === 0) { 
+                container.innerHTML = `<div class="col-span-full py-20 text-center text-gray-300 font-bold uppercase tracking-widest">${getLang().noResults}</div>`; 
+                return; 
+            }
             
             container.innerHTML = items.map((item) => {
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
+                const catInfo = CATEGORIES[item.category] || { is: item.category, en: item.category };
                 const price = item.prices ? item.prices.M : item.price;
+                const kcal = item.macros ? (item.prices ? item.macros.M.kcal : item.macros.kcal) : null;
                 
+                // Aukamerki fyrir flokk ef þema er virkt
+                const categoryTag = state.activeTheme ? `
+                    <span class="text-[8px] font-bold text-gray-300 uppercase tracking-widest mb-1.5 block">
+                        ${state.isIcelandic ? catInfo.is : catInfo.en}
+                    </span>
+                ` : '';
+
                 return `
                     <div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up" onclick="openModal(${rawData.indexOf(item)})">
                         <div class="flex justify-between items-start mb-4">
-                            <div class="flex gap-2">
-                                <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
-                                ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
+                            <div class="flex flex-col">
+                                ${categoryTag}
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
+                                    ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
+                                    ${kcal !== null ? `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-100 text-gray-400 rounded-md uppercase tracking-widest">${kcal} kcal</span>` : ''}
+                                </div>
                             </div>
-                            <span class="text-base font-black text-red-500 tracking-tight">${price}</span>
+                            <span class="text-base font-black text-red-500 tracking-tight block leading-none">${price}</span>
                         </div>
                         <h3 class="text-lg font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
                         <p class="text-gray-400 text-xs leading-relaxed line-clamp-2 font-medium">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
@@ -487,7 +549,6 @@
             }).join('');
         }
 
-        // Animation fall fyrir tölur
         function animateValue(id, start, end, duration, suffix = "") {
             const obj = document.getElementById(id);
             if (!obj) return;
@@ -537,7 +598,9 @@
             
             if (item.prices) {
                 pContainer.innerHTML = `<div class="grid grid-cols-3 gap-2">${Object.entries(item.prices).map(([size, price]) => `<button onclick="changeSize('${size}')" class="flex flex-col items-center py-2.5 px-3 rounded-xl border transition-all ${state.selectedSize === size ? 'border-red-400 bg-red-50/50 text-red-500 font-bold' : 'border-gray-100 text-gray-400 font-medium'}"><span class="text-[8px] font-black uppercase tracking-widest mb-0.5">${lang[size]}</span><span class="text-xs">${price}</span></button>`).join('')}</div>`;
-            } else { pContainer.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tight">${item.price}</span>`; }
+            } else { 
+                pContainer.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tight">${item.price}</span>`; 
+            }
             
             const mContainer = document.getElementById('modal-macros');
             const macroBar = document.getElementById('modal-macro-bar');
@@ -547,7 +610,6 @@
                 nutritionSection.classList.remove('hidden');
                 const styleMap = { kcal: { bg: 'bg-gray-50', label: 'text-gray-400' }, protein: { bg: 'bg-red-500/5', label: 'text-red-500' }, carbs: { bg: 'bg-orange-500/5', label: 'text-orange-500' }, fat: { bg: 'bg-sky-500/5', label: 'text-sky-600' } };
                 
-                // Setja upp HTML fyrir macros með ID fyrir animation
                 mContainer.innerHTML = [
                     { k: 'kcal', l: lang.kcal, v: macros.kcal || 0, u: '' }, 
                     { k: 'protein', l: lang.protein, v: macros.protein || 0, u: 'g' }, 
@@ -561,7 +623,6 @@
                     </div>`; 
                 }).join('');
                 
-                // Ræsa animation fyrir tölur
                 setTimeout(() => {
                     animateValue("val-kcal", 0, macros.kcal || 0, 800, "");
                     animateValue("val-protein", 0, macros.protein || 0, 800, "g");
@@ -580,12 +641,10 @@
                     const bC = document.getElementById('bar-carbs');
                     const bF = document.getElementById('bar-fat');
                     
-                    // Reset widths
                     bP.style.width = "0%";
                     bC.style.width = "0%";
                     bF.style.width = "0%";
 
-                    // Sequential growth animation
                     setTimeout(() => { bP.style.width = `${(p/total) * 100}%`; }, 200);
                     setTimeout(() => { bC.style.width = `${(c/total) * 100}%`; }, 500);
                     setTimeout(() => { bF.style.width = `${(f/total) * 100}%`; }, 800);
