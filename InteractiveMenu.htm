@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laugar Cafe | Interactive Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas til að breyta HTML í mynd -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -115,6 +117,16 @@
 
         .macro-circle {
             transform-origin: center;
+            transition-property: stroke-dashoffset;
+            transition-timing-function: ease-in-out; 
+        }
+
+        /* Stílar fyrir screenshot mode */
+        .is-sharing #modal-price-container {
+            display: none !important;
+        }
+        .is-sharing #screenshot-footer {
+            display: flex !important;
         }
     </style>
 </head>
@@ -192,19 +204,32 @@
 
     <!-- Upplýsingagluggi -->
     <div id="item-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-gray-950/25 backdrop-blur-sm transition-opacity duration-300" onclick="closeModal()">
-        <div class="bg-white rounded-[2rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-content" onclick="event.stopPropagation()">
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-gray-50 p-2 rounded-full hover:bg-white transition-all text-gray-400 hover:text-red-500 border border-gray-100">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+        <div class="bg-white rounded-[2rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300 relative" id="modal-content" onclick="event.stopPropagation()">
             
-            <div class="p-6 sm:p-10">
+            <!-- Aðgerðarhnappar efst -->
+            <div class="absolute top-4 right-4 z-20 flex gap-2">
+                <!-- Share Takki -->
+                <button id="share-btn" onclick="shareAsImage()" class="bg-gray-50 p-2 rounded-full hover:bg-white transition-all text-gray-400 hover:text-blue-500 border border-gray-100 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                    </svg>
+                </button>
+                <!-- Close Takki -->
+                <button onclick="closeModal()" class="bg-gray-50 p-2 rounded-full hover:bg-white transition-all text-gray-400 hover:text-red-500 border border-gray-100 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Innihald sem á að taka screenshot af -->
+            <div class="p-6 sm:p-10 bg-white" id="share-capture-area">
                 <div class="flex items-center gap-2 mb-4">
-                    <span id="modal-tag" class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest"></span>
-                    <span id="modal-vegan" class="hidden text-[8px] font-black px-2 py-0.5 bg-green-500/10 text-green-600 rounded-md uppercase tracking-widest border border-green-500/20">Vegan</span>
+                    <span id="modal-tag" class="text-[9px] font-extrabold px-3 py-1 inline-flex items-center justify-center rounded-md text-white uppercase tracking-widest leading-none"></span>
+                    <span id="modal-vegan" class="hidden text-[9px] font-extrabold px-3 py-1 inline-flex items-center justify-center bg-green-500/10 text-green-600 rounded-md uppercase tracking-widest border border-green-500/20 leading-none">Vegan</span>
                 </div>
                 
                 <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-4"></h2>
                 
+                <!-- Þetta hverfur á screenshotinu -->
                 <div id="modal-price-container" class="mb-8"></div>
 
                 <div class="mb-8">
@@ -241,6 +266,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Branding neðst á Story myndina (falið á skjánum nema í screenshot mode) -->
+                <div id="screenshot-footer" class="hidden mt-10 pt-6 border-t border-gray-100 items-center justify-between">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">World Class+</span>
+                        <span class="text-[8px] font-bold text-gray-300 uppercase tracking-widest">þín orka, þinn árangur.</span>
+                    </div>
+                    <!-- Háskerpu logo fyrir screenshot -->
+                    <img src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress&w=300" alt="World Class Logo" class="h-6 w-auto opacity-20">
+                </div>
             </div>
         </div>
     </div>
@@ -259,7 +294,8 @@
             noResults: 'Engar niðurstöður fundust.',
             kcal: 'Kcal', protein: 'Prótein', fat: 'Fita', carbs: 'Kolvetni',
             noMacros: 'Næringargildi ekki tilgreind.',
-            S: 'Lítill', M: 'Mið', L: 'Stór'
+            S: 'Lítill', M: 'Mið', L: 'Stór',
+            sharing: 'Bý til mynd...'
         };
 
         const EN_LANG = {
@@ -275,7 +311,8 @@
             noResults: 'No items found.',
             kcal: 'Kcal', protein: 'Protein', fat: 'Fat', carbs: 'Carbs',
             noMacros: 'Nutrition facts not available.',
-            S: 'Small', M: 'Medium', L: 'Large'
+            S: 'Small', M: 'Medium', L: 'Large',
+            sharing: 'Generating image...'
         };
 
         const THEME_ORDER = ['LIGHT', 'BALANCE', 'ENERGY', 'STRENGTH'];
@@ -305,7 +342,7 @@
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', descriptionEn: 'Lemon, ginger, apple and strawberry protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:227, protein:24, fat:1, carbs:28}, M:{kcal:253, protein:27, fat:2, carbs:31}, L:{kcal:278, protein:29, fat:2, carbs:34} } },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', descriptionEn: 'Avocado, apple, pineapple and ginger.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:216, protein:1, fat: 8, carbs: 35}, M:{kcal:241, protein:1, fat: 10, carbs: 43}, L:{kcal:266, protein:1, fat: 12, carbs: 51} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', descriptionEn: 'Beetroot juice, avocado, celery and lemon.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:255, protein:1, fat:1, carbs:57}, M:{kcal:284, protein:1, fat:1, carbs:64}, L:{kcal:312, protein:1, fat:1, carbs:70} }, isVegan: true },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', descriptionEn: 'Spinach, mango, apple and collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:12, fat:1, carbs:27}, M:{kcal:200, protein:13, fat:1, carbs:30}, L:{kcal:220, protein:15, fat:1, carbs:33} } },
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', descriptionEn: 'Spinach, mango, apple and collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:12, fat:1, carbs:27}, M:{kcal:200, protein:13, fat:1, carbs:30}, L:{kcal:180, protein:12, fat:1, carbs:27}, fat: 1 } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', descriptionEn: 'Apple, mango, blueberries and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283, protein:23, fat:1, carbs:43}, M:{kcal:300, protein:25, fat:1, carbs:48}, L:{kcal:347, protein:28, fat: 2, carbs: 53} } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', descriptionEn: 'Vanilla Skyr, strawberries and mango.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:177, protein:11, fat:2, carbs:30}, M:{kcal:197, protein:12, fat:2, carbs:33}, L:{kcal:216, protein:13, fat:2, carbs:37} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Jarðarber, döðlur, hnetusmjör og prótein.', descriptionEn: 'Strawberries, dates and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636, protein:39, fat:31, carbs:61}, M:{kcal:707, protein:44, fat:35, carbs:68}, L:{kcal:778, protein:48, fat:38, carbs:75} } },
@@ -536,7 +573,6 @@
             container.innerHTML = items.map((item) => {
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
                 const catInfo = CATEGORIES[item.category] || { is: item.category, en: item.category };
-                const price = item.prices ? item.prices.M : item.price;
                 const lang = getLang();
 
                 const activeSort = ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy) ? state.sortBy : 'kcal';
@@ -556,8 +592,8 @@
                 ` : '';
 
                 return `
-                    <div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up" onclick="openModal(${rawData.indexOf(item)})">
-                        <div class="flex justify-between items-start mb-4">
+                    <div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up flex flex-col h-full" onclick="openModal(${rawData.indexOf(item)})">
+                        <div class="mb-4">
                             <div class="flex flex-col">
                                 ${categoryTag}
                                 <div class="flex flex-wrap gap-2">
@@ -566,15 +602,13 @@
                                     ${dynamicLabel}
                                 </div>
                             </div>
-                            <span class="text-base font-black text-red-500 tracking-tight block leading-none">${price}</span>
                         </div>
                         <h3 class="text-lg font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
-                        <p class="text-gray-400 text-xs leading-relaxed line-clamp-2 font-medium">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
+                        <p class="text-gray-400 text-xs leading-relaxed font-medium mt-auto line-clamp-2">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
                     </div>`;
             }).join('');
         }
 
-        // --- Samstillt Animation Logic ---
         function animateSynchronized(macros, lang) {
             const p = macros.protein || 0; 
             const c = macros.carbs || 0; 
@@ -609,23 +643,21 @@
             function step(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const progress = Math.min((timestamp - startTime) / totalTime, 1);
-                
                 const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-                // Telja upp tölurnar (með Math.round fyrir betra flæði)
-                valK.textContent = Math.round(ease * macros.kcal);
+                valK.textContent = Math.round(ease * (macros.kcal || 0));
 
                 const pEnd = pRatio;
                 const pEase = Math.min(ease, pEnd);
                 cP.style.strokeDashoffset = circumference - (pEase * circumference);
-                valP.textContent = Math.round((pEase / pEnd || 0) * p) + 'g';
+                valP.textContent = Math.round((pEase / (pEnd || 1)) * p) + 'g';
 
                 const cStart = pRatio;
                 const cEnd = pRatio + cRatio;
                 if (ease > cStart) {
                     const cEase = Math.min(ease, cEnd) - cStart;
                     cC.style.strokeDashoffset = circumference - (cEase * circumference);
-                    valC.textContent = Math.round((cEase / cRatio || 0) * c) + 'g';
+                    valC.textContent = Math.round((cEase / (cRatio || 1)) * c) + 'g';
                 }
 
                 const fStart = pRatio + cRatio;
@@ -633,12 +665,11 @@
                 if (ease > fStart) {
                     const fEase = Math.min(ease, fEnd) - fStart;
                     cF.style.strokeDashoffset = circumference - (fEase * circumference);
-                    valF.textContent = Math.round((fEase / fRatio || 0) * f) + 'g';
+                    valF.textContent = Math.round((fEase / (fRatio || 1)) * f) + 'g';
                 }
 
-                // Tryggja nákvæm loka-gildi
                 if (progress === 1) {
-                    valK.textContent = macros.kcal;
+                    valK.textContent = macros.kcal || 0;
                     valP.textContent = p + 'g';
                     valC.textContent = c + 'g';
                     valF.textContent = f + 'g';
@@ -646,8 +677,68 @@
 
                 if (progress < 1) requestAnimationFrame(step);
             }
+            if (total > 0 || (macros.kcal && macros.kcal > 0)) requestAnimationFrame(step);
+        }
 
-            if (total > 0 || macros.kcal > 0) requestAnimationFrame(step);
+        async function shareAsImage() {
+            const modal = document.getElementById('item-modal');
+            const captureArea = document.getElementById('share-capture-area');
+            const shareBtn = document.getElementById('share-btn');
+            
+            modal.classList.add('is-sharing');
+            shareBtn.innerHTML = `<span class="text-[8px] font-black">${getLang().sharing}</span>`;
+            
+            try {
+                const canvas = await html2canvas(captureArea, {
+                    backgroundColor: '#ffffff',
+                    scale: 4, 
+                    useCORS: true,
+                    borderRadius: 32,
+                    logging: false,
+                    onclone: (clonedDoc) => {
+                        const tag = clonedDoc.getElementById('modal-tag');
+                        const vegan = clonedDoc.getElementById('modal-vegan');
+                        
+                        const applyCleanStyle = (el) => {
+                            if (!el) return;
+                            el.style.display = 'inline-flex';
+                            el.style.alignItems = 'center';
+                            el.style.justifyContent = 'center';
+                            el.style.height = 'auto';
+                            el.style.padding = '6px 14px'; // Aukið padding í screenshot mode
+                            el.style.lineHeight = '1';
+                        };
+
+                        applyCleanStyle(tag);
+                        if(vegan && vegan.style.display !== 'none') applyCleanStyle(vegan);
+                    }
+                });
+
+                const dataUrl = canvas.toDataURL('image/png');
+                const blob = await (await fetch(dataUrl)).blob();
+                const file = new File([blob], 'worldclass-plus-menu.png', { type: 'image/png' });
+
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'World Class+',
+                        text: getLang().tagline
+                    });
+                } else {
+                    const link = document.createElement('a');
+                    link.download = 'worldclass-menu-card.png';
+                    link.href = dataUrl;
+                    link.click();
+                }
+            } catch (err) {
+                console.error("Villa við að búa til mynd:", err);
+            } finally {
+                modal.classList.remove('is-sharing');
+                shareBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                    </svg>`;
+            }
         }
 
         function openModal(idx) {
@@ -665,7 +756,7 @@
             const tag = document.getElementById('modal-tag');
             tag.textContent = state.isIcelandic ? theme.is : theme.en;
             tag.style.backgroundColor = theme.color;
-            document.getElementById('modal-vegan').style.display = item.isVegan ? 'block' : 'none';
+            document.getElementById('modal-vegan').style.display = item.isVegan ? 'inline-flex' : 'none';
             
             updateModalUI();
             
