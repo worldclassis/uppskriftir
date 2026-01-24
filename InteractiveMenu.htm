@@ -87,7 +87,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* Animated Logo - Miðjað aftur */
+        /* Animated Logo */
         .logo-animated {
             width: 280px;
             height: 60px;
@@ -128,7 +128,7 @@
 
     <div class="max-w-4xl mx-auto px-4 pt-4 pb-8 sm:pt-8 sm:pb-12">
         
-        <!-- Haus: Allt miðjað eins og áður -->
+        <!-- Haus: Allt miðjað -->
         <header class="flex flex-col items-center mb-10">
             <div class="w-full flex justify-end items-center mb-4 sm:mb-8">
                 <div class="flex items-center gap-3">
@@ -140,26 +140,12 @@
                 </div>
             </div>
             
-            <!-- Stærra lógó í miðju -->
             <div class="logo-animated mb-4"></div>
             
-            <!-- Slagorð í miðju -->
             <p id="tagline" class="text-gray-400 font-semibold text-xs sm:text-sm text-center tracking-[0.1em] uppercase"></p>
         </header>
 
-        <!-- Hero mynd - Núna með rounded-2xl til að passa við flokkastikanne -->
-        <div class="mb-8">
-            <div id="category-hero" class="rounded-2xl overflow-hidden shadow-xl relative h-28 sm:h-64 hidden animate-slide-up">
-                <img id="hero-img" src="" class="w-full h-full object-cover" alt="Borðamynd">
-                <div id="hero-color-overlay" class="absolute inset-0 transition-all duration-300 pointer-events-none mix-blend-multiply opacity-0 z-10"></div>
-                
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 z-20">
-                    <h2 id="hero-title" class="text-white text-xl sm:text-4xl font-black uppercase tracking-tight"></h2>
-                </div>
-            </div>
-        </div>
-
-        <!-- Flokkar -->
+        <!-- Flokkar (Stiky bar) -->
         <div class="sticky top-4 z-40 mb-6 space-y-3">
             <div class="glass rounded-2xl shadow-sm overflow-hidden border border-gray-100/50">
                 <div class="scroll-mask-container">
@@ -178,11 +164,23 @@
         <div id="theme-filters" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
         </div>
 
+        <!-- Hero mynd - Færð aftur hingað niður fyrir síurnar. Hækkuð í h-36 á mobile. -->
+        <div class="mb-12">
+            <div id="category-hero" class="rounded-2xl overflow-hidden shadow-xl relative h-36 sm:h-64 hidden animate-slide-up">
+                <img id="hero-img" src="" class="w-full h-full object-cover" alt="Borðamynd">
+                <div id="hero-color-overlay" class="absolute inset-0 transition-all duration-300 pointer-events-none mix-blend-multiply opacity-0 z-10"></div>
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 z-20">
+                    <h2 id="hero-title" class="text-white text-xl sm:text-4xl font-black uppercase tracking-tight"></h2>
+                </div>
+            </div>
+        </div>
+
         <!-- Matseðils-grid -->
         <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]">
         </div>
 
-        <!-- Auglýsing - Einnig samræmt rúnnun -->
+        <!-- Auglýsing -->
         <section class="mt-20 relative rounded-2xl overflow-hidden shadow-xl">
             <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Heilsutvenna" class="w-full h-auto object-cover">
         </section>
@@ -216,7 +214,6 @@
                         <p id="modal-description" class="text-gray-600 leading-relaxed text-base font-medium"></p>
                     </div>
 
-                    <!-- Næringargildi Section -->
                     <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100/50 hidden">
                         <div class="flex justify-between items-center mb-3">
                             <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300">Næringargildi</h4>
