@@ -59,9 +59,9 @@
         }
 
         .category-scroll-track {
-            height: 2px;
-            width: 30px;
-            background-color: #f3f4f6;
+            height: 4px;
+            width: 48px;
+            background-color: #e5e7eb;
             border-radius: 99px;
             overflow: hidden;
             position: relative;
@@ -115,7 +115,7 @@
                     </nav>
                 </div>
             </div>
-            <div class="flex justify-center sm:hidden">
+            <div class="flex justify-center sm:hidden pt-1">
                 <div class="category-scroll-track">
                     <div id="category-scroll-thumb"></div>
                 </div>
@@ -126,9 +126,9 @@
         <div id="theme-filters" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
         </div>
 
-        <!-- Hero mynd -->
+        <!-- Hero mynd - Núna með rúnnun í samræmi við spjöld (rounded-[2rem]) -->
         <div class="mb-12">
-            <div id="category-hero" class="rounded-[2.5rem] overflow-hidden shadow-xl relative h-48 sm:h-64 hidden animate-slide-up">
+            <div id="category-hero" class="rounded-[2rem] overflow-hidden shadow-xl relative h-48 sm:h-64 hidden animate-slide-up">
                 <img id="hero-img" src="" class="w-full h-full object-cover" alt="Mynd">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-8">
                     <h2 id="hero-title" class="text-white text-3xl sm:text-4xl font-black uppercase tracking-tight"></h2>
@@ -140,8 +140,8 @@
         <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]">
         </div>
 
-        <!-- Auglýsing -->
-        <section class="mt-20 relative rounded-[2.5rem] overflow-hidden shadow-xl">
+        <!-- Auglýsing - Einnig samræmd rúnnun -->
+        <section class="mt-20 relative rounded-[2rem] overflow-hidden shadow-xl">
             <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Tilboð" class="w-full h-auto object-cover">
         </section>
         
@@ -284,6 +284,8 @@
             // KAFFI
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Americano', nameEn: 'Americano', price: '500 kr', descriptionIs: 'Svart kaffi úr nýmöluðum baunum.', descriptionEn: 'Fresh black coffee.', isVegan: true },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Espresso', nameEn: 'Espresso', price: '500 kr', descriptionIs: 'Sterkt kaffiskot.', descriptionEn: 'Strong coffee shot.', isVegan: true },
+            { category: 'KAFFI', theme: 'ALL', nameIs: 'Tvöfaldur Espresso', nameEn: 'Double Espresso', price: '500 kr', descriptionIs: 'Tvöfaldur skammtur af hreinni orku.', descriptionEn: 'A double shot.', isVegan: true },
+            { category: 'KAFFI', theme: 'ALL', nameIs: 'Cappucino', nameEn: 'Cappuccino', price: '500 kr', descriptionIs: 'Espresso með flóaðri mjólk.', descriptionEn: 'Espresso with steamed milk.' },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Latte', nameEn: 'Caffè Latte', price: '500 kr', descriptionIs: 'Milt kaffi með mikilli flóaðri mjólk.', descriptionEn: 'Mild coffee with milk.' },
 
             // GRÍPTU MEÐ
