@@ -169,8 +169,8 @@
             <p id="tagline" class="text-gray-400 font-semibold text-[10px] sm:text-xs text-center tracking-[0.2em] uppercase"></p>
         </header>
 
-        <!-- Navigation -->
-        <div class="sticky top-4 z-40 mb-6 space-y-3">
+        <!-- Navigation Section -->
+        <div id="sticky-nav-container" class="sticky top-4 z-40 mb-6 space-y-3">
             <div class="glass rounded-2xl shadow-sm border border-gray-100/50">
                 <div class="scroll-mask-container">
                     <nav id="category-tabs" class="flex overflow-x-auto no-scrollbar gap-2 w-full py-4 px-8" onscroll="updateCategoryScroll()">
@@ -334,55 +334,25 @@
             'GRÍPTU MEÐ': { is: 'Gríptu með', en: 'Grab & Go', img: 'https://images.prismic.io/worldclass/aXQ2UQIvOtkhB5aU_gripamed.jpg?auto=format,compress' }
         };
 
-        // --- 2. GLOBAL STATE ---
-        let state = { isIcelandic: true, activeCategory: 'DRYKKIR', activeTheme: null, selectedSize: 'M', modalItem: null, sortBy: 'category' };
-        let lastAnimateValues = { kcal: 0, protein: 0, carbs: 0, fat: 0 };
-
-        // --- 3. HELPER FUNCTIONS ---
-        function getLang() { return state.isIcelandic ? IS_LANG : EN_LANG; }
-
-        function updateToggleVisual() {
-            const dot = document.getElementById('toggle-dot');
-            const lIs = document.getElementById('lang-label-is-plain');
-            const lEn = document.getElementById('lang-label-en');
-            if (!dot || !lIs || !lEn) return;
-            if (state.isIcelandic) {
-                dot.style.transform = 'translateX(0)';
-                lIs.classList.replace('text-gray-400', 'text-red-500');
-                lEn.classList.replace('text-red-500', 'text-gray-400');
-            } else {
-                dot.style.transform = 'translateX(1.25rem)';
-                lIs.classList.replace('text-red-500', 'text-gray-400');
-                lEn.classList.replace('text-gray-400', 'text-red-500');
-            }
-        }
-
         const rawData = [
-            // STRENGTH
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Vanillu skyr, banani, hnetusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636.3, protein:39.4, fat:31.3, carbs:61.4, fiber:12.5}, M:{kcal:707, protein:43.8, fat:34.8, carbs:68.2, fiber:13.9}, L:{kcal:777.7, protein:48.2, fat:38.3, carbs:75.0, fiber:15.3} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833.4, protein:44, fat:38.3, carbs:86.1, fiber:15.8}, M:{kcal:926, protein:48.9, fat:42.5, carbs:95.7, fiber:17.5}, L:{kcal:1018.6, protein:53.8, fat:46.8, carbs:105.3, fiber:19.3} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778.5, protein:24.4, fat:67.7, carbs:21.8, fiber:4.8}, M:{kcal:865, protein:27.5, fat:75.2, carbs:24.2, fiber:5.3}, L:{kcal:951, protein:29.8, fat:82.7, carbs:26.6, fiber:5.8} } },
             { category: 'GRAUTUR', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og vanillu prótein.', macros: { kcal: 731, protein: 44, fat: 13.8, carbs: 115, fiber: 15.5 } },
             { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur og parmesanostur.', macros: { kcal: 905, protein: 57.4, fat: 33, carbs: 97.6, fiber: 13 } },
             { category: 'KRISP', theme: 'STRENGTH', nameIs: 'Túnfisk & Egg Krisp', nameEn: 'Tuna & Egg Crisp', price: '1.290 kr', descriptionIs: 'Finn Crisp, túnfisksalat, egg og graslaukur.', macros: { kcal: 313, protein: 31.8, fat: 15.5, carbs: 16.9, fiber: 4.6 } },
-
-            // ENERGY
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:308, protein:38, fat:0.9, carbs:37, fiber:3.6}, M:{kcal:333, protein:40, fat:1.0, carbs:41, fiber:1.0}, L:{kcal:354, protein:42, fat:1.1, carbs:44, fiber:4.4} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:28, fat:8.7, carbs:3.6, fiber:0}, M:{kcal:200, protein:30, fat:9.7, carbs:4.0, fiber:0}, L:{kcal:220, protein:32, fat:10.7, carbs:4.4, fiber:0} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:142, protein:1.4, fat:0.5, carbs:43, fiber:3.6}, M:{kcal:157, protein:1.6, fat:0.6, carbs:39, fiber:4.0}, L:{kcal:173, protein:1.8, fat:0.7, carbs:43, fiber:4.4} }, isVegan: true },
             { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein.', macros: { kcal: 720, protein: 42.4, fat: 13, carbs: 110, fiber: 12 } },
             { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur og kasjúhnetur.', macros: { kcal: 991, protein: 32.2, fat: 49.4, carbs: 102, fiber: 17 } },
             { category: 'KRISP', theme: 'ENERGY', nameIs: 'Kjúklinga & Avocado Krisp', nameEn: 'Chicken & Avocado Crisp', price: '1.290 kr', descriptionIs: 'Finn Crisp, kjúklingur, avókadó og sesamfræ.', macros: { kcal: 290, protein: 22.8, fat: 14.5, carbs: 21.9, fiber: 6.6 } },
-
-            // LIGHT
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232.2, protein:28.1, fat:1.2, carbs:31.2, fiber:7.3}, M:{kcal:258, protein:31.2, fat:1.3, carbs:34.7, fiber:8.1}, L:{kcal:283.3, protein:34.3, fat:1.4, carbs:38.2, fiber:8.9} } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283.3, protein:23.3, fat:1.7, carbs:43.7, fiber:6.3}, M:{kcal:300, protein:25.9, fat:1.9, carbs:48.6, fiber:7.0}, L:{kcal:347, protein:28.5, fat:2.1, carbs:53.5, fiber:7.7} } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:177.3, protein:11.2, fat:2.3, carbs:30.5, fiber:2.7}, M:{kcal:197, protein:12.2, fat:2.5, carbs:33.9, fiber:3.0}, L:{kcal:216.7, protein:13.4, fat:2.8, carbs:37.3, fiber:3.3} } },
             { category: 'GRAUTUR', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', price: '890 kr', descriptionIs: 'Möndlumjólk, hafrar og hunang.', macros: { kcal: 524, protein: 15.6, fat: 14.5, carbs: 87, fiber: 12 } },
             { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur og gúrka.', macros: { kcal: 452, protein: 48.5, fat: 16.5, carbs: 14.7, fiber: 3.5 } },
             { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: 'Finn Crisp, kjúklingasalat og tómatar.', macros: { kcal: 288, protein: 28.8, fat: 12.5, carbs: 14.9, fiber: 4.1 } },
-
-            // BALANCE
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:231.7, protein:23.8, fat:1.8, carbs:33.1, fiber:5.13}, M:{kcal:257.5, protein:26.5, fat:2.0, carbs:36.8, fiber:5.7}, L:{kcal:283.2, protein:29.1, fat:2.2, carbs:40.5, fiber:6.3} } },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:365.4, protein:4, fat:17.8, carbs:56.1, fiber:14.5}, M:{kcal:406, protein:4.4, fat:19.8, carbs:62.3, fiber:16.1}, L:{kcal:446.6, protein:4.8, fat:21.8, carbs:68.5, fiber:17.7} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:324, protein:6.1, fat:18, carbs:43.6, fiber:12.51}, M:{kcal:360, protein:6.8, fat:20, carbs:48.5, fiber:13.9}, L:{kcal:396.1, protein:7.4, fat:22, carbs:53.3, fiber:15.2} }, isVegan: true },
@@ -426,6 +396,29 @@
         
         const fullData = [...rawData, ...shotItems, ...kidsItems, ...coffeeItems, ...grabGoItems];
 
+        // --- 2. GLOBAL STATE ---
+        let state = { isIcelandic: true, activeCategory: 'DRYKKIR', activeTheme: null, selectedSize: 'M', modalItem: null, sortBy: 'category' };
+        let lastAnimateValues = { kcal: 0, protein: 0, carbs: 0, fat: 0 };
+
+        // --- 3. HELPER FUNCTIONS ---
+        function getLang() { return state.isIcelandic ? IS_LANG : EN_LANG; }
+
+        function updateToggleVisual() {
+            const dot = document.getElementById('toggle-dot');
+            const lIs = document.getElementById('lang-label-is-plain');
+            const lEn = document.getElementById('lang-label-en');
+            if (!dot || !lIs || !lEn) return;
+            if (state.isIcelandic) {
+                dot.style.transform = 'translateX(0)';
+                lIs.classList.replace('text-gray-400', 'text-red-500');
+                lEn.classList.replace('text-red-500', 'text-gray-400');
+            } else {
+                dot.style.transform = 'translateX(1.25rem)';
+                lIs.classList.replace('text-red-500', 'text-gray-400');
+                lEn.classList.replace('text-gray-400', 'text-red-500');
+            }
+        }
+
         // --- 4. CORE FUNCTIONS ---
         function toggleLanguage() {
             state.isIcelandic = !state.isIcelandic;
@@ -438,8 +431,17 @@
             state.activeCategory = c; 
             state.activeTheme = null; 
             render(); 
+            
+            // Scroll tab horizontally
             const b = document.querySelector(`[data-cat-btn="${c}"]`); 
-            if (b) b.scrollIntoView({ behavior: 'smooth', inline: 'center' }); 
+            if (b) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); 
+            
+            // Scroll vertically so sticky banner is at the top above the content
+            const nav = document.getElementById('sticky-nav-container');
+            if (nav) {
+                const y = nav.getBoundingClientRect().top + window.pageYOffset - 16;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }
         }
 
         function toggleTheme(k) { 
@@ -669,6 +671,8 @@
         function changeSize(s) { state.selectedSize = s; updateModalUI(); }
         function closeModal() { const m = document.getElementById('item-modal'), c = document.getElementById('modal-content'); if(c) { c.classList.replace('scale-100', 'scale-95'); c.classList.replace('opacity-100', 'opacity-0'); } setTimeout(() => { if(m) m.classList.replace('flex', 'hidden'); }, 300); }
 
+        function showToast(m) { const t = document.getElementById("toast"); t.textContent = m; t.className = "show"; setTimeout(() => t.className = "", 3000); }
+        
         window.onload = function() {
             updateToggleVisual();
             render();
