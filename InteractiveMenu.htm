@@ -164,7 +164,7 @@
 
     <div class="max-w-4xl mx-auto px-4 pt-4 pb-8 sm:pt-8 sm:pb-12">
         
-        <!-- Header -->
+        <!-- Haus -->
         <header class="flex flex-col items-center mb-10">
             <div class="w-full flex justify-end items-center mb-4 sm:mb-8">
                 <div class="flex items-center gap-3 bg-white p-1.5 rounded-full shadow-sm border border-gray-100">
@@ -255,8 +255,8 @@
                 
                 <div class="flex items-center justify-between mb-8 h-10">
                     <div class="flex items-center gap-2">
-                        <span id="modal-tag" class="text-[9px] font-extrabold px-3 pt-2 pb-1.5 inline-flex items-center justify-center rounded-lg text-white uppercase tracking-widest leading-none border-b-2 border-black/5"></span>
-                        <span id="modal-vegan" class="hidden text-[9px] font-extrabold px-3 pt-2 pb-1.5 inline-flex items-center justify-center bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20 leading-none">Vegan</span>
+                        <span id="modal-tag" class="text-[9px] font-extrabold px-3 pt-2.5 pb-2 inline-flex items-center justify-center rounded-lg text-white uppercase tracking-widest leading-none border-b-2 border-black/5"></span>
+                        <span id="modal-vegan" class="hidden text-[9px] font-extrabold px-3 pt-2.5 pb-2 inline-flex items-center justify-center bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20 leading-none">Vegan</span>
                     </div>
 
                     <div id="screenshot-logo-wrapper" class="hidden">
@@ -282,7 +282,7 @@
                         
                         <div class="flex items-center justify-between gap-8 mb-2">
                             <div class="relative flex-shrink-0">
-                                <!-- Base rotation handled by style tag for html2canvas consistency -->
+                                <!-- Hringurinn snúinn um -90 gráður svo hann byrji efst -->
                                 <svg width="140" height="140" viewBox="0 0 150 150" style="transform: rotate(-90deg);" class="block">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
                                     <circle id="circle-protein" cx="75" cy="75" r="65" stroke="#f87171" stroke-width="14" fill="transparent" 
@@ -321,7 +321,7 @@
             sortFat: 'Fita',
             sortCategory: 'Flokkar',
             noResults: 'Engar niðurstöður fundust.',
-            kcal: 'Kcal', protein: 'Prótein', fat: 'Fita', carbs: 'Kolvetni',
+            kcal: 'kcal', protein: 'prótein', fat: 'fita', carbs: 'kolvetni',
             noMacros: 'Næringargildi ekki tilgreind.',
             S: 'Lítill', M: 'Mið', L: 'Stór',
             sharing: 'Bý til...',
@@ -339,7 +339,7 @@
             sortFat: 'Fat',
             sortCategory: 'Categories',
             noResults: 'No items found.',
-            kcal: 'Kcal', protein: 'Protein', fat: 'Fat', carbs: 'Carbs',
+            kcal: 'kcal', protein: 'protein', fat: 'fat', carbs: 'carbs',
             noMacros: 'Nutrition facts not available.',
             S: 'Small', M: 'Medium', L: 'Large',
             sharing: 'Creating...',
@@ -447,7 +447,10 @@
             const lang = getLang();
             document.getElementById('tagline').textContent = lang.tagline;
             document.getElementById('sort-label').textContent = lang.labelSortBy;
-            ['kcal', 'protein', 'carbs', 'fat', 'category'].forEach(s => document.getElementById(`sort-${s}`).textContent = lang[`sort${s.charAt(0).toUpperCase() + s.slice(1)}`]);
+            ['kcal', 'protein', 'carbs', 'fat', 'category'].forEach(s => {
+                const btn = document.getElementById(`sort-${s}`);
+                if (btn) btn.textContent = lang[`sort${s.charAt(0).toUpperCase() + s.slice(1)}`];
+            });
             document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById(`sort-${state.sortBy}`);
             if(activeBtn) activeBtn.classList.add('active');
@@ -467,9 +470,12 @@
             const container = document.getElementById('theme-filters');
             container.innerHTML = Object.values(THEMES).map(t => {
                 const active = state.activeTheme === t.key;
-                return `<button onclick="toggleTheme('${t.key}')" class="theme-btn text-left p-4 rounded-[1.5rem] flex flex-col gap-2.5 bg-white border border-gray-100 transition-all ${active ? 'ring-2 ring-offset-2 ring-gray-100 shadow-xl scale-[1.02]' : 'hover:bg-gray-50'}" style="color: ${t.color}">
+                return `<button onclick="toggleTheme('${t.key}')" class="theme-btn text-left p-3.5 rounded-[1.2rem] flex items-center gap-3 bg-white border border-gray-100 transition-all ${active ? 'ring-2 ring-offset-2 ring-gray-100 shadow-xl scale-[1.02]' : 'hover:bg-gray-50'}" style="color: ${t.color}">
                     <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${t.color}"></div>
-                    <div><h5 class="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5><p class="text-[9px] text-gray-400 leading-tight font-medium">${state.isIcelandic ? t.descIs : t.descEn}</p></div>
+                    <div class="flex flex-col">
+                        <h5 class="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5>
+                        <p class="text-[9px] text-gray-400 leading-tight font-medium">${state.isIcelandic ? t.descIs : t.descEn}</p>
+                    </div>
                 </button>`;
             }).join('');
         }
@@ -490,27 +496,41 @@
 
         function renderGrid() {
             const container = document.getElementById('menu-grid');
+            const lang = getLang();
             let items = [...rawData];
             items = state.activeTheme ? items.filter(i => i.theme === state.activeTheme) : items.filter(i => i.category === state.activeCategory);
+            
             if (['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
                 items.sort((a, b) => {
                     const getVal = (item, key) => { if (!item.macros) return 0; const m = item.prices ? item.macros.M : item.macros; return m[key] || 0; };
                     return getVal(b, state.sortBy) - getVal(a, state.sortBy);
                 });
             }
+            
             if (items.length === 0) { container.innerHTML = `<div class="col-span-full py-20 text-center text-gray-300 font-bold uppercase tracking-widest">${getLang().noResults}</div>`; return; }
+            
             container.innerHTML = items.map((item) => {
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
                 const price = item.prices ? item.prices.M : item.price;
                 const macros = item.macros ? (item.prices ? item.macros.M : item.macros) : null;
+                
                 let dynamicLabel = "";
-                if (macros && macros[state.sortBy] !== undefined) {
+                if (macros && ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
                     const val = macros[state.sortBy];
-                    dynamicLabel = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${val}${state.sortBy === 'kcal' ? ' kcal' : 'g'}</span>`;
+                    const unit = state.sortBy === 'kcal' ? ` ${lang.kcal}` : `g ${lang[state.sortBy]}`;
+                    dynamicLabel = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${val}${unit}</span>`;
+                } else if (macros) {
+                    // Default to kcal if no specific macro sort is active but macros exist
+                    dynamicLabel = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${macros.kcal} ${lang.kcal}</span>`;
                 }
+
                 return `<div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up flex flex-col h-full" onclick="openModal(${rawData.indexOf(item)})">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="flex flex-wrap gap-2"><span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}${dynamicLabel}</div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
+                            ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
+                            ${dynamicLabel}
+                        </div>
                         <span class="text-xs font-black text-red-500 tracking-tight whitespace-nowrap">${price}</span>
                     </div>
                     <h3 class="text-lg font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
@@ -554,7 +574,7 @@
                         const prices = clonedDoc.getElementById('modal-price-container');
                         const controls = clonedDoc.getElementById('modal-controls');
                         
-                        // Force real transparency on corners
+                        // Force real transparency on corners and white background for output
                         area.style.backgroundColor = 'white';
                         area.style.borderRadius = '2.5rem';
                         area.style.width = '420px';
