@@ -88,6 +88,7 @@
 
         .sort-btn {
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
         .sort-btn.active {
             background-color: var(--secondary);
@@ -183,11 +184,14 @@
             </div>
         </div>
 
-        <!-- Röðunarstika -->
-        <div class="flex items-center gap-3 mb-10 px-1 overflow-x-auto no-scrollbar">
+        <!-- Röðunarstika undir mynd -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-10 px-1">
             <span id="sort-label" class="text-[9px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Raða eftir:</span>
-            <div class="flex gap-2">
-                <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Kaloríur</button>
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+                <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Kcal</button>
+                <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Prótein</button>
+                <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Kolvetni</button>
+                <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Fita</button>
                 <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] font-bold border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase tracking-widest">Flokkar</button>
             </div>
         </div>
@@ -221,17 +225,14 @@
                 
                 <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-4"></h2>
                 
-                <!-- Verð í popup -->
                 <div id="modal-price-container" class="mb-8"></div>
 
-                <!-- Innihaldslýsing -->
                 <div class="mb-8">
                     <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300 mb-1.5">Innihaldslýsing</h4>
                     <p id="modal-description" class="text-gray-600 leading-relaxed text-base font-medium"></p>
                 </div>
 
                 <div class="space-y-6">
-                    <!-- Næringargildi Section -->
                     <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100/50 hidden">
                         <div class="flex justify-between items-center mb-3">
                             <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300">Næringargildi</h4>
@@ -257,7 +258,10 @@
             labelIngredients: 'Innihaldslýsing',
             labelNutrition: 'Næringargildi',
             labelSortBy: 'Raða eftir:',
-            sortKcal: 'Kaloríur',
+            sortKcal: 'Kcal',
+            sortProtein: 'Prótein',
+            sortCarbs: 'Kolvetni',
+            sortFat: 'Fita',
             sortCategory: 'Flokkar',
             noResults: 'Engar niðurstöður fundust.',
             kcal: 'Kcal', protein: 'Prótein', fat: 'Fita', carbs: 'Kolvetni',
@@ -271,12 +275,18 @@
             labelNutrition: 'Nutrition Facts',
             labelSortBy: 'Sort by:',
             sortKcal: 'Calories',
+            sortProtein: 'Protein',
+            sortCarbs: 'Carbs',
+            sortFat: 'Fat',
             sortCategory: 'Categories',
             noResults: 'No items found.',
             kcal: 'Kcal', protein: 'Protein', fat: 'Fat', carbs: 'Carbs',
             noMacros: 'Nutrition facts not available.',
             S: 'Small', M: 'Medium', L: 'Large'
         };
+
+        // Föst röðun fyrir þemu
+        const THEME_ORDER = ['LIGHT', 'BALANCE', 'ENERGY', 'STRENGTH'];
 
         const THEMES = {
             LIGHT: { key: 'LIGHT', is: 'Light', en: 'Light', color: '#34d399', descIs: 'Næringarríkt án auka hitaeininga', descEn: 'Nutritious without extra calories' },
@@ -420,6 +430,9 @@
             document.getElementById('tagline').textContent = lang.tagline;
             document.getElementById('sort-label').textContent = lang.labelSortBy;
             document.getElementById('sort-kcal').textContent = lang.sortKcal;
+            document.getElementById('sort-protein').textContent = lang.sortProtein;
+            document.getElementById('sort-carbs').textContent = lang.sortCarbs;
+            document.getElementById('sort-fat').textContent = lang.sortFat;
             document.getElementById('sort-category').textContent = lang.sortCategory;
             
             document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
@@ -505,14 +518,25 @@
                 items = items.filter(i => i.category === state.activeCategory);
             }
 
-            if (state.sortBy === 'kcal') {
+            // Raða
+            if (['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
                 items.sort((a, b) => {
-                    const kcalA = a.macros ? (a.prices ? a.macros.M.kcal : a.macros.kcal) : 0;
-                    const kcalB = b.macros ? (b.prices ? b.macros.M.kcal : b.macros.kcal) : 0;
-                    return kcalA - kcalB;
+                    const getVal = (item, key) => {
+                        if (!item.macros) return 0;
+                        const m = item.prices ? item.macros.M : item.macros;
+                        return m[key] || 0;
+                    };
+                    // Alltaf vaxandi röð (minnst -> stærst)
+                    return getVal(a, state.sortBy) - getVal(b, state.sortBy);
                 });
             } else {
-                items.sort((a, b) => a.category.localeCompare(b.category));
+                // Föst röðun eftir þemum: Light -> Balance -> Energy -> Strength
+                items.sort((a, b) => {
+                    const orderA = THEME_ORDER.indexOf(a.theme);
+                    const orderB = THEME_ORDER.indexOf(b.theme);
+                    if (orderA !== orderB) return orderA - orderB;
+                    return a.nameIs.localeCompare(b.nameIs);
+                });
             }
 
             if (items.length === 0) { 
@@ -524,7 +548,18 @@
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
                 const catInfo = CATEGORIES[item.category] || { is: item.category, en: item.category };
                 const price = item.prices ? item.prices.M : item.price;
-                const kcal = item.macros ? (item.prices ? item.macros.M.kcal : item.macros.kcal) : null;
+                const lang = getLang();
+
+                // Birta það gildi sem verið er að sía eftir
+                const activeSort = ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy) ? state.sortBy : 'kcal';
+                const macros = item.macros ? (item.prices ? item.macros.M : item.macros) : null;
+                
+                let dynamicLabel = "";
+                if (macros && macros[activeSort] !== undefined) {
+                    const val = macros[activeSort];
+                    const unit = activeSort === 'kcal' ? ` ${lang.kcal}` : `g ${lang[activeSort]}`;
+                    dynamicLabel = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-100 text-gray-400 rounded-md uppercase tracking-widest">${val}${unit}</span>`;
+                }
                 
                 const categoryTag = state.activeTheme ? `
                     <span class="text-[8px] font-bold text-gray-300 uppercase tracking-widest mb-1.5 block">
@@ -540,7 +575,7 @@
                                 <div class="flex flex-wrap gap-2">
                                     <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
                                     ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
-                                    ${kcal !== null ? `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-100 text-gray-400 rounded-md uppercase tracking-widest">${kcal} kcal</span>` : ''}
+                                    ${dynamicLabel}
                                 </div>
                             </div>
                             <span class="text-base font-black text-red-500 tracking-tight block leading-none">${price}</span>
