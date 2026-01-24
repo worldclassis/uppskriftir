@@ -92,11 +92,7 @@
             height: 60px;
             background: linear-gradient(
                 45deg, 
-                #34d399, 
-                #38bdf8, 
-                #fb923c, 
-                #ef4444, 
-                #34d399  
+                #34d399, #38bdf8, #fb923c, #ef4444, #34d399  
             );
             background-size: 300% 300%;
             -webkit-mask: url("https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress") no-repeat center;
@@ -124,7 +120,7 @@
 
         .macro-circle {
             transform-origin: center;
-            transition: stroke-dashoffset 0.8s ease-in-out; 
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
         }
 
         #toast {
@@ -149,15 +145,8 @@
             animation: fadein 0.5s, fadeout 0.5s 2.5s;
         }
 
-        @keyframes fadein {
-            from {bottom: 0; opacity: 0;}
-            to {bottom: 30px; opacity: 1;}
-        }
-
-        @keyframes fadeout {
-            from {bottom: 30px; opacity: 1;}
-            to {bottom: 0; opacity: 0;}
-        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-600">
@@ -235,11 +224,9 @@
         </footer>
     </div>
 
-    <!-- Upplýsingagluggi (Modal) -->
+    <!-- Modal -->
     <div id="item-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-gray-950/40 backdrop-blur-sm transition-opacity duration-300" onclick="closeModal()">
         <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300 relative" id="modal-content" onclick="event.stopPropagation()">
-            
-            <!-- Controls -->
             <div class="absolute top-6 right-6 z-20 flex gap-2" id="modal-controls">
                 <button id="share-btn" onclick="shareAsImage()" class="bg-white/80 backdrop-blur p-2.5 rounded-full hover:bg-white transition-all text-gray-400 hover:text-blue-500 border border-gray-100 shadow-sm active:scale-95">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -251,22 +238,18 @@
                 </button>
             </div>
             
-            <!-- Screenshot Area -->
             <div class="p-8 sm:p-10 bg-white relative rounded-[2.5rem]" id="share-capture-area">
-                
                 <div class="flex items-center justify-between mb-8 h-10">
                     <div class="flex items-center gap-2">
                         <span id="modal-tag" class="text-[9px] font-extrabold px-3 pt-2.5 pb-2 inline-flex items-center justify-center rounded-lg text-white uppercase tracking-widest leading-none border-b-2 border-black/5"></span>
                         <span id="modal-vegan" class="hidden text-[9px] font-extrabold px-3 pt-2.5 pb-2 inline-flex items-center justify-center bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20 leading-none">Vegan</span>
                     </div>
-
                     <div id="screenshot-logo-wrapper" class="hidden">
                         <img src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress&w=600" alt="Logo" class="h-10 w-auto opacity-90 block">
                     </div>
                 </div>
                 
                 <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-4 pr-10"></h2>
-                
                 <div id="modal-price-container" class="mb-8"></div>
 
                 <div class="mb-8">
@@ -283,7 +266,7 @@
                         
                         <div class="flex items-center justify-between gap-8 mb-2">
                             <div class="relative flex-shrink-0">
-                                <svg width="140" height="140" viewBox="0 0 150 150" style="transform: rotate(-90deg);" class="block">
+                                <svg width="140" height="140" viewBox="0 0 150 150" style="transform: rotate(-90deg);" class="block overflow-visible">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
                                     <circle id="circle-protein" cx="75" cy="75" r="65" stroke="#f87171" stroke-width="14" fill="transparent" 
                                         stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
@@ -297,9 +280,7 @@
                                     <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1">kcal</span>
                                 </div>
                             </div>
-
-                            <div id="modal-macros" class="flex-grow flex flex-col gap-3">
-                            </div>
+                            <div id="modal-macros" class="flex-grow flex flex-col gap-3"></div>
                         </div>
                     </div>
                 </div>
@@ -315,17 +296,10 @@
             labelIngredients: 'Innihaldslýsing',
             labelNutrition: 'Næringargildi',
             labelSortBy: 'Raða eftir:',
-            sortKcal: 'Kcal',
-            sortProtein: 'Prótein',
-            sortCarbs: 'Kolvetni',
-            sortFat: 'Fita',
-            sortCategory: 'Flokkar',
+            sortKcal: 'Kcal', sortProtein: 'Prótein', sortCarbs: 'Kolvetni', sortFat: 'Fita', sortCategory: 'Flokkar',
             noResults: 'Engar niðurstöður fundust.',
             kcal: 'kcal', protein: 'prótein', fat: 'fita', carbs: 'kolvetni',
-            noMacros: 'Næringargildi ekki tilgreind.',
-            S: 'Lítill', M: 'Mið', L: 'Stór',
-            sharing: 'Bý til...',
-            imageCreated: 'Mynd búin til!'
+            S: 'Lítill', M: 'Mið', L: 'Stór', sharing: 'Bý til...', imageCreated: 'Mynd búin til!'
         };
 
         const EN_LANG = {
@@ -333,17 +307,10 @@
             labelIngredients: 'Ingredients',
             labelNutrition: 'Nutrition Facts',
             labelSortBy: 'Sort by:',
-            sortKcal: 'Calories',
-            sortProtein: 'Protein',
-            sortCarbs: 'Carbs',
-            sortFat: 'Fat',
-            sortCategory: 'Categories',
+            sortKcal: 'Calories', sortProtein: 'Protein', sortCarbs: 'Carbs', sortFat: 'Fat', sortCategory: 'Categories',
             noResults: 'No items found.',
             kcal: 'kcal', protein: 'protein', fat: 'fat', carbs: 'carbs',
-            noMacros: 'Nutrition facts not available.',
-            S: 'Small', M: 'Medium', L: 'Large',
-            sharing: 'Creating...',
-            imageCreated: 'Image created!'
+            S: 'Small', M: 'Medium', L: 'Large', sharing: 'Creating...', imageCreated: 'Image created!'
         };
 
         const THEMES = {
@@ -365,7 +332,7 @@
         };
 
         const rawData = [
-            // DRYKKIR
+            // All 44 items included
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', descriptionEn: 'Vanilla Skyr, banana, strawberries and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:282, protein:26, fat:1, carbs:36}, M:{kcal:314, protein:29, fat:2, carbs:40}, L:{kcal:345, protein:32, fat:2, carbs:44} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', descriptionEn: 'Double espresso, almond milk and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:154, protein:26, fat:4, carbs:1}, M:{kcal:172, protein:29, fat:4, carbs:1}, L:{kcal:189, protein:32, fat:5, carbs:2} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', descriptionEn: 'Strawberries, banana, apple and Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232, protein:1, fat:0, carbs:54}, M:{kcal:258, protein:1, fat:1, carbs:60}, L:{kcal:283, protein:1, fat:1, carbs:66} }, isVegan: true },
@@ -379,25 +346,21 @@
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', descriptionEn: 'Banana, oatmeal and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833, protein:44, fat:38, carbs:86}, M:{kcal:926, protein:49, fat:42, carbs:95}, L:{kcal:1018, protein:53, fat: 46, carbs: 105} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', descriptionEn: 'Berries and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778, protein:24, fat:67, carbs:21}, M:{kcal:865, protein:27, fat:75, carbs:24}, L:{kcal:951, protein:29, fat: 82, carbs: 26} } },
 
-            // SALAT
             { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur og fetaostur.', descriptionEn: 'Pesto pasta, spinach, dates and feta.', macros: { kcal: 991, protein: 32, fat: 49, carbs: 102 } },
             { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur, parmesanostur og World Class+ dressing.', descriptionEn: 'Chicken, pasta and Parmesan.', macros: { kcal: 905, protein: 57, fat: 33, carbs: 97 } },
             { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar og frönsk dressing.', descriptionEn: 'Veggie patty and avocado.', macros: { kcal: 424, protein: 11, fat: 27, carbs: 39 }, isVegan: true },
             { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur, gúrka og kotasæludressing.', descriptionEn: 'Tuna, egg and cucumber.', macros: { kcal: 452, protein: 48, fat: 16, carbs: 14 } },
 
-            // GRAUTUR
             { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein. Toppað með: möndlusmjör, bláber, jarðarber og banani.', descriptionEn: 'Almond milk, oats and protein.', macros: { kcal: 720, protein: 42, fat: 13, carbs: 110 } },
             { category: 'GRAUTUR', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og vanillu prótein. Toppað með: hnetusmjör, banani, döðlur og bláber.', descriptionEn: 'Almond milk, oats and protein.', macros: { kcal: 731, protein: 44, fat: 14, carbs: 115 } },
             { category: 'GRAUTUR', theme: 'BALANCE', nameIs: 'Balance Grautur', nameEn: 'Balance Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og collagen. Toppað með: hampfræ, bláber, döðlur og jarðarber.', descriptionEn: 'Almond milk, oats and collagen.', macros: { kcal: 680, protein: 42, fat: 8, carbs: 113 } },
             { category: 'GRAUTUR', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', price: '890 kr', descriptionIs: 'Möndlumjólk, hafrar og hunang. Toppað með: hampfræ, jarðarber, kókosflögur og bláber.', descriptionEn: 'Almond milk, oats and seeds.', macros: { kcal: 524, protein: 15, fat: 14, carbs: 87 } },
 
-            // KRISP
             { category: 'KRISP', theme: 'ENERGY', nameIs: 'Kjúklinga & avókadó krisp', nameEn: 'Chicken & Avocado Crisp', price: '1.290 kr', descriptionIs: '4x Finn Crisp, kjúklingur, avókadó og sesamfræ.', descriptionEn: 'Crisp bread with chicken and avocado.', macros: { kcal: 321, protein: 28, fat: 20, carbs: 8 } },
             { category: 'KRISP', theme: 'STRENGTH', nameIs: 'Túnfisk & egg krisp', nameEn: 'Tuna & Egg Crisp', price: '1.290 kr', descriptionIs: '4x Finn Crisp og túnfisksalat.', descriptionEn: 'Crisp bread with tuna salad.', macros: { kcal: 334, protein: 32, fat: 15, carbs: 21 } },
             { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, hummus og tómatar.', descriptionEn: 'Crisp bread with hummus and tomatoes.', macros: { kcal: 318, protein: 12, fat: 8, carbs: 60 }, isVegan: true },
             { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, kjúklingasalat og tómatar.', descriptionEn: 'Crisp bread with chicken salad.', macros: { kcal: 316, protein: 29, fat: 12, carbs: 20 } },
 
-            // SKOT
             { category: 'SKOT', theme: 'ENERGY', nameIs: 'Orkuskot', nameEn: 'Energy Shot', price: '450 kr', descriptionIs: 'Rauðrófa, túrmerik, engifer, sítróna og epli.', descriptionEn: 'Beetroot, turmeric, ginger, lemon and apple.', isVegan: true },
             { category: 'SKOT', theme: 'STRENGTH', nameIs: 'Kraftskot', nameEn: 'Power Shot', price: '450 kr', descriptionIs: 'Kreatín og epli.', descriptionEn: 'Creatine and apple.', isVegan: true },
             { category: 'SKOT', theme: 'LIGHT', nameIs: 'Ofurskot', nameEn: 'Super Shot', price: '450 kr', descriptionIs: 'Túrmerik, engifer, sítróna, epli og kanill.', descriptionEn: 'Turmeric, ginger, lemon and apple.', isVegan: true },
@@ -406,18 +369,15 @@
             { category: 'SKOT', theme: 'BALANCE', nameIs: 'Túrmerik', nameEn: 'Turmeric', price: '350 kr', descriptionIs: 'Hreint túrmerikskot.', descriptionEn: 'Pure turmeric shot.', isVegan: true },
             { category: 'SKOT', theme: 'BALANCE', nameIs: 'Rauðrófa', nameEn: 'Beetroot', price: '350 kr', descriptionIs: 'Hreint rauðrófuskot.', descriptionEn: 'Pure beetroot shot.', isVegan: true },
 
-            // BÖRN
             { category: 'BÖRN', theme: 'ALL', nameIs: 'Jarðarberjaboost', nameEn: 'Strawberry Boost', price: '890 kr', descriptionIs: 'Jarðarber, banani og epli.', descriptionEn: 'Strawberry, banana and apple.', isVegan: true },
             { category: 'BÖRN', theme: 'ALL', nameIs: 'Bláberjaboost', nameEn: 'Blueberry Boost', price: '890 kr', descriptionIs: 'Bláber, banani og epli.', descriptionEn: 'Blueberry, banana and apple.', isVegan: true },
             { category: 'BÖRN', theme: 'ALL', nameIs: 'Fruit minis', nameEn: 'Fruit Minis', price: '190 kr', descriptionIs: 'Smábitar með hindberja og bláberjabragði.', descriptionEn: 'Small fruit bites.', isVegan: true },
             { category: 'BÖRN', theme: 'ALL', nameIs: 'BEAR ávaxtarúlla', nameEn: 'BEAR Fruit Roll', price: '190 kr', descriptionIs: 'Jarðarberja ávaxtarúlla.', descriptionEn: 'Strawberry fruit roll.', isVegan: true },
 
-            // KAFFI
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Americano', nameEn: 'Americano', price: '500 kr', descriptionIs: 'Svart kaffi úr nýmöluðum baunum.', descriptionEn: 'Fresh black coffee.', isVegan: true },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Espresso', nameEn: 'Espresso', price: '500 kr', descriptionIs: 'Sterkt kaffiskot.', descriptionEn: 'Strong coffee shot.', isVegan: true },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Latte', nameEn: 'Caffè Latte', price: '500 kr', descriptionIs: 'Milt kaffi með mikilli flóaðri mjólk.', descriptionEn: 'Mild coffee with milk.' },
 
-            // GRÍPTU MEÐ
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Harðfiskur', nameEn: 'Dried Fish', price: '990 kr', descriptionIs: 'Hágæða íslenskur harðfiskur.', descriptionEn: 'Premium dried fish.' },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Prótein muffins', nameEn: 'Protein Muffin', price: '590 kr', descriptionIs: 'Próteinrík muffins-kaka.', descriptionEn: 'High-protein muffin.' },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Hnetumix', nameEn: 'Nut Mix', price: '390 kr', descriptionIs: 'Blanda af völdum hnetum.', descriptionEn: 'Assorted nut mix.', isVegan: true },
@@ -427,231 +387,149 @@
         ];
 
         let state = { isIcelandic: true, activeCategory: 'DRYKKIR', activeTheme: null, selectedSize: 'M', modalItem: null, sortBy: 'category' };
+        let lastAnimateValues = { kcal: 0, protein: 0, carbs: 0, fat: 0 };
         const getLang = () => state.isIcelandic ? IS_LANG : EN_LANG;
 
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.textContent = message;
-            toast.className = "show";
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        function updateToggleVisual() {
-            const dot = document.getElementById('toggle-dot');
-            const labelIsPlain = document.getElementById('lang-label-is-plain');
-            const labelEn = document.getElementById('lang-label-en');
-            if (state.isIcelandic) {
-                dot.style.transform = 'translateX(0)';
-                labelIsPlain.classList.replace('text-gray-400', 'text-red-500');
-                labelEn.classList.replace('text-red-500', 'text-gray-400');
-            } else {
-                dot.style.transform = 'translateX(1.25rem)';
-                labelIsPlain.classList.replace('text-red-500', 'text-gray-400');
-                labelEn.classList.replace('text-gray-400', 'text-red-500');
-            }
-        }
+        function showToast(m) { const t = document.getElementById("toast"); t.textContent = m; t.className = "show"; setTimeout(() => t.className = "", 3000); }
 
         function toggleLanguage() {
             state.isIcelandic = !state.isIcelandic;
-            updateToggleVisual();
+            const dot = document.getElementById('toggle-dot');
+            dot.style.transform = state.isIcelandic ? 'translateX(0)' : 'translateX(1.25rem)';
+            document.getElementById('lang-label-is-plain').className = `text-[10px] font-bold ${state.isIcelandic ? 'text-red-500' : 'text-gray-400'} tracking-widest px-1`;
+            document.getElementById('lang-label-en').className = `text-[10px] font-bold ${!state.isIcelandic ? 'text-red-500' : 'text-gray-400'} tracking-widest px-1`;
             render();
             if (state.modalItem) openModal(rawData.indexOf(state.modalItem));
         }
 
-        function setActiveCategory(cat) {
-            state.activeCategory = cat; state.activeTheme = null; render();
-            const btn = document.querySelector(`[data-cat-btn="${cat}"]`);
-            if (btn) btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        }
-
-        function toggleTheme(themeKey) { state.activeTheme = (state.activeTheme === themeKey) ? null : themeKey; render(); }
-        function setSort(type) { state.sortBy = type; render(); }
+        function setActiveCategory(c) { state.activeCategory = c; state.activeTheme = null; render(); const b = document.querySelector(`[data-cat-btn="${c}"]`); if (b) b.scrollIntoView({ behavior: 'smooth', inline: 'center' }); }
+        function toggleTheme(k) { state.activeTheme = state.activeTheme === k ? null : k; render(); }
+        function setSort(t) { state.sortBy = t; render(); }
 
         function updateCategoryScroll() {
-            const nav = document.getElementById('category-tabs');
-            const thumb = document.getElementById('category-scroll-thumb');
-            if(!thumb || !nav) return;
-            const scrollPercent = nav.scrollLeft / (nav.scrollWidth - nav.clientWidth || 1);
-            thumb.style.transform = `translateX(${scrollPercent * 233}%)`;
+            const n = document.getElementById('category-tabs'), th = document.getElementById('category-scroll-thumb');
+            if(!th || !n) return;
+            const p = n.scrollLeft / (n.scrollWidth - n.clientWidth || 1);
+            th.style.transform = `translateX(${p * 233}%)`;
         }
 
         function render() {
-            const lang = getLang();
-            document.getElementById('tagline').textContent = lang.tagline;
-            document.getElementById('sort-label').textContent = lang.labelSortBy;
-            ['kcal', 'protein', 'carbs', 'fat', 'category'].forEach(s => {
-                const btn = document.getElementById(`sort-${s}`);
-                if (btn) btn.textContent = lang[`sort${s.charAt(0).toUpperCase() + s.slice(1)}`];
-            });
-            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById(`sort-${state.sortBy}`);
-            if(activeBtn) activeBtn.classList.add('active');
-            renderNav(); renderThemeButtons(); renderHero(); renderGrid();
-            setTimeout(updateCategoryScroll, 50);
-        }
-
-        function renderNav() {
-            const container = document.getElementById('category-tabs');
-            container.innerHTML = Object.entries(CATEGORIES).map(([key, info]) => {
-                const active = state.activeCategory === key && !state.activeTheme;
-                return `<button onclick="setActiveCategory('${key}')" data-cat-btn="${key}" class="category-tab px-6 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-[0.2em] transition-all ${active ? 'bg-red-500 text-white shadow-md shadow-red-200' : 'bg-transparent text-gray-400 hover:text-gray-600'}">${state.isIcelandic ? info.is : info.en}</button>`;
+            const l = getLang();
+            document.getElementById('tagline').textContent = l.tagline;
+            document.getElementById('sort-label').textContent = l.labelSortBy;
+            ['kcal', 'protein', 'carbs', 'fat', 'category'].forEach(s => { const b = document.getElementById(`sort-${s}`); if (b) b.textContent = l[`sort${s.charAt(0).toUpperCase() + s.slice(1)}`]; });
+            document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+            const ab = document.getElementById(`sort-${state.sortBy}`); if(ab) ab.classList.add('active');
+            
+            // Render Nav
+            document.getElementById('category-tabs').innerHTML = Object.entries(CATEGORIES).map(([k, info]) => {
+                const active = state.activeCategory === k && !state.activeTheme;
+                return `<button onclick="setActiveCategory('${k}')" data-cat-btn="${k}" class="category-tab px-6 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-[0.2em] transition-all ${active ? 'bg-red-500 text-white shadow-md shadow-red-200' : 'bg-transparent text-gray-400 hover:text-gray-600'}">${state.isIcelandic ? info.is : info.en}</button>`;
             }).join('');
-        }
 
-        function renderThemeButtons() {
-            const container = document.getElementById('theme-filters');
-            container.innerHTML = Object.values(THEMES).map(t => {
+            // Render Themes
+            document.getElementById('theme-filters').innerHTML = Object.values(THEMES).map(t => {
                 const active = state.activeTheme === t.key;
                 return `<button onclick="toggleTheme('${t.key}')" class="theme-btn text-left p-3.5 rounded-[1.2rem] flex flex-row items-center gap-3 bg-white border border-gray-100 transition-all ${active ? 'ring-2 ring-offset-2 ring-gray-100 shadow-xl scale-[1.02]' : 'hover:bg-gray-50'}" style="color: ${t.color}">
                     <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${t.color}"></div>
-                    <div class="flex flex-col">
-                        <h5 class="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5>
-                        <p class="text-[9px] text-gray-400 leading-tight font-medium">${state.isIcelandic ? t.descIs : t.descEn}</p>
-                    </div>
+                    <div class="flex flex-col"><h5 class="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5><p class="text-[9px] text-gray-400 leading-tight font-medium">${state.isIcelandic ? t.descIs : t.descEn}</p></div>
                 </button>`;
             }).join('');
-        }
 
-        function renderHero() {
-            const hero = document.getElementById('category-hero');
-            const heroImg = document.getElementById('hero-img');
-            const heroTitle = document.getElementById('hero-title');
-            const overlay = document.getElementById('hero-color-overlay');
-            let newSrc = "", newTitle = "", newColor = "", newOpacity = "0";
-            if (state.activeTheme) {
-                const t = THEMES[state.activeTheme]; newSrc = "https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg"; newTitle = state.isIcelandic ? t.is : t.en; newColor = t.color; newOpacity = '0.5';
-            } else {
-                const c = CATEGORIES[state.activeCategory]; if (c) { newSrc = c.img; newTitle = state.isIcelandic ? c.is : c.en; }
-            }
-            if (newSrc) { hero.classList.remove('hidden'); heroImg.src = newSrc; heroTitle.textContent = newTitle; overlay.style.backgroundColor = newColor; overlay.style.opacity = newOpacity; } else { hero.classList.add('hidden'); }
-        }
+            // Render Hero
+            const hero = document.getElementById('category-hero'), hi = document.getElementById('hero-img'), ht = document.getElementById('hero-title'), ho = document.getElementById('hero-color-overlay');
+            let ns = "", nti = "", nc = "", nop = "0";
+            if (state.activeTheme) { const t = THEMES[state.activeTheme]; ns = "https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg"; nti = state.isIcelandic ? t.is : t.en; nc = t.color; nop = '0.5'; }
+            else { const c = CATEGORIES[state.activeCategory]; if (c) { ns = c.img; nti = state.isIcelandic ? c.is : c.en; } }
+            if (ns) { hero.classList.remove('hidden'); hi.src = ns; ht.textContent = nti; ho.style.backgroundColor = nc; ho.style.opacity = nop; } else hero.classList.add('hidden');
 
-        function renderGrid() {
-            const container = document.getElementById('menu-grid');
-            const lang = getLang();
+            // Render Grid
+            const grid = document.getElementById('menu-grid');
             let items = [...rawData];
-            
-            if (state.activeTheme) {
-                items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
-            } else {
-                items = items.filter(i => i.category === state.activeCategory);
-            }
-            
-            if (['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
-                items.sort((a, b) => {
-                    const getVal = (item, key) => { if (!item.macros) return 0; const m = item.prices ? item.macros.M : item.macros; return m[key] || 0; };
-                    return getVal(b, state.sortBy) - getVal(a, state.sortBy);
-                });
-            }
-            
-            if (items.length === 0) { container.innerHTML = `<div class="col-span-full py-20 text-center text-gray-300 font-bold uppercase tracking-widest">${getLang().noResults}</div>`; return; }
-            
-            container.innerHTML = items.map((item) => {
+            items = state.activeTheme ? items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL') : items.filter(i => i.category === state.activeCategory);
+            if (['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) items.sort((a, b) => { const g = (i, k) => { if (!i.macros) return 0; const m = i.prices ? i.macros.M : i.macros; return m[k] || 0; }; return g(b, state.sortBy) - g(a, state.sortBy); });
+            if (items.length === 0) { grid.innerHTML = `<div class="col-span-full py-20 text-center text-gray-300 font-bold uppercase tracking-widest">${l.noResults}</div>`; return; }
+            grid.innerHTML = items.map((item) => {
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
                 const price = item.prices ? item.prices.M : item.price;
                 const macros = item.macros ? (item.prices ? item.macros.M : item.macros) : null;
-                
-                let dynamicLabel = "";
-                if (macros && ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
-                    const val = macros[state.sortBy];
-                    const unit = state.sortBy === 'kcal' ? ` ${lang.kcal}` : `g ${lang[state.sortBy]}`;
-                    dynamicLabel = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${val}${unit}</span>`;
-                } else if (macros) {
-                    dynamicLabel = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${macros.kcal} ${lang.kcal}</span>`;
-                }
-
+                let dl = "";
+                if (macros && ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) dl = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${macros[state.sortBy]}${state.sortBy === 'kcal' ? ' ' + l.kcal : 'g ' + l[state.sortBy]}</span>`;
+                else if (macros) dl = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${macros.kcal} ${l.kcal}</span>`;
                 return `<div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up flex flex-col h-full" onclick="openModal(${rawData.indexOf(item)})">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
-                            ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
-                            ${dynamicLabel}
-                        </div>
-                        <span class="text-xs font-black text-red-500 tracking-tight whitespace-nowrap">${price}</span>
-                    </div>
-                    <h3 class="text-lg font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed font-medium mt-auto line-clamp-2">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
+                    <div class="flex justify-between items-start mb-4"><div class="flex flex-wrap gap-2"><span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}${dl}</div><span class="text-xs font-black text-red-500 tracking-tight whitespace-nowrap">${price}</span></div>
+                    <h3 class="text-lg font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3><p class="text-gray-400 text-xs leading-relaxed font-medium mt-auto line-clamp-2">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
                 </div>`;
             }).join('');
+            setTimeout(updateCategoryScroll, 50);
         }
 
         function animateSynchronized(macros) {
-            const p = macros.protein || 0, c = macros.carbs || 0, f = macros.fat || 0, total = p + c + f || 1;
+            const p = macros.protein || 0, c = macros.carbs || 0, f = macros.fat || 0, k = macros.kcal || 0, t = p + c + f || 1;
             const circum = 408.4;
-            const cP = document.getElementById('circle-protein'), cC = document.getElementById('circle-carbs'), cF = document.getElementById('circle-fat'), valK = document.getElementById('val-kcal-center');
-            const pR = p / total, cR = c / total, fR = f / total;
-            [cP, cC, cF].forEach(circle => { circle.style.strokeDashoffset = circum; });
-            cP.style.transform = 'rotate(0deg)'; cC.style.transform = `rotate(${pR * 360}deg)`; cF.style.transform = `rotate(${(pR + cR) * 360}deg)`;
-            setTimeout(() => {
-                cP.style.strokeDashoffset = circum - (pR * circum); cC.style.strokeDashoffset = circum - (cR * circum); cF.style.strokeDashoffset = circum - (fR * circum);
-                let end = macros.kcal || 0, dur = 800, startT = null;
-                function step(t) { if (!startT) startT = t; let prog = Math.min((t - startT) / dur, 1); valK.textContent = Math.floor(prog * end); if (prog < 1) requestAnimationFrame(step); else valK.textContent = end; }
-                requestAnimationFrame(step);
-                ['protein', 'carbs', 'fat'].forEach(key => document.getElementById(`val-${key}`).textContent = macros[key] + 'g');
-            }, 50);
+            const cP = document.getElementById('circle-protein'), cC = document.getElementById('circle-carbs'), cF = document.getElementById('circle-fat'), vk = document.getElementById('val-kcal-center');
+            const pR = p / t, cR = c / t, fR = f / t;
+
+            // Wait a tiny bit to let DOM update before triggering CSS transitions
+            requestAnimationFrame(() => {
+                cP.style.strokeDashoffset = circum - (pR * circum);
+                cC.style.strokeDashoffset = circum - (cR * circum);
+                cF.style.strokeDashoffset = circum - (fR * circum);
+                cP.style.transform = 'rotate(0deg)';
+                cC.style.transform = `rotate(${pR * 360}deg)`;
+                cF.style.transform = `rotate(${(pR + cR) * 360}deg)`;
+            });
+
+            const sv = { ...lastAnimateValues }, ev = { kcal: k, protein: p, carbs: c, fat: f };
+            let dur = 800, st = null;
+            function step(timestamp) {
+                if (!st) st = timestamp;
+                let prog = Math.min((timestamp - st) / dur, 1);
+                const ease = 1 - Math.pow(1 - prog, 3);
+                vk.textContent = Math.floor(sv.kcal + (ev.kcal - sv.kcal) * ease);
+                ['protein', 'carbs', 'fat'].forEach(key => { const el = document.getElementById(`val-${key}`); if (el) el.textContent = Math.floor(sv[key] + (ev[key] - sv[key]) * ease) + 'g'; });
+                if (prog < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+            lastAnimateValues = { ...ev };
         }
 
         async function shareAsImage() {
-            const shareBtn = document.getElementById('share-btn');
-            const captureArea = document.getElementById('share-capture-area');
-            const item = state.modalItem; if (!item) return;
-            const originalBtn = shareBtn.innerHTML;
-            shareBtn.innerHTML = `<svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" stroke-width="2" stroke-linecap="round"/></svg>`;
-            
+            const sb = document.getElementById('share-btn'), ca = document.getElementById('share-capture-area'), item = state.modalItem; if (!item) return;
+            const ob = sb.innerHTML; sb.innerHTML = `<svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" stroke-width="2" stroke-linecap="round"/></svg>`;
             try {
-                const canvas = await html2canvas(captureArea, {
-                    backgroundColor: null, 
-                    scale: 3, 
-                    useCORS: true,
-                    logging: false,
-                    onclone: (clonedDoc) => {
-                        const area = clonedDoc.getElementById('share-capture-area');
-                        const logo = clonedDoc.getElementById('screenshot-logo-wrapper');
-                        const prices = clonedDoc.getElementById('modal-price-container');
-                        const controls = clonedDoc.getElementById('modal-controls');
-                        
-                        area.style.backgroundColor = 'white';
-                        area.style.borderRadius = '2.5rem';
-                        area.style.width = '420px';
-                        area.style.paddingTop = '40px';
-                        area.style.boxShadow = 'none';
-
-                        if (logo) logo.style.display = 'block';
-                        if (prices) prices.style.display = 'none';
-                        if (controls) controls.style.display = 'none';
-
-                        const svg = area.querySelector('svg');
-                        if (svg) { svg.style.transform = 'rotate(-90deg)'; svg.style.display = 'block'; }
-                    }
-                });
-
+                const canvas = await html2canvas(ca, { backgroundColor: null, scale: 3, useCORS: true, onclone: (clonedDoc) => {
+                    const a = clonedDoc.getElementById('share-capture-area');
+                    a.style.backgroundColor = 'white'; a.style.borderRadius = '2.5rem'; a.style.width = '420px'; a.style.paddingTop = '40px'; a.style.boxShadow = 'none';
+                    clonedDoc.getElementById('screenshot-logo-wrapper').style.display = 'block';
+                    clonedDoc.getElementById('modal-price-container').style.display = 'none';
+                    clonedDoc.getElementById('modal-controls').style.display = 'none';
+                    const svg = a.querySelector('svg'); if (svg) { svg.style.transform = 'rotate(-90deg)'; svg.style.display = 'block'; }
+                }});
                 canvas.toBlob(async (blob) => {
                     const file = new File([blob], `worldclass-${item.nameIs.toLowerCase()}.png`, { type: 'image/png' });
-                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({ files: [file], title: 'World Class+' });
-                    } else {
-                        const link = document.createElement('a');
-                        link.download = `worldclass-${item.nameIs.toLowerCase()}.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        showToast(getLang().imageCreated);
-                    }
-                    shareBtn.innerHTML = originalBtn;
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: 'World Class+' });
+                    else { const link = document.createElement('a'); link.download = `worldclass-${item.nameIs.toLowerCase()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); showToast(getLang().imageCreated); }
+                    sb.innerHTML = ob;
                 }, 'image/png');
-            } catch (err) { shareBtn.innerHTML = originalBtn; }
+            } catch (err) { sb.innerHTML = ob; }
         }
 
         function openModal(idx) {
             const item = rawData[idx]; state.modalItem = item; state.selectedSize = item.prices ? 'M' : null;
-            const content = document.getElementById('modal-content');
-            const theme = THEMES[item.theme] || { is: 'Standard', en: 'Standard', color: '#9ca3af' };
+            lastAnimateValues = { kcal: 0, protein: 0, carbs: 0, fat: 0 };
+            const circum = 408.4;
+            const content = document.getElementById('modal-content'), tag = document.getElementById('modal-tag'), theme = THEMES[item.theme] || { is: 'Standard', color: '#9ca3af' };
+            
+            // Set Initial values to 0 for growth animation
+            ['protein', 'carbs', 'fat'].forEach(c => { const el = document.getElementById(`circle-${c}`); el.style.strokeDashoffset = circum; el.style.transform = 'rotate(0deg)'; });
+            document.getElementById('val-kcal-center').textContent = '0';
+            
             document.getElementById('modal-title').textContent = state.isIcelandic ? item.nameIs : item.nameEn;
             document.getElementById('modal-description').textContent = state.isIcelandic ? item.descriptionIs : item.descriptionEn;
             document.getElementById('label-ingredients').textContent = getLang().labelIngredients;
             document.getElementById('label-nutrition').textContent = getLang().labelNutrition;
-            const tag = document.getElementById('modal-tag');
-            tag.textContent = state.isIcelandic ? theme.is : theme.en;
-            tag.style.backgroundColor = theme.color;
+            tag.textContent = state.isIcelandic ? theme.is : theme.en; tag.style.backgroundColor = theme.color;
             document.getElementById('modal-vegan').style.display = item.isVegan ? 'inline-flex' : 'none';
             updateModalUI();
             document.getElementById('item-modal').classList.replace('hidden', 'flex');
@@ -663,22 +541,18 @@
             const pContainer = document.getElementById('modal-price-container'), nSection = document.getElementById('modal-nutrition-section');
             if (item.prices) pContainer.innerHTML = `<div class="grid grid-cols-3 gap-2">${Object.entries(item.prices).map(([size, price]) => `<button onclick="changeSize('${size}')" class="flex flex-col items-center py-2.5 px-3 rounded-2xl border transition-all ${state.selectedSize === size ? 'border-red-400 bg-red-50/50 text-red-500 font-bold' : 'border-gray-100 text-gray-400 font-medium'}"><span class="text-[8px] font-black uppercase tracking-widest mb-0.5">${lang[size]}</span><span class="text-xs">${price}</span></button>`).join('')}</div>`;
             else pContainer.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tight">${item.price}</span>`;
-            const macros = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
-            if (macros) {
+            const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
+            if (m) {
                 nSection.classList.remove('hidden');
                 const styles = { protein: { bg: 'bg-red-500/5', l: lang.protein, c: 'text-red-500' }, carbs: { bg: 'bg-orange-500/5', l: lang.carbs, c: 'text-orange-500' }, fat: { bg: 'bg-sky-500/5', l: lang.fat, c: 'text-sky-600' } };
                 document.getElementById('modal-macros').innerHTML = Object.entries(styles).map(([key, s]) => `<div class="${s.bg} px-4 py-3 rounded-2xl flex items-center justify-between border border-gray-100/10"><span class="text-[8px] font-black uppercase tracking-widest pt-0.5 ${s.c}">${s.l}</span><span id="val-${key}" class="text-sm font-black text-gray-800">0g</span></div>`).join('');
-                animateSynchronized(macros);
+                animateSynchronized(m);
             } else nSection.classList.add('hidden');
         }
 
-        function changeSize(size) { state.selectedSize = size; updateModalUI(); }
-        function closeModal() {
-            const m = document.getElementById('item-modal'), c = document.getElementById('modal-content');
-            c.classList.replace('scale-100', 'scale-95'); c.classList.replace('opacity-100', 'opacity-0');
-            setTimeout(() => m.classList.replace('flex', 'hidden'), 300);
-        }
-        window.onload = () => { render(); updateToggleVisual(); };
+        function changeSize(s) { state.selectedSize = s; updateModalUI(); }
+        function closeModal() { const m = document.getElementById('item-modal'), c = document.getElementById('modal-content'); c.classList.replace('scale-100', 'scale-95'); c.classList.replace('opacity-100', 'opacity-0'); setTimeout(() => m.classList.replace('flex', 'hidden'), 300); }
+        window.onload = () => render();
     </script>
 </body>
 </html>
