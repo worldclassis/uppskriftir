@@ -124,10 +124,10 @@
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-600">
 
-    <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div class="max-w-4xl mx-auto px-4 pt-4 pb-8 sm:pt-8 sm:pb-12">
         
-        <header class="flex flex-col items-center mb-10">
-            <div class="w-full flex justify-end items-center mb-8">
+        <header class="flex flex-col items-center mb-6 sm:mb-10">
+            <div class="w-full flex justify-end items-center mb-4 sm:mb-8">
                 <div class="flex items-center gap-3">
                     <span id="lang-label-is-plain" class="text-[10px] font-bold text-red-500 transition-colors tracking-widest">ÍS</span>
                     <button onclick="toggleLanguage()" class="relative w-10 h-5 bg-gray-100 rounded-full p-0.5 transition-colors hover:bg-gray-200 focus:outline-none">
@@ -137,18 +137,18 @@
                 </div>
             </div>
             
-            <div class="logo-animated mb-4"></div>
+            <div class="logo-animated mb-2 sm:mb-4"></div>
             <p id="tagline" class="text-gray-400 font-semibold text-xs sm:text-sm text-center tracking-[0.1em] uppercase"></p>
         </header>
 
-        <!-- Hero mynd (Einfölduð án animations) -->
+        <!-- Hero mynd - Hæð minnkuð í h-40 á mobile (var h-48) -->
         <div class="mb-8">
-            <div id="category-hero" class="rounded-[2rem] overflow-hidden shadow-xl relative h-48 sm:h-64 hidden animate-slide-up">
+            <div id="category-hero" class="rounded-[2rem] overflow-hidden shadow-xl relative h-40 sm:h-64 hidden animate-slide-up">
                 <img id="hero-img" src="" class="w-full h-full object-cover" alt="Borðamynd">
                 <div id="hero-color-overlay" class="absolute inset-0 transition-all duration-300 pointer-events-none mix-blend-multiply opacity-0 z-10"></div>
                 
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-8 z-20">
-                    <h2 id="hero-title" class="text-white text-3xl sm:text-4xl font-black uppercase tracking-tight"></h2>
+                    <h2 id="hero-title" class="text-white text-2xl sm:text-4xl font-black uppercase tracking-tight"></h2>
                 </div>
             </div>
         </div>
@@ -277,7 +277,7 @@
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', descriptionEn: 'Vanilla Skyr, strawberries and mango.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:177, protein:11, fat:2, carbs:30}, M:{kcal:197, protein:12, fat:2, carbs:33}, L:{kcal:216, protein:13, fat:2, carbs:37} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Jarðarber, döðlur, hnetusmjör og prótein.', descriptionEn: 'Strawberries, dates and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636, protein:39, fat:31, carbs:61}, M:{kcal:707, protein:44, fat:35, carbs:68}, L:{kcal:778, protein:48, fat:38, carbs:75} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', descriptionEn: 'Banana, oatmeal and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833, protein:44, fat:38, carbs:86}, M:{kcal:926, protein:49, fat:42, carbs:95}, L:{kcal:1018, protein:53, carbs: 105} } },
-            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', descriptionEn: 'Berries and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778, protein:24, fat:67, carbs:21}, M:{kcal:865, protein:27, fat:75, carbs:24}, L:{kcal:951, protein:29, fat:82, carbs:26} } },
+            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', descriptionEn: 'Berries and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778, protein:24, fat:67, carbs:21}, M:{kcal:865, protein:27, fat:75, carbs:24}, L:{kcal:951, protein:29, font: 82, carbs: 26} } },
 
             // SALAT
             { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur og fetaostur.', descriptionEn: 'Pesto pasta, spinach, dates and feta.', macros: { kcal: 991, protein: 32, fat: 49, carbs: 102 } },
@@ -452,7 +452,6 @@
                 overlay.style.backgroundColor = newColor;
                 overlay.style.opacity = newOpacity;
                 
-                // Sýna texta strax án animation
                 heroTitle.style.opacity = '1';
             } else {
                 hero.classList.add('hidden');
