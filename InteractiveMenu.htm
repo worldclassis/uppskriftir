@@ -203,17 +203,17 @@
                     <span id="modal-vegan" class="hidden text-[8px] font-black px-2 py-0.5 bg-green-500/10 text-green-600 rounded-md uppercase tracking-widest border border-green-500/20">Vegan</span>
                 </div>
                 
-                <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-0.5"></h2>
-                <p id="modal-theme-desc" class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-300 mb-4"></p>
+                <!-- Heiti og Innihald -->
+                <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-4"></h2>
+                
+                <div class="mb-8">
+                    <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300 mb-1.5">Innihaldslýsing</h4>
+                    <p id="modal-description" class="text-gray-600 leading-relaxed text-base font-medium"></p>
+                </div>
 
                 <div id="modal-price-container" class="mb-8"></div>
 
                 <div class="space-y-6">
-                    <div>
-                        <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300 mb-1.5">Innihaldslýsing</h4>
-                        <p id="modal-description" class="text-gray-600 leading-relaxed text-base font-medium"></p>
-                    </div>
-
                     <!-- Næringargildi Section -->
                     <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100/50 hidden">
                         <div class="flex justify-between items-center mb-3">
@@ -470,24 +470,14 @@
             
             container.innerHTML = items.map((item) => {
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
-                const catInfo = CATEGORIES[item.category] || { is: item.category, en: item.category };
                 const price = item.prices ? item.prices.M : item.price;
                 
-                const categoryLabel = state.activeTheme ? `
-                    <span class="text-[8px] font-bold text-gray-300 uppercase tracking-widest mb-1.5 block">
-                        ${state.isIcelandic ? catInfo.is : catInfo.en}
-                    </span>
-                ` : '';
-
                 return `
                     <div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up" onclick="openModal(${rawData.indexOf(item)})">
                         <div class="flex justify-between items-start mb-4">
-                            <div class="flex flex-col gap-1">
-                                ${categoryLabel}
-                                <div class="flex gap-2">
-                                    <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
-                                    ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
-                                </div>
+                            <div class="flex gap-2">
+                                <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
+                                ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
                             </div>
                             <span class="text-base font-black text-red-500 tracking-tight">${price}</span>
                         </div>
@@ -522,9 +512,9 @@
             const theme = THEMES[item.theme] || { is: 'Standard', en: 'Standard', color: '#9ca3af', descIs: '', descEn: '' };
             document.getElementById('modal-title').textContent = state.isIcelandic ? item.nameIs : item.nameEn;
             document.getElementById('modal-description').textContent = state.isIcelandic ? item.descriptionIs : item.descriptionEn;
-            document.getElementById('modal-theme-desc').textContent = state.isIcelandic ? theme.descIs : theme.descEn;
             document.getElementById('label-ingredients').textContent = getLang().labelIngredients;
             document.getElementById('label-nutrition').textContent = getLang().labelNutrition;
+            
             const tag = document.getElementById('modal-tag');
             tag.textContent = state.isIcelandic ? theme.is : theme.en;
             tag.style.backgroundColor = theme.color;
