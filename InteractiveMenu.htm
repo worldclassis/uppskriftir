@@ -172,7 +172,7 @@
         <!-- Akkeri fyrir scroll -->
         <div id="menu-scroll-anchor" class="h-0 relative -top-6"></div>
 
-        <!-- Sticky Nav Container -->
+        <!-- Sticky Nav Container (Categories) -->
         <div id="sticky-nav-container" class="sticky top-4 z-40 mb-6 space-y-3">
             <div class="glass rounded-2xl shadow-sm border border-gray-100/50">
                 <div class="scroll-mask-container">
@@ -185,7 +185,7 @@
             </div>
         </div>
 
-        <!-- Þemasíur -->
+        <!-- Theme Filters Section -->
         <div id="theme-filters" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
         </div>
 
@@ -294,7 +294,7 @@
     <div id="toast"></div>
 
     <script>
-        // --- 1. DATA & STATE ---
+        // --- 1. CONFIG & DATA ---
         const IS_LANG = {
             tagline: 'þín orka, þinn árangur.',
             labelIngredients: 'Innihaldslýsing',
@@ -334,37 +334,44 @@
             'SKOT': { is: 'Skot', en: 'Shots', img: 'https://images.prismic.io/worldclass/aXQ3CAIvOtkhB5aW_skot.jpg' },
             'BÖRN': { is: 'Börn', en: 'Kids', img: 'https://images.prismic.io/worldclass/aVxTOHNYClf9ozUB_menu_21920.jpg' },
             'KAFFI': { is: 'Kaffi', en: 'Coffee', img: 'https://kitchenaid.com.au/cdn/shop/articles/Untitled_design_22_a34b9e85-b904-4444-b67b-c0cb895357ea.png?v=1728611009' },
-            'GRÍPTU MEÐ': { is: 'Gríptu með', en: 'Grab & Go', img: 'https://images.prismic.io/worldclass/aXQ2UQIvOtkhB5aU_gripamed.jpg?auto=format,compress' }
+            'GRÍPTU MEÐ': { is: 'Gríptu með', en: 'Grab & Go', img: 'https://images.prismic.io/worldclass/aXQ2UQIvOtkhB5U_gripamed.jpg?auto=format,compress' }
         };
 
         let state = { isIcelandic: true, activeCategory: 'DRYKKIR', activeTheme: null, selectedSize: 'M', modalItem: null, sortBy: 'category' };
         let lastAnimateValues = { kcal: 0, protein: 0, carbs: 0, fat: 0 };
 
         const rawData = [
-            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Vanillu skyr, banani, hnetusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636.3, protein:39.4, fat:31.3, carbs:61.4, fiber:12.5}, M:{kcal:707, protein:43.8, fat:34.8, carbs:68.2, fiber:13.9}, L:{kcal:777.7, protein:48.2, fat:38.3, carbs:75.0, fiber:15.3} } },
-            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833.4, protein:44, fat:38.3, carbs:86.1, fiber:15.8}, M:{kcal:926, protein:48.9, fat:42.5, carbs:95.7, fiber:17.5}, L:{kcal:1018.6, protein:53.8, fat:46.8, carbs:105.3, fiber:19.3} } },
-            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778.5, protein:24.4, fat:67.7, carbs:21.8, fiber:4.8}, M:{kcal:865, protein:27.5, fat:75.2, carbs:24.2, fiber:5.3}, L:{kcal:951, protein:29.8, fat:82.7, carbs:26.6, fiber:5.8} } },
-            { category: 'GRAUTUR', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og vanillu prótein.', macros: { kcal: 731, protein: 44, fat: 13.8, carbs: 115, fiber: 15.5 } },
-            { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur og parmesanostur.', macros: { kcal: 905, protein: 57.4, fat: 33, carbs: 97.6, fiber: 13 } },
-            { category: 'KRISP', theme: 'STRENGTH', nameIs: 'Túnfisk & Egg Krisp', nameEn: 'Tuna & Egg Crisp', price: '1.290 kr', descriptionIs: 'Finn Crisp, túnfisksalat, egg og graslaukur.', macros: { kcal: 313, protein: 31.8, fat: 15.5, carbs: 16.9, fiber: 4.6 } },
+            // STRENGTH
+            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Vanillu skyr, banani, hnetusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636, protein:39, fat:31, carbs:61, fiber:13}, M:{kcal:707, protein:44, fat:35, carbs:68, fiber:14}, L:{kcal:778, protein:48, fat:38, carbs:75, fiber:15} } },
+            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833, protein:44, fat:38, carbs:86, fiber:16}, M:{kcal:926, protein:49, fat:43, carbs:96, fiber:18}, L:{kcal:1019, protein:54, fat:47, carbs:105, fiber:19} } },
+            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:779, protein:24, fat:68, carbs:22, fiber:5}, M:{kcal:865, protein:28, fat:75, carbs:24, fiber:5}, L:{kcal:951, protein:30, fat:83, carbs:27, fiber:6} } },
+            { category: 'GRAUTUR', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og vanillu prótein.', macros: { kcal: 731, protein: 44, fat: 14, carbs: 115, fiber: 16 } },
+            { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur og parmesanostur.', macros: { kcal: 905, protein: 57, fat: 33, carbs: 98, fiber: 13 } },
+            { category: 'KRISP', theme: 'STRENGTH', nameIs: 'Túnfisk & Egg Krisp', nameEn: 'Tuna & Egg Crisp', price: '1.290 kr', descriptionIs: 'Finn Crisp, túnfisksalat, egg og graslaukur.', macros: { kcal: 313, protein: 32, fat: 16, carbs: 17, fiber: 5 } },
+
+            // ENERGY
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:308, protein:38, fat:1, carbs:37, fiber:4}, M:{kcal:333, protein:40, fat:1, carbs:41, fiber:1}, L:{kcal:354, protein:42, fat:1, carbs:44, fiber:4} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:28, fat:9, carbs:4, fiber:0}, M:{kcal:200, protein:30, fat:10, carbs:4, fiber:0}, L:{kcal:220, protein:32, fat:11, carbs:4, fiber:0} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:142, protein:1, fat:1, carbs:43, fiber:4}, M:{kcal:157, protein:2, fat:1, carbs:39, fiber:4}, L:{kcal:173, protein:2, fat:1, carbs:43, fiber:4} }, isVegan: true },
-            { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein.', macros: { kcal: 720, protein: 42.4, fat: 13, carbs: 110, fiber: 12 } },
-            { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur og kasjúhnetur.', macros: { kcal: 991, protein: 32.2, fat: 49.4, carbs: 102, fiber: 17 } },
-            { category: 'KRISP', theme: 'ENERGY', nameIs: 'Kjúklinga & Avocado Krisp', nameEn: 'Chicken & Avocado Crisp', price: '1.290 kr', descriptionIs: 'Finn Crisp, kjúklingur, avókadó og sesamfræ.', macros: { kcal: 290, protein: 22.8, fat: 14.5, carbs: 21.9, fiber: 6.6 } },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232.2, protein:28.1, fat:1.2, carbs:31.2, fiber:7.3}, M:{kcal:258, protein:31.2, fat:1.3, carbs:34.7, fiber:8.1}, L:{kcal:283.3, protein:34.3, fat:1.4, carbs:38.2, fiber:8.9} } },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283.3, protein:23.3, fat:2, carbs:44, fiber:6}, M:{kcal:300, protein:26, fat:2, carbs:49, fiber:7}, L:{kcal:347, protein:29, fat:2, carbs:54, fiber:8} } },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:177.3, protein:11.2, fat:2.3, carbs:30.5, fiber:2.7}, M:{kcal:197, protein:12.2, fat:2.5, carbs:33.9, fiber:3.0}, L:{kcal:216.7, protein:13.4, fat:2.8, carbs:37.3, fiber:3.3} } },
-            { category: 'GRAUTUR', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', price: '890 kr', descriptionIs: 'Möndlumjólk, hafrar og hunang.', macros: { kcal: 524, protein: 15.6, fat: 14.5, carbs: 87, fiber: 12 } },
-            { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur og gúrka.', macros: { kcal: 452, protein: 48.5, fat: 16.5, carbs: 14.7, fiber: 3.5 } },
-            { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: 'Finn Crisp, kjúklingasalat og tómatar.', macros: { kcal: 288, protein: 28.8, fat: 12.5, carbs: 14.9, fiber: 4.1 } },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:231.7, protein:23.8, fat:1.8, carbs:33.1, fiber:5.1}, M:{kcal:257.5, protein:26.5, fat:2.0, carbs:36.8, fiber:5.7}, L:{kcal:283.2, protein:29.1, fat:2.2, carbs:40.5, fiber:6.3} } },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:365.4, protein:4, fat:17.8, carbs:56.1, fiber:14.5}, M:{kcal:406, protein:4.4, fat:19.8, carbs:62.3, fiber:16.1}, L:{kcal:446.6, protein:4.8, fat:21.8, carbs:68.5, fiber:17.7} }, isVegan: true },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:324, protein:6.1, fat:18, carbs:43.6, fiber:12.5}, M:{kcal:360, protein:6.8, fat:20, carbs:48.5, fiber:13.9}, L:{kcal:396.1, protein:7.5, fat:22.5, carbs:53.4, fiber:15.3} }, isVegan: true },
+            { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein.', macros: { kcal: 720, protein: 42, fat: 13, carbs: 110, fiber: 12 } },
+            { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur og kasjúhnetur.', macros: { kcal: 991, protein: 32, fat: 49, carbs: 102, fiber: 17 } },
+            { category: 'KRISP', theme: 'ENERGY', nameIs: 'Kjúklinga & Avocado Krisp', nameEn: 'Chicken & Avocado Crisp', price: '1.290 kr', descriptionIs: 'Finn Crisp, kjúklingur, avókadó og sesamfræ.', macros: { kcal: 290, protein: 23, fat: 15, carbs: 22, fiber: 7 } },
+
+            // LIGHT
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232, protein:28, fat:1, carbs:31, fiber:7}, M:{kcal:258, protein:31, fat:1, carbs:35, fiber:8}, L:{kcal:283, protein:34, fat:1, carbs:38, fiber:9} } },
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283, protein:23, fat:2, carbs:44, fiber:6}, M:{kcal:300, protein:26, fat:2, carbs:49, fiber:7}, L:{kcal:347, protein:29, fat:2, carbs:54, fiber:8} } },
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:177, protein:11, fat:2, carbs:31, fiber:3}, M:{kcal:197, protein:12, fat:3, carbs:34, fiber:3}, L:{kcal:217, protein:13, fat:3, carbs:37, fiber:3} } },
+            { category: 'GRAUTUR', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', price: '890 kr', descriptionIs: 'Möndlumjólk, hafrar og hunang.', macros: { kcal: 524, protein: 16, fat: 15, carbs: 87, fiber: 12 } },
+            { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur og gúrka.', macros: { kcal: 452, protein: 49, fat: 17, carbs: 15, fiber: 4 } },
+            { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: 'Finn Crisp, kjúklingasalat og tómatar.', macros: { kcal: 288, protein: 29, fat: 13, carbs: 15, fiber: 4 } },
+
+            // BALANCE
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232, protein:24, fat:2, carbs:33, fiber:5}, M:{kcal:258, protein:27, fat:2, carbs:37, fiber:6}, L:{kcal:283, protein:29, fat:2, carbs:41, fiber:6} } },
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:365, protein:4, fat:18, carbs:56, fiber:15}, M:{kcal:406, protein:4, fat:20, carbs:62, fiber:16}, L:{kcal:447, protein:5, fat:22, carbs:69, fiber:18} }, isVegan: true },
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:324, protein:6, fat:18, carbs:44, fiber:13}, M:{kcal:360, protein:7, fat:20, carbs:49, fiber:14}, L:{kcal:396, protein:7, fat:22, carbs:53, fiber:15} }, isVegan: true },
             { category: 'GRAUTUR', theme: 'BALANCE', nameIs: 'Balance Grautur', nameEn: 'Balance Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og collagen.', macros: { kcal: 680, protein: 42, fat: 8, carbs: 113, fiber: 13 } },
-            { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado og rauðlaukur.', macros: { kcal: 539, protein: 11.4, fat: 37.6, carbs: 42.2, fiber: 10 }, isVegan: true },
-            { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus Krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: 'Finn Crisp, hummus og tómatar.', macros: { kcal: 263, protein: 10.8, fat: 7.5, carbs: 49.9, fiber: 19 }, isVegan: true }
+            { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado og rauðlaukur.', macros: { kcal: 539, protein: 11, fat: 38, carbs: 42, fiber: 10 }, isVegan: true },
+            { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus Krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: 'Finn Crisp, hummus og tómatar.', macros: { kcal: 263, protein: 11, fat: 8, carbs: 50, fiber: 19 }, isVegan: true }
         ];
 
         const shotItems = [
@@ -421,14 +428,10 @@
             }
         }
 
-        /**
-         * Smoothly scroll the page so the category/sticky nav is at the top.
-         * We target the actual anchor point that stays at the scroll destination.
-         */
         function scrollToMenu() {
             const target = document.getElementById('menu-scroll-anchor');
             if (target) {
-                const yOffset = -16; // Add margin top for a clean look
+                const yOffset = -20;
                 const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
                 window.scrollTo({top: y, behavior: 'smooth'});
             }
@@ -439,19 +442,14 @@
             state.isIcelandic = !state.isIcelandic;
             updateToggleVisual();
             render();
-            // Removed automatic modal reopening to fix the language toggle bug
         }
 
         function setActiveCategory(c) { 
             state.activeCategory = c; 
             state.activeTheme = null; 
             render(); 
-            
-            // Scroll category list horizontally
             const b = document.querySelector(`[data-cat-btn="${c}"]`); 
             if (b) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); 
-            
-            // Wait for DOM update layout then scroll page vertically
             requestAnimationFrame(() => scrollToMenu());
         }
 
@@ -547,15 +545,22 @@
                     const vA = getVal(a, state.sortBy);
                     const vB = getVal(b, state.sortBy);
                     if (vA === null) return 1; if (vB === null) return -1;
-                    return vA - vB; // Ascending order
+                    return vA - vB;
                 });
             } else {
+                // Sorting logic: Theme -> Category (via fixed CATEGORIES order) -> Name
                 items.sort((a, b) => {
                     const themeIdxA = THEME_ORDER.indexOf(a.theme);
                     const themeIdxB = THEME_ORDER.indexOf(b.theme);
-                    const effA = themeIdxA === -1 ? 99 : themeIdxA;
-                    const effB = themeIdxB === -1 ? 99 : themeIdxB;
-                    if (effA !== effB) return effA - effB;
+                    const effThemeA = themeIdxA === -1 ? 99 : themeIdxA;
+                    const effThemeB = themeIdxB === -1 ? 99 : themeIdxB;
+                    if (effThemeA !== effThemeB) return effThemeA - effThemeB;
+
+                    const catOrder = Object.keys(CATEGORIES);
+                    const catIdxA = catOrder.indexOf(a.category);
+                    const catIdxB = catOrder.indexOf(b.category);
+                    if (catIdxA !== catIdxB) return catIdxA - catIdxB;
+
                     return (state.isIcelandic ? a.nameIs : a.nameEn).localeCompare(state.isIcelandic ? b.nameIs : b.nameEn);
                 });
             }
@@ -564,17 +569,38 @@
             
             grid.innerHTML = items.map((item) => {
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
+                const catInfo = CATEGORIES[item.category] || { is: item.category, en: item.category };
                 const price = item.prices ? item.prices.M : item.price;
                 const m = item.macros ? (item.prices ? item.macros.M : item.macros) : null;
+                
                 let dl = "";
                 if (m && ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy)) {
                     dl = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${Math.round(m[state.sortBy])}${state.sortBy === 'kcal' ? ' ' + l.kcal : 'g ' + l[state.sortBy]}</span>`;
                 } else if (m) {
                     dl = `<span class="text-[8px] font-bold px-2 py-0.5 bg-gray-50 text-gray-400 rounded-md uppercase tracking-widest">${Math.round(m.kcal)} ${l.kcal}</span>`;
                 }
+
+                // Category Label for Theme View
+                const categoryLabel = state.activeTheme ? `
+                    <span class="text-[8px] font-bold text-gray-300 uppercase tracking-widest mb-1 block">
+                        ${state.isIcelandic ? catInfo.is : catInfo.en}
+                    </span>
+                ` : '';
+
                 return `<div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up flex flex-col h-full" onclick="openModal(${fullData.indexOf(item)})">
-                    <div class="flex justify-between items-start mb-4"><div class="flex flex-wrap gap-2"><span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}${dl}</div><span class="text-xs font-black text-red-500 tracking-tight whitespace-nowrap">${price}</span></div>
-                    <h3 class="text-lg font-extrabold text-gray-900 mb-2 pr-4 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3><p class="text-gray-400 text-xs leading-relaxed font-medium mt-auto line-clamp-2">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex flex-col gap-1">
+                            ${categoryLabel}
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
+                                ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20">Vegan</span>' : ''}
+                                ${dl}
+                            </div>
+                        </div>
+                        <span class="text-xs font-black text-red-500 tracking-tight whitespace-nowrap">${price}</span>
+                    </div>
+                    <h3 class="text-lg font-extrabold text-gray-900 mb-2 pr-4 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed font-medium mt-auto line-clamp-2">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
                 </div>`;
             }).join('');
             setTimeout(updateCategoryScroll, 50);
