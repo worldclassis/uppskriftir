@@ -166,7 +166,7 @@
                 <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-0.5"></h2>
                 <p id="modal-theme-desc" class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-300 mb-4"></p>
 
-                <div id="modal-price-container" class="mb-6"></div>
+                <div id="modal-price-container" class="mb-8"></div>
 
                 <div class="space-y-6">
                     <div>
@@ -227,45 +227,30 @@
             'SALAT': { is: 'Salöt', en: 'Salads', img: 'https://images.prismic.io/worldclass/aVxTN3NYClf9ozUA_menu_11920.jpg' },
             'GRAUTUR': { is: 'Grautar', en: 'Porridge', img: 'https://images.prismic.io/worldclass/aVxTOnNYClf9ozUD_menu_41920.jpg' },
             'KRISP': { is: 'Krisp', en: 'Crisp', img: 'https://images.prismic.io/worldclass/aVxTOXNYClf9ozUC_menu_31920.jpg' },
-            'SKOT': { is: 'Skot', en: 'Shots', img: 'https://images.prismic.io/worldclass/aVxY43NYClf9ozUz_menu_21920.jpg?auto=format,compress' },
-            'BÖRN': { is: 'Börn', en: 'Kids', img: 'https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg?auto=format,compress' },
+            'SKOT': { is: 'Skot', en: 'Shots', img: 'https://images.prismic.io/worldclass/aXQ3CAIvOtkhB5aW_skot.jpg' },
+            'BÖRN': { is: 'Börn', en: 'Kids', img: 'https://images.prismic.io/worldclass/aVxTOHNYClf9ozUB_menu_21920.jpg' },
             'KAFFI': { is: 'Kaffi', en: 'Coffee', img: 'https://kitchenaid.com.au/cdn/shop/articles/Untitled_design_22_a34b9e85-b904-4444-b67b-c0cb895357ea.png?v=1728611009' },
-            'GRÍPTU MEÐ': { is: 'Gríptu með', en: 'Grab & Go', img: 'https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg?auto=format,compress' }
-        };
-
-        const DRINK_MACROS = {
-            'Kraftur': { S: { kcal: 282, protein: 26, fat: 1, carbs: 36 }, M: { kcal: 314, protein: 29, fat: 2, carbs: 40 }, L: { kcal: 345, protein: 32, fat: 2, carbs: 44 } },
-            'Prótein ískaffi': { S: { kcal: 154, protein: 26, fat: 4, carbs: 1 }, M: { kcal: 172, protein: 29, fat: 4, carbs: 1 }, L: { kcal: 189, protein: 32, fat: 5, carbs: 2 } },
-            'Snerpa': { S: { kcal: 232, protein: 1, fat: 0, carbs: 54 }, M: { kcal: 258, protein: 1, fat: 1, carbs: 60 }, L: { kcal: 283, protein: 1, fat: 1, carbs: 66 } },
-            'Gleði': { S: { kcal: 227, protein: 24, fat: 1, carbs: 28 }, M: { kcal: 253, protein: 27, fat: 2, carbs: 31 }, L: { kcal: 278, protein: 29, fat: 2, carbs: 34 } },
-            'Líf': { S: { kcal: 216, protein: 1, fat: 8, carbs: 35 }, M: { kcal: 241, protein: 1, fat: 9, carbs: 39 }, L: { kcal: 265, protein: 1, font: 10, carbs: 43 } },
-            'Endurnýjun': { S: { kcal: 255, protein: 1, fat: 1, carbs: 57 }, M: { kcal: 284, protein: 1, fat: 1, carbs: 64 }, L: { kcal: 312, protein: 1, fat: 1, carbs: 70 } },
-            'Græn heilsa': { S: { kcal: 180, protein: 12, fat: 1, carbs: 27 }, M: { kcal: 200, protein: 13, fat: 1, carbs: 30 }, L: { kcal: 220, protein: 15, fat: 1, carbs: 33 } },
-            'Brennsla': { S: { kcal: 283, protein: 23, fat: 1, carbs: 43 }, M: { kcal: 300, protein: 25, fat: 1, carbs: 48 }, L: { kcal: 347, protein: 28, fat: 2, carbs: 53 } },
-            'Upphitun': { S: { kcal: 177, protein: 11, fat: 2, carbs: 30 }, M: { kcal: 197, protein: 12, fat: 2, carbs: 33 }, L: { kcal: 216, protein: 13, fat: 2, carbs: 37 } },
-            'Massi': { S: { kcal: 636, protein: 39, fat: 31, carbs: 61 }, M: { kcal: 707, protein: 44, fat: 35, carbs: 68 }, L: { kcal: 778, protein: 48, fat: 38, carbs: 75 } },
-            'Orka': { S: { kcal: 833, protein: 44, fat: 38, carbs: 86 }, M: { kcal: 926, protein: 49, fat: 42, carbs: 95 }, L: { kcal: 1018, protein: 53, fat: 46, carbs: 105 } },
-            'Berjabomba': { S: { kcal: 778, protein: 24, fat: 67, carbs: 21 }, M: { kcal: 865, protein: 27, fat: 75, carbs: 24 }, L: { kcal: 951, protein: 29, fat: 82, carbs: 26 } }
+            'GRÍPTU MEÐ': { is: 'Gríptu með', en: 'Grab & Go', img: 'https://images.prismic.io/worldclass/aXQ2UQIvOtkhB5aU_gripamed.jpg?auto=format,compress' }
         };
 
         const rawData = [
             // DRYKKIR
-            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', descriptionEn: 'Vanilla Skyr, banana, strawberries and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Kraftur'] },
-            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'espresso, möndlumjólk, ólífuolía og prótein.', descriptionEn: 'Double espresso, almond milk and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Prótein ískaffi'] },
-            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', descriptionEn: 'Strawberries, banana, apple and Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Snerpa'], isVegan: true },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', descriptionEn: 'Lemon, ginger, apple and strawberry protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Gleði'] },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', descriptionEn: 'Avocado, apple, pineapple and ginger.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Líf'], isVegan: true },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', descriptionEn: 'Beetroot juice, avocado, celery and lemon.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Endurnýjun'], isVegan: true },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', descriptionEn: 'Spinach, mango, apple and collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Græn heilsa'] },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', descriptionEn: 'Apple, mango, blueberries and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Brennsla'] },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', descriptionEn: 'Vanilla Skyr, strawberries and mango.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: DRINK_MACROS['Upphitun'] },
-            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Jarðarber, döðlur, hnetusmjör og prótein.', descriptionEn: 'Strawberries, dates and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: DRINK_MACROS['Massi'] },
-            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', descriptionEn: 'Banana, oatmeal and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: DRINK_MACROS['Orka'] },
-            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', descriptionEn: 'Berries and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: DRINK_MACROS['Berjabomba'] },
+            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', descriptionEn: 'Vanilla Skyr, banana, strawberries and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:282, protein:26, fat:1, carbs:36}, M:{kcal:314, protein:29, fat:2, carbs:40}, L:{kcal:345, protein:32, fat:2, carbs:44} } },
+            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', descriptionEn: 'Double espresso, almond milk and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:154, protein:26, fat:4, carbs:1}, M:{kcal:172, protein:29, fat:4, carbs:1}, L:{kcal:189, protein:32, fat:5, carbs:2} } },
+            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', descriptionEn: 'Strawberries, banana, apple and Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232, protein:1, fat:0, carbs:54}, M:{kcal:258, protein:1, fat:1, carbs:60}, L:{kcal:283, protein:1, fat:1, carbs:66} }, isVegan: true },
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', descriptionEn: 'Lemon, ginger, apple and strawberry protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:227, protein:24, fat:1, carbs:28}, M:{kcal:253, protein:27, fat:2, carbs:31}, L:{kcal:278, protein:29, fat:2, carbs:34} } },
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', descriptionEn: 'Avocado, apple, pineapple and ginger.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:216, protein:1, fat:8, carbs:35}, M:{kcal:241, protein:1, fat:9, carbs:39}, L:{kcal:265, protein:1, font: 10, carbs: 43} }, isVegan: true },
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', descriptionEn: 'Beetroot juice, avocado, celery and lemon.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:255, protein:1, fat:1, carbs:57}, M:{kcal:284, protein:1, fat:1, carbs:64}, L:{kcal:312, protein:1, fat:1, carbs:70} }, isVegan: true },
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', descriptionEn: 'Spinach, mango, apple and collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:12, fat:1, carbs:27}, M:{kcal:200, protein:13, fat:1, carbs:30}, L:{kcal:220, protein:15, fat:1, carbs:33} } },
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', descriptionEn: 'Apple, mango, blueberries and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283, protein:23, fat:1, carbs:43}, M:{kcal:300, protein:25, fat:1, carbs:48}, L:{kcal:347, protein:28, fat:2, carbs:53} } },
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', descriptionEn: 'Vanilla Skyr, strawberries and mango.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:177, protein:11, fat:2, carbs:30}, M:{kcal:197, protein:12, fat:2, carbs:33}, L:{kcal:216, protein:13, fat:2, carbs:37} } },
+            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Jarðarber, döðlur, hnetusmjör og prótein.', descriptionEn: 'Strawberries, dates and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636, protein:39, fat:31, carbs:61}, M:{kcal:707, protein:44, fat:35, carbs:68}, L:{kcal:778, protein:48, fat:38, carbs:75} } },
+            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', descriptionEn: 'Banana, oatmeal and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833, protein:44, fat:38, carbs:86}, M:{kcal:926, protein:49, fat:42, carbs:95}, L:{kcal:1018, protein:53, fat:46, carbs:105} } },
+            { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', descriptionEn: 'Berries and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778, protein:24, fat:67, carbs:21}, M:{kcal:865, protein:27, fat:75, carbs:24}, L:{kcal:951, protein:29, fat:82, carbs:26} } },
 
             // SALAT
             { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur og fetaostur.', descriptionEn: 'Pesto pasta, spinach, dates and feta.', macros: { kcal: 991, protein: 32, fat: 49, carbs: 102 } },
-            { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur, parmesan og dressing.', descriptionEn: 'Chicken, pasta and Parmesan.', macros: { kcal: 905, protein: 57, fat: 33, carbs: 97 } },
+            { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur, parmesanostur og World Class+ dressing.', descriptionEn: 'Chicken, pasta and Parmesan.', macros: { kcal: 905, protein: 57, fat: 33, carbs: 97 } },
             { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar og frönsk dressing.', descriptionEn: 'Veggie patty and avocado.', macros: { kcal: 424, protein: 11, fat: 27, carbs: 39 }, isVegan: true },
             { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur, gúrka og kotasæludressing.', descriptionEn: 'Tuna, egg and cucumber.', macros: { kcal: 452, protein: 48, fat: 16, carbs: 14 } },
 
@@ -299,8 +284,6 @@
             // KAFFI
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Americano', nameEn: 'Americano', price: '500 kr', descriptionIs: 'Svart kaffi úr nýmöluðum baunum.', descriptionEn: 'Fresh black coffee.', isVegan: true },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Espresso', nameEn: 'Espresso', price: '500 kr', descriptionIs: 'Sterkt kaffiskot.', descriptionEn: 'Strong coffee shot.', isVegan: true },
-            { category: 'KAFFI', theme: 'ALL', nameIs: 'Tvöfaldur Espresso', nameEn: 'Double Espresso', price: '500 kr', descriptionIs: 'Tvöfaldur skammtur af hreinni orku.', descriptionEn: 'A double shot.', isVegan: true },
-            { category: 'KAFFI', theme: 'ALL', nameIs: 'Cappucino', nameEn: 'Cappuccino', price: '500 kr', descriptionIs: 'Espresso með flóaðri mjólk.', descriptionEn: 'Espresso with steamed milk.' },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Latte', nameEn: 'Caffè Latte', price: '500 kr', descriptionIs: 'Milt kaffi með mikilli flóaðri mjólk.', descriptionEn: 'Mild coffee with milk.' },
 
             // GRÍPTU MEÐ
