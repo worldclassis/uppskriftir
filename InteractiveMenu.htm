@@ -340,7 +340,7 @@
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', descriptionEn: 'Double espresso, almond milk and protein powder.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:154, protein:26, fat:4, carbs:1}, M:{kcal:172, protein:29, fat:4, carbs:1}, L:{kcal:189, protein:32, fat:5, carbs:2} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', descriptionEn: 'Strawberries, banana, apple and Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232, protein:1, fat:0, carbs:54}, M:{kcal:258, protein:1, fat:1, carbs:60}, L:{kcal:283, protein:1, fat:1, carbs:66} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', descriptionEn: 'Lemon, ginger, apple and strawberry protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:227, protein:24, fat:1, carbs:28}, M:{kcal:253, protein:27, fat:2, carbs:31}, L:{kcal:278, protein:29, fat:2, carbs:34} } },
-            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', descriptionEn: 'Avocado, apple, pineapple and ginger.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:216, protein:1, fat: 8, carbs: 35}, M:{kcal:241, protein:1, fat: 10, carbs: 43}, L:{kcal:266, protein:1, fat: 12, carbs: 51} }, isVegan: true },
+            { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', descriptionEn: 'Avocado, apple, pineapple and ginger.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:216, protein:1, fat: 8, carbs: 35}, M:{kcal:241, protein:1, fat: 10, carbs: 43}, L:{kcal:216, protein:1, fat: 12, carbs: 51} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', descriptionEn: 'Beetroot juice, avocado, celery and lemon.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:255, protein:1, fat:1, carbs:57}, M:{kcal:284, protein:1, fat:1, carbs:64}, L:{kcal:312, protein:1, fat:1, carbs:70} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', descriptionEn: 'Spinach, mango, apple and collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:12, fat:1, carbs:27}, M:{kcal:200, protein:13, fat:1, carbs:30}, L:{kcal:180, protein:12, fat:1, carbs:27} } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', descriptionEn: 'Apple, mango, blueberries and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283, protein:23, fat:1, carbs:43}, M:{kcal:300, protein:25, fat:1, carbs:48}, L:{kcal:347, protein:28, fat: 2, carbs: 53} } },
@@ -574,6 +574,7 @@
                 const theme = THEMES[item.theme] || { is: 'All', en: 'All', color: '#9ca3af' };
                 const catInfo = CATEGORIES[item.category] || { is: item.category, en: item.category };
                 const lang = getLang();
+                const price = item.prices ? item.prices.M : item.price; // Get price (default to M for sized items)
 
                 const activeSort = ['kcal', 'protein', 'carbs', 'fat'].includes(state.sortBy) ? state.sortBy : 'kcal';
                 const macros = item.macros ? (item.prices ? item.macros.M : item.macros) : null;
@@ -593,8 +594,8 @@
 
                 return `
                     <div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up flex flex-col h-full" onclick="openModal(${rawData.indexOf(item)})">
-                        <div class="mb-4">
-                            <div class="flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex flex-col gap-2">
                                 ${categoryTag}
                                 <div class="flex flex-wrap gap-2">
                                     <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
@@ -602,6 +603,7 @@
                                     ${dynamicLabel}
                                 </div>
                             </div>
+                            <span class="text-xs font-black text-red-500 tracking-tight whitespace-nowrap">${price}</span>
                         </div>
                         <h3 class="text-lg font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
                         <p class="text-gray-400 text-xs leading-relaxed font-medium mt-auto line-clamp-2">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
@@ -690,10 +692,9 @@
             shareBtn.innerHTML = `<span class="text-[8px] font-black">${getLang().sharing}</span>`;
             
             try {
-                // Við byrjum á því að búa til Canvas en bíðum með File creation þar til share skipun er gefin
                 const canvas = await html2canvas(captureArea, {
                     backgroundColor: null, 
-                    scale: 2.5, // Örlítið minni scale til að flýta fyrir vinnslu á iPhone
+                    scale: 2.5, 
                     useCORS: true,
                     borderRadius: 32,
                     logging: false,
@@ -723,7 +724,6 @@
                             el.style.lineHeight = '1';
                             el.style.verticalAlign = 'middle';
                             el.style.boxSizing = 'border-box';
-                            // Manual nudge fyrir textann svo hann lendi í miðjunni á myndinni
                             el.style.paddingBottom = '4px'; 
                         };
 
@@ -732,21 +732,18 @@
                     }
                 });
 
-                // Mynd búin til sem Blob strax
                 canvas.toBlob(async (blob) => {
                     if (!blob) return;
                     const file = new File([blob], 'worldclass-plus-menu.png', { type: 'image/png' });
 
                     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                         try {
-                            // Við verðum að kalla á share() innan mjög stutts tíma glugga
                             await navigator.share({
                                 files: [file],
                                 title: 'World Class+',
                                 text: getLang().tagline
                             });
                         } catch (shareErr) {
-                            // Canceled villur eru hunsaðar
                         }
                     } else {
                         const dataUrl = canvas.toDataURL('image/png');
@@ -756,7 +753,6 @@
                         link.click();
                     }
                     
-                    // Reset hnappur
                     shareBtn.innerHTML = `
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
