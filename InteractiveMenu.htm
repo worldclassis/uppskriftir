@@ -136,16 +136,16 @@
             <p id="tagline" class="text-gray-400 font-bold text-[10px] text-center tracking-[0.2em] uppercase"></p>
         </header>
 
-        <!-- Sýnar-val (Segmented Control look) -->
-        <div class="flex justify-center mb-12">
+        <!-- Sýnar-val - Bætt við z-50 svo það fari ekki bakvið stikuna -->
+        <div class="flex justify-center mb-12 relative z-50">
             <div class="bg-gray-100/90 p-1 rounded-2xl flex gap-1 border border-gray-200/40 w-full max-w-[280px] relative">
                 <button onclick="setViewMode('categories')" id="mode-categories" class="view-toggle-btn flex-1 py-2.5 rounded-xl text-[10px] transition-all uppercase font-black tracking-widest z-10">Flokkar</button>
                 <button onclick="setViewMode('themes')" id="mode-themes" class="view-toggle-btn flex-1 py-2.5 rounded-xl text-[10px] transition-all uppercase font-black tracking-widest z-10">Markmið</button>
             </div>
         </div>
 
-        <!-- Akkerispunktur fyrir scroll - Núna hér fyrir ofan flokka/markmið stikuna -->
-        <div id="scroll-anchor" class="h-px w-full -mt-20"></div>
+        <!-- Akkerispunktur fyrir scroll - Núna nákvæmlega fyrir ofan síustikuna -->
+        <div id="scroll-anchor" class="h-px w-full -mt-2"></div>
 
         <!-- Síustikur - Modern Glass Design -->
         <div id="category-container" class="sticky top-6 z-40 mb-10 hidden">
@@ -162,7 +162,7 @@
         <!-- Hero -->
         <div class="mb-10">
             <div id="category-hero" class="rounded-[2.5rem] overflow-hidden shadow-xl relative h-44 sm:h-80 hidden animate-slide-up">
-                <img id="hero-img" src="" class="w-full h-full object-cover" alt="Bakgrunnur">
+                <img id="hero-img" src="" class="w-full h-full object-cover" alt="Hero">
                 <div id="hero-color-overlay" class="absolute inset-0 transition-all duration-300 pointer-events-none mix-blend-multiply opacity-0 z-10"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-8 sm:p-12 z-20">
                     <h2 id="hero-title" class="text-white text-3xl sm:text-6xl font-black uppercase tracking-tighter"></h2>
@@ -185,7 +185,7 @@
         <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 min-h-[400px]"></div>
 
         <section class="mt-24 relative rounded-[2.5rem] overflow-hidden shadow-xl">
-            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Auglýsing" class="w-full h-auto object-cover">
+            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Promotion" class="w-full h-auto object-cover">
         </section>
         
         <footer class="mt-24 text-center pb-16">
