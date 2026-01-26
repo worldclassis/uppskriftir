@@ -172,7 +172,8 @@
             </div>
         </div>
 
-        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[400px]"></div>
+        <!-- Grid uppfært með gap-4 fyrir betra bil á milli carda -->
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 min-h-[400px]"></div>
 
         <section class="mt-24 relative rounded-[2.5rem] overflow-hidden shadow-xl">
             <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Auglýsing" class="w-full h-auto object-cover">
@@ -185,7 +186,7 @@
 
     <!-- Modal (Popup) -->
     <div id="item-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-gray-950/25 backdrop-blur-sm transition-opacity duration-300" onclick="closeModal()">
-        <div class="bg-white rounded-[3rem] shadow-2xl max-w-sm w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300 relative" id="modal-content" onclick="event.stopPropagation()">
+        <div class="bg-white rounded-[3rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300 relative" id="modal-content" onclick="event.stopPropagation()">
             
             <div class="absolute top-6 right-6 z-50 flex gap-2 export-hide">
                 <button id="share-img-btn" onclick="shareAsImage()" class="bg-gray-50 p-2.5 rounded-full hover:bg-white text-gray-400 hover:text-blue-500 border border-gray-100 transition-colors shadow-sm">
@@ -199,8 +200,8 @@
             <div id="export-container" class="p-8 sm:p-10 bg-white" style="border-radius: 3rem;">
                 <div class="flex items-start justify-between mb-8">
                     <div class="flex flex-wrap gap-2.5 pr-10">
-                        <span id="modal-tag" class="text-[9px] font-black px-2.5 py-1 rounded-lg text-white uppercase tracking-widest shadow-sm"></span>
-                        <span id="modal-vegan" class="hidden text-[9px] font-black px-2.5 py-1 bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20">Vegan</span>
+                        <span id="modal-tag" class="text-[9px] font-black px-2.5 py-1.5 rounded-lg text-white uppercase tracking-widest shadow-sm"></span>
+                        <span id="modal-vegan" class="hidden text-[9px] font-black px-2.5 py-1.5 bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20">Vegan</span>
                     </div>
                     <img id="export-logo" src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress" class="hidden h-7 w-auto object-contain" alt="World Class+">
                 </div>
@@ -220,10 +221,10 @@
                             <div id="modal-sizes" class="flex gap-2 export-hide"></div>
                         </div>
                         
-                        <div class="flex items-center justify-between gap-4">
-                            <!-- SVG Hringur gerður stærri -->
+                        <div class="flex items-center justify-between gap-6">
+                            <!-- SVG Hringur ráðandi vinstra megin -->
                             <div class="relative w-[55%] flex justify-center items-center">
-                                <svg width="150" height="150" viewBox="0 0 150 150" class="transform -rotate-90">
+                                <svg width="140" height="140" viewBox="0 0 150 150" class="transform -rotate-90">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
                                     <circle id="circle-protein" cx="75" cy="75" r="65" stroke="#f87171" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
                                     <circle id="circle-carbs" cx="75" cy="75" r="65" stroke="#fdba74" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
@@ -231,11 +232,11 @@
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                                     <span id="val-kcal-center" class="text-2xl font-black text-gray-900 leading-none tracking-tighter">0</span>
-                                    <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1">kcal</span>
+                                    <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1.5">kcal</span>
                                 </div>
                             </div>
-                            <!-- Gildisboxin löng og þunn með minna letri -->
-                            <div id="modal-macros" class="w-[45%] flex flex-col gap-1.5"></div>
+                            <!-- Gildisboxin löng og þunn hægra megin -->
+                            <div id="modal-macros" class="w-[45%] flex flex-col gap-2"></div>
                         </div>
                     </div>
                 </div>
@@ -284,27 +285,29 @@
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Jarðarber, döðlur, hnetusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636, protein:39, fat:31, carbs:61, fiber:13}, M:{kcal:707, protein:44, fat:35, carbs:68, fiber:14}, L:{kcal:778, protein:48, fat:38, carbs:75, fiber:15} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833, protein:44, fat:38, carbs:86, fiber:16}, M:{kcal:926, protein:48.9, fat:42.5, carbs:95.7, fiber:17.5}, L:{kcal:1018.6, protein:53.8, fat:46.8, carbs:105.3, fiber:19.3} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778.5, protein:24.4, fat:67.7, carbs:21.8, fiber:4.8}, M:{kcal:865, protein:27.5, fat:75.2, carbs:24.2, fiber:5.3}, L:{kcal:951, protein:29.8, fat:82.7, carbs:26.6, fiber:5.8} } },
-            { category: 'GRAUTUR', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og vanillu prótein.', macros: { kcal: 731, protein: 44, fat: 14, carbs: 115, fiber: 16 } },
-            { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength Salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur, parmesanostur.', macros: { kcal: 905, protein: 57, fat: 33, carbs: 98, fiber: 13 } },
-            { category: 'KRISP', theme: 'STRENGTH', nameIs: 'Túnfisk & Egg Krisp', nameEn: 'Tuna & Egg Crisp', price: '1.290 kr', descriptionIs: '4x Finn Crisp og túnfisksalat.', macros: { kcal: 313, protein: 32, fat: 16, carbs: 17, fiber: 5 } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:308, protein:38, fat:0.9, carbs:37, fiber:3.6}, M:{kcal:333, protein:40, fat:1, carbs:41, fiber:4}, L:{kcal:354, protein:42, fat:1.1, carbs:44, fiber:4.4} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:28, fat:8.7, carbs:3.6, fiber:0}, M:{kcal:200, protein:30, fat:9.7, carbs:4, fiber:0}, L:{kcal:220, protein:32, fat:10.7, carbs:4.4, fiber:0} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:142, protein:1.4, fat:0.5, carbs:43.5, fiber:3.6}, M:{kcal:157, protein:1.6, fat:0.6, carbs:39, fiber:4}, L:{kcal:173, protein:1.8, fat:0.7, carbs:43, fiber:4.4} }, isVegan: true },
-            { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein.', macros: { kcal: 720, protein: 42.4, fat: 13, carbs: 110, fiber: 12 } },
-            { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy Salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur og fetaostur.', macros: { kcal: 991, protein: 32.2, fat: 49.4, carbs: 102, fiber: 17 } },
-            { category: 'KRISP', theme: 'ENERGY', nameIs: 'Kjúklinga Avocado Krisp', nameEn: 'Chicken Avocado Crisp', price: '1.290 kr', descriptionIs: '4x Finn Crisp, kjúklingur, avókadó og sesamfræ.', macros: { kcal: 290, protein: 22.8, fat: 14.5, carbs: 21.9, fiber: 6.6 } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232.2, protein:28.1, fat:1.2, carbs:31.2, fiber:7.3}, M:{kcal:258, protein:31.2, fat:1.3, carbs:34.7, fiber:8.1}, L:{kcal:283.3, protein:34.3, fat:1.4, carbs:38.2, fiber:8.9} } },
-            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283.3, protein:23.3, fat:1.7, carbs:43.7, fiber:6.3}, M:{kcal:300, protein:25.9, fat:1.9, carbs:48.6, fiber:7}, L:{kcal:347, protein:28.5, fat:2.1, carbs:53.5, fiber:7.7} } },
+            { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Brennsla', nameEn: 'Metabolism', descriptionIs: 'Epli, mangó, bláber, engifer og prótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:283.3, protein:23.3, fat:1.7, carbs:43.7, fiber:6.3}, M:{kcal:300, protein:25.9, fat:1.9, carbs:48.6, fiber:7}, L:{kcal:347, protein:28.5, fat:2.1, carbs:53.5, fiber:7.7} } },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Upphitun', nameEn: 'Warm-up', descriptionIs: 'Vanillu skyr, jarðarber, mangó og ananas.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:177.3, protein:11, fat:2.3, carbs:30.5, fiber:2.7}, M:{kcal:197, protein:12.2, fat:2.5, carbs:33.9, fiber:3}, L:{kcal:216.7, protein:13.4, fat:2.8, carbs:37.3, fiber:3.3} } },
-            { category: 'GRAUTUR', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', price: '890 kr', descriptionIs: 'Möndlumjólk, hafrar og hunang.', macros: { kcal: 524, protein: 15.6, fat: 14.5, carbs: 87, fiber: 12 } },
-            { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light Salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur, gúrka og kotasæludressing.', macros: { kcal: 452, protein: 48.5, fat: 16.5, carbs: 14.7, fiber: 3.5 } },
-            { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, kjúklingasalat og tómatar.', macros: { kcal: 288, protein: 28.8, fat: 12.5, carbs: 14.9, fiber: 4.1 } },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Gleði', nameEn: 'Joy', descriptionIs: 'Sítróna, engifer, jarðarber, epli og jarðarberjaprótein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232, protein:24, fat:2, carbs:33, fiber:5}, M:{kcal:257.5, protein:26.5, fat:2, carbs:36.8, fiber:5.7}, L:{kcal:283.2, protein:29.1, fat:2.2, carbs:40.5, fiber:6.3} } },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Líf', nameEn: 'Life', descriptionIs: 'Avókadó, epli, ananas og engifer.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:365.4, protein:4, fat:17.8, carbs:56.1, fiber:14.5}, M:{kcal:406, protein:4.4, fat:19.8, carbs:62.3, fiber:16.1}, L:{kcal:446.6, protein:4.8, fat:21.8, carbs:68.5, fiber:17.7} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'BALANCE', nameIs: 'Endurnýjun', nameEn: 'Renewal', descriptionIs: 'Rauðrófusafi, avókadó, sellerí, epli og sítróna.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:324, protein:6, fat:18, carbs:43, fiber:13}, M:{kcal:360, protein:6.8, fat:20, carbs:48.5, fiber:13.9}, L:{kcal:396.1, protein:7.48, fat:22, carbs:53.35, fiber:15.29} }, isVegan: true },
-            { category: 'GRAUTUR', theme: 'BALANCE', nameIs: 'Balance Grautur', nameEn: 'Balance Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og collagen.', macros: { kcal: 680, protein: 42, fat: 8, carbs: 113, fiber: 13 } },
+            { category: 'SALAT', theme: 'STRENGTH', nameIs: 'Strength Salat', nameEn: 'Strength Salad', price: '2.190 kr', descriptionIs: 'Kjúklingur, pasta, vínber, döðlur, parmesanostur.', macros: { kcal: 905, protein: 57.4, fat: 33, carbs: 97.6, fiber: 13 } },
+            { category: 'SALAT', theme: 'ENERGY', nameIs: 'Energy Salat', nameEn: 'Energy Salad', price: '2.190 kr', descriptionIs: 'Pestó pasta, tómatar, spínat, döðlur, kasjúhnetur og fetaostur.', macros: { kcal: 991, protein: 32.2, fat: 49.4, carbs: 102, fiber: 17 } },
+            { category: 'SALAT', theme: 'LIGHT', nameIs: 'Light Salat', nameEn: 'Light Salad', price: '1.890 kr', descriptionIs: 'Salat, túnfiskur, egg, rauðlaukur, gúrka og kotasæludressing.', macros: { kcal: 452, protein: 48.5, fat: 16.5, carbs: 14.7, fiber: 3.5 } },
             { category: 'SALAT', theme: 'BALANCE', nameIs: 'Balance Salat', nameEn: 'Balance Salad', price: '2.190 kr', descriptionIs: 'Salat, grænmetisbuff, avocado, rauðlaukur, gúrka, tómatar.', macros: { kcal: 539, protein: 11.4, fat: 37.6, carbs: 42.2, fiber: 9.5 }, isVegan: true },
-            { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus Krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, hummus og tómatar.', macros: { kcal: 263, protein: 11, fat: 8, carbs: 50, fiber: 19 }, isVegan: true },
+            { category: 'GRAUTUR', theme: 'STRENGTH', nameIs: 'Strength Grautur', nameEn: 'Strength Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og vanillu prótein.', macros: { kcal: 731, protein: 44, fat: 13.8, carbs: 115, fiber: 15.5 } },
+            { category: 'GRAUTUR', theme: 'ENERGY', nameIs: 'Energy Grautur', nameEn: 'Energy Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og Cookies & Cream prótein.', macros: { kcal: 720, protein: 42.4, fat: 13, carbs: 110, fiber: 12 } },
+            { category: 'GRAUTUR', theme: 'LIGHT', nameIs: 'Light Grautur', nameEn: 'Light Porridge', price: '890 kr', descriptionIs: 'Möndlumjólk, hafrar og hunang.', macros: { kcal: 524, protein: 15.6, fat: 14.5, carbs: 87, fiber: 12 } },
+            { category: 'GRAUTUR', theme: 'BALANCE', nameIs: 'Balance Grautur', nameEn: 'Balance Porridge', price: '990 kr', descriptionIs: 'Möndlumjólk, hafrar, hunang og collagen.', macros: { kcal: 680, protein: 42, fat: 8, carbs: 113, fiber: 13 } },
+            { category: 'KRISP', theme: 'STRENGTH', nameIs: 'Túnfisk & Egg Krisp', nameEn: 'Tuna & Egg Crisp', price: '1.290 kr', descriptionIs: '4x Finn Crisp og túnfisksalat.', macros: { kcal: 313, protein: 31.8, fat: 15.5, carbs: 16.9, fiber: 4.6 } },
+            { category: 'KRISP', theme: 'ENERGY', nameIs: 'Kjúklinga Avocado Krisp', nameEn: 'Chicken Avocado Crisp', price: '1.290 kr', descriptionIs: '4x Finn Crisp, kjúklingur, avókadó og sesamfræ.', macros: { kcal: 290, protein: 22.8, fat: 14.5, carbs: 21.9, fiber: 6.6 } },
+            { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, kjúklingasalat og tómatar.', macros: { kcal: 288, protein: 28.8, fat: 12.5, carbs: 14.9, fiber: 4.1 } },
+            { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus Krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, hummus og tómatar.', macros: { kcal: 263, protein: 10.8, fat: 7.5, carbs: 49.9, fiber: 18.6 }, isVegan: true },
+            { category: 'SKOT', theme: 'ALL', nameIs: 'Engifer Skot', nameEn: 'Ginger Shot', price: '450 kr', descriptionIs: 'Ferskt engifer og sítróna.', macros: { kcal: 15, protein: 0.5, fat: 0, carbs: 3, fiber: 0.5 }, isVegan: true },
+            { category: 'SKOT', theme: 'ALL', nameIs: 'Túrmerik Skot', nameEn: 'Turmeric Shot', price: '450 kr', descriptionIs: 'Túrmerik, epli og engifer.', macros: { kcal: 20, protein: 0.5, fat: 0, carbs: 4.5, fiber: 0.5 }, isVegan: true },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Harðfiskur', nameEn: 'Dried Fish', price: '990 kr', descriptionIs: 'Hágæða íslenskur harðfiskur.', macros: { kcal: 320, protein: 78, fat: 1, carbs: 0, fiber: 0 } },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Prótein muffins', nameEn: 'Protein Muffin', price: '590 kr', descriptionIs: 'Próteinrík muffins-kaka.', macros: { kcal: 240, protein: 18, fat: 8, carbs: 22, fiber: 4 } },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Hnetumix', nameEn: 'Nut Mix', price: '390 kr', descriptionIs: 'Blanda af völdum hnetum.', macros: { kcal: 180, protein: 8, fat: 14, carbs: 12, fiber: 3 }, isVegan: true },
@@ -577,7 +580,6 @@
             
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
-                // Uppfært: tölur í text-sm og örsmá heiti samkvæmt beiðni
                 const rows = [ 
                     {k:'protein', c:'text-[#dc2626]', bg:'bg-[#fff1f2]'}, 
                     {k:'carbs', c:'text-[#ea580c]', bg:'bg-[#fff7ed]'},   
@@ -585,7 +587,7 @@
                     {k:'fiber', c:'text-[#16a34a]', bg:'bg-[#f0fdf4]'}    
                 ];
                 mCont.innerHTML = rows.map(r => `
-                    <div class="${r.bg} px-4 py-1.5 rounded-[1.2rem] flex items-center justify-between border border-white/50 shadow-sm w-full">
+                    <div class="${r.bg} px-5 py-2.5 rounded-[1.4rem] flex items-center justify-between border border-white/50 shadow-sm w-full">
                         <span class="text-[6.5px] font-black uppercase tracking-[0.2em] ${r.c}">${lang[r.k]}</span>
                         <span id="val-${r.k}" class="text-sm font-black text-gray-800">0g</span>
                     </div>`).join('');
