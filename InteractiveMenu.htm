@@ -126,18 +126,19 @@
             <p id="tagline" class="text-gray-400 font-bold text-[10px] text-center tracking-[0.2em] uppercase"></p>
         </header>
 
-        <!-- Sýnar-val -->
-        <div class="flex justify-center mb-12 relative z-50">
-            <div class="bg-gray-100/90 p-1 rounded-2xl flex gap-1 border border-gray-200/40 w-full max-w-[280px] relative">
+        <!-- Sýnar-val - Z-index lækkað í 30 svo það fari undir sticky bar -->
+        <div class="flex justify-center mb-12 relative z-30">
+            <div class="bg-gray-100/90 p-1 rounded-2xl flex gap-1 border border-gray-200/40 w-full max-w-[280px] relative shadow-inner">
                 <button onclick="setViewMode('categories')" id="mode-categories" class="view-toggle-btn flex-1 py-2.5 rounded-xl text-[10px] transition-all uppercase font-black tracking-widest z-10">Flokkar</button>
                 <button onclick="setViewMode('themes')" id="mode-themes" class="view-toggle-btn flex-1 py-2.5 rounded-xl text-[10px] transition-all uppercase font-black tracking-widest z-10">Markmið</button>
             </div>
         </div>
 
-        <div id="scroll-anchor" class="h-px w-full -mt-24 mb-24"></div>
+        <!-- Akkerispunktur fyrir scroll -->
+        <div id="scroll-anchor" class="h-px w-full -mt-2"></div>
 
-        <!-- Síustikur -->
-        <div id="category-container" class="sticky top-6 z-40 mb-10 hidden">
+        <!-- Síustikur - Z-index hækkað í 50 svo hún sé alltaf efst -->
+        <div id="category-container" class="sticky top-6 z-50 mb-10 hidden">
             <div class="glass rounded-[2rem] overflow-hidden">
                 <div class="scroll-mask-container">
                     <nav id="category-tabs" class="flex overflow-x-auto no-scrollbar gap-1 w-full py-4 px-6 justify-start items-center relative">
@@ -310,7 +311,7 @@
             { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, kjúklingasalat og tómatar.', descriptionEn: '4x Finn Crisp, chicken salad, and tomatoes.', macros: { kcal: 288, protein: 28.8, fat: 12.5, carbs: 14.9, fiber: 4.1 } },
             { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus Krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, hummus og tómatar.', descriptionEn: '4x Finn Crisp, hummus, and tomatoes.', macros: { kcal: 263, protein: 10.8, fat: 7.5, carbs: 49.9, fiber: 18.6 }, isVegan: true },
             
-            // SKOT
+            // SKOT (Uppfært með réttum markmiðum og lýsingum)
             { category: 'SKOT', theme: 'ENERGY', nameIs: 'Orkuskot', nameEn: 'Energy Shot', price: '450 kr', descriptionIs: 'Rauðrófa, túrmerik, engifer, sítróna, epli.', descriptionEn: 'Beetroot, turmeric, ginger, lemon, apple.', macros: { kcal: 22, protein: 0.5, fat: 0, carbs: 5.2, fiber: 0.6 }, isVegan: true },
             { category: 'SKOT', theme: 'STRENGTH', nameIs: 'Kraftskot', nameEn: 'Power Shot', price: '450 kr', descriptionIs: 'Kreatín, epli.', descriptionEn: 'Creatine, apple.', macros: { kcal: 18, protein: 0.2, fat: 0, carbs: 4.5, fiber: 0.4 }, isVegan: true },
             { category: 'SKOT', theme: 'LIGHT', nameIs: 'Ofurskot', nameEn: 'Super Shot', price: '450 kr', descriptionIs: 'Túrmerik, engifer, sítróna, epli, kanill.', descriptionEn: 'Turmeric, ginger, lemon, apple, cinnamon.', macros: { kcal: 20, protein: 0.4, fat: 0, carbs: 4.8, fiber: 0.5 }, isVegan: true },
@@ -329,7 +330,7 @@
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Americano', nameEn: 'Americano', price: '550 kr', descriptionIs: 'Tvöfaldur espresso og heitt vatn.', descriptionEn: 'Double espresso and hot water.', macros: { kcal: 5, protein: 0.2, fat: 0, carbs: 1, fiber: 0 }, isVegan: true },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Espresso', nameEn: 'Espresso', price: '450 kr', descriptionIs: 'Sterkt og gott ítalskt kaffi.', descriptionEn: 'Strong and authentic Italian coffee.', macros: { kcal: 2, protein: 0.1, fat: 0, carbs: 0.4, fiber: 0 }, isVegan: true },
             
-            // GRÍPTU MEÐ
+            // SNARL
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Harðfiskur', nameEn: 'Dried Fish', price: '990 kr', descriptionIs: 'Hágæða íslenskur harðfiskur.', descriptionEn: 'High quality Icelandic dried fish.', macros: { kcal: 320, protein: 78, fat: 1, carbs: 0, fiber: 0 } },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Prótein muffins', nameEn: 'Protein Muffin', price: '590 kr', descriptionIs: 'Próteinrík muffins-kaka.', descriptionEn: 'Protein-rich muffin.', macros: { kcal: 240, protein: 18, fat: 8, carbs: 22, fiber: 4 } },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Hnetumix', nameEn: 'Nut Mix', price: '390 kr', descriptionIs: 'Blanda af völdum hnetum.', descriptionEn: 'Selection of mixed nuts.', macros: { kcal: 180, protein: 8, fat: 14, carbs: 12, fiber: 3 }, isVegan: true },
@@ -442,7 +443,7 @@
             container.innerHTML = sortedThemes.map(key => {
                 const t = THEMES[key];
                 const active = state.activeTheme === t.key;
-                return `<button onclick="state.activeTheme='${t.key}';render();scrollToContent()" class="theme-btn text-left p-4 rounded-3xl flex items-start gap-3 bg-white border border-gray-100 ${active ? 'ring-2 ring-offset-2 ring-red-500 shadow-lg' : ''}" style="color:${t.color}"><div class="w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0" style="background-color:${t.color}"></div><div><h5 class="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5><p class="text-[9px] text-gray-400 leading-tight">${state.isIcelandic ? t.descIs : t.descEn}</p></div></button>`;
+                return `<button onclick="state.activeTheme='${t.key}';render();scrollToContent()" class="theme-btn text-left p-4 rounded-3xl flex items-start gap-3 bg-white border border-gray-100 ${active ? 'ring-2 ring-offset-2 ring-red-500 shadow-lg' : ''}" style="color:${t.color}"><div class="w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0" style="background-color:${t.color}"></div><div><h5 class="text-[10px] font-black uppercase tracking-widest mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5><p class="text-[9px] text-gray-400 leading-tight">${state.isIcelandic ? t.descIs : t.descEn}</p></div></button>`;
             }).join('');
         }
 
