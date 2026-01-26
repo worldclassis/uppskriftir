@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laugar Cafe | Interactive Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- html2canvas dependency for image export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -23,11 +23,14 @@
             color: var(--secondary);
             -webkit-tap-highlight-color: transparent;
         }
+        
+        /* Modern Glassmorphism Stíll */
         .glass {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
         }
         
         .scroll-mask-container {
@@ -44,13 +47,20 @@
             box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
+        /* Uppfærður textastíll fyrir flokka samkvæmt mynd */
         .category-tab {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 800;
-            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            font-weight: 900;
+            font-size: 0.65rem;
+        }
+
+        .active-tab {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -76,8 +86,8 @@
         .view-toggle-btn {
             transition: all 0.3s ease;
             text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 0.05em;
+            font-weight: 900;
+            letter-spacing: 0.08em;
         }
         .view-toggle-btn.active {
             background-color: white;
@@ -89,7 +99,7 @@
             transition: all 0.2s ease;
             white-space: nowrap;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 0.05em;
         }
 
@@ -131,11 +141,11 @@
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-600">
 
-    <div class="max-w-4xl mx-auto px-4 pt-4 pb-8 sm:pt-8 sm:pb-12">
+    <div class="max-w-4xl mx-auto px-4 pt-6 pb-8 sm:pt-12 sm:pb-16">
         
         <!-- Haus -->
-        <header class="flex flex-col items-center mb-8">
-            <div class="w-full flex justify-end items-center mb-4 sm:mb-8">
+        <header class="flex flex-col items-center mb-12 sm:mb-20">
+            <div class="w-full flex justify-end items-center mb-6 sm:mb-10">
                 <button onclick="toggleLanguage()" class="group relative flex items-center focus:outline-none" title="Change Language">
                     <div id="lang-flag-container" class="lang-globe w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-md ring-1 ring-gray-100">
                         <img id="lang-flag-img" src="https://flagcdn.com/w80/is.png" class="w-full h-full object-cover" alt="Flag">
@@ -143,115 +153,117 @@
                 </button>
             </div>
             
-            <div class="logo-animated mb-4"></div>
-            <p id="tagline" class="text-gray-400 font-semibold text-xs sm:text-sm text-center tracking-[0.1em] uppercase"></p>
+            <div class="logo-animated mb-6"></div>
+            <p id="tagline" class="text-gray-400 font-bold text-xs sm:text-sm text-center tracking-[0.15em] uppercase"></p>
         </header>
 
         <!-- Sýnar-val -->
-        <div class="flex justify-center mb-6">
-            <div class="bg-gray-100/80 p-1 rounded-2xl flex gap-1 border border-gray-200/50">
-                <button onclick="setViewMode('categories')" id="mode-categories" class="view-toggle-btn px-6 py-2 rounded-xl text-[10px] text-gray-400 transition-all">Flokkar</button>
-                <button onclick="setViewMode('themes')" id="mode-themes" class="view-toggle-btn px-6 py-2 rounded-xl text-[10px] text-gray-400 transition-all">Markmið</button>
+        <div class="flex justify-center mb-8">
+            <div class="bg-gray-100/80 p-1.5 rounded-2xl flex gap-1 border border-gray-200/50">
+                <button onclick="setViewMode('categories')" id="mode-categories" class="view-toggle-btn px-8 py-2.5 rounded-xl text-[10px] text-gray-400 transition-all">Flokkar</button>
+                <button onclick="setViewMode('themes')" id="mode-themes" class="view-toggle-btn px-8 py-2.5 rounded-xl text-[10px] text-gray-400 transition-all">Markmið</button>
             </div>
         </div>
 
-        <div id="scroll-anchor" class="h-1 -mt-4 mb-4"></div>
+        <div id="scroll-anchor" class="h-px w-full -mt-24 mb-24"></div>
 
-        <!-- Síustikur -->
-        <div id="category-container" class="sticky top-4 z-40 mb-6 hidden">
-            <div class="glass rounded-[1.5rem] shadow-sm overflow-hidden">
+        <!-- Síustikur - Modern Glass Design -->
+        <div id="category-container" class="sticky top-6 z-40 mb-8 hidden">
+            <div class="glass rounded-[2.2rem] overflow-hidden">
                 <div class="scroll-mask-container">
-                    <nav id="category-tabs" class="flex overflow-x-auto no-scrollbar gap-1 w-full py-3 px-4 justify-start"></nav>
+                    <nav id="category-tabs" class="flex overflow-x-auto no-scrollbar gap-1 w-full py-3.5 px-5 justify-start items-center"></nav>
                 </div>
             </div>
         </div>
-        <div id="theme-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10 hidden"></div>
+        <div id="theme-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12 hidden"></div>
 
         <!-- Hero -->
-        <div class="mb-6">
-            <div id="category-hero" class="rounded-2xl overflow-hidden shadow-xl relative h-36 sm:h-64 hidden animate-slide-up">
+        <div class="mb-8">
+            <div id="category-hero" class="rounded-3xl overflow-hidden shadow-2xl relative h-40 sm:h-72 hidden animate-slide-up">
                 <img id="hero-img" src="" class="w-full h-full object-cover" alt="Hero">
                 <div id="hero-color-overlay" class="absolute inset-0 transition-all duration-300 pointer-events-none mix-blend-multiply opacity-0 z-10"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 z-20">
-                    <h2 id="hero-title" class="text-white text-xl sm:text-4xl font-black uppercase tracking-tight"></h2>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-8 z-20">
+                    <h2 id="hero-title" class="text-white text-2xl sm:text-5xl font-black uppercase tracking-tighter"></h2>
                 </div>
             </div>
         </div>
 
         <!-- Röðunarstika -->
-        <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-10 px-1">
-            <span id="sort-label" class="text-[9px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Raða eftir:</span>
-            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
-                <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase">Kcal</button>
-                <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase">Prótein</button>
-                <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase">Kolvetni</button>
-                <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase">Fita</button>
-                <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300 uppercase">Flokkar</button>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-12 px-2">
+            <span id="sort-label" class="text-[10px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Raða eftir:</span>
+            <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+                <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-5 py-2 rounded-full text-[10px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300">Kcal</button>
+                <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-5 py-2 rounded-full text-[10px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300">Prótein</button>
+                <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-5 py-2 rounded-full text-[10px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300">Kolvetni</button>
+                <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-5 py-2 rounded-full text-[10px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300">Fita</button>
+                <button onclick="setSort('category')" id="sort-category" class="sort-btn px-5 py-2 rounded-full text-[10px] border border-gray-200 bg-white text-gray-500 hover:border-gray-300">Flokkar</button>
             </div>
         </div>
 
-        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]"></div>
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[400px]"></div>
 
-        <section class="mt-20 relative rounded-2xl overflow-hidden shadow-xl">
+        <section class="mt-24 relative rounded-3xl overflow-hidden shadow-2xl">
             <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Auglýsing" class="w-full h-auto object-cover">
         </section>
         
-        <footer class="mt-20 text-center pb-12">
-            <p class="text-gray-300 text-[10px] font-bold tracking-[0.2em] uppercase">Laugar Cafe &copy; 2024</p>
+        <footer class="mt-24 text-center pb-16">
+            <p class="text-gray-300 text-[11px] font-black tracking-[0.3em] uppercase">Laugar Cafe &copy; 2026</p>
         </footer>
     </div>
 
     <!-- Modal (Popup) -->
-    <div id="item-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-gray-950/25 backdrop-blur-sm transition-opacity duration-300" onclick="closeModal()">
-        <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300 relative" id="modal-content" onclick="event.stopPropagation()">
+    <div id="item-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-gray-950/30 backdrop-blur-md transition-opacity duration-300" onclick="closeModal()">
+        <div class="bg-white rounded-[3rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300 relative" id="modal-content" onclick="event.stopPropagation()">
             
-            <div class="absolute top-6 right-6 z-50 flex gap-2 export-hide" data-html2canvas-ignore="true">
-                <button id="share-img-btn" onclick="shareAsImage()" class="bg-gray-50 p-2.5 rounded-full hover:bg-white transition-all text-gray-400 hover:text-blue-500 border border-gray-100 shadow-sm" title="Share">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+            <div class="absolute top-8 right-8 z-50 flex gap-3 export-hide" data-html2canvas-ignore="true">
+                <!-- Share Button -->
+                <button id="share-img-btn" onclick="shareAsImage()" class="bg-gray-50 p-3 rounded-full hover:bg-white transition-all text-gray-400 hover:text-blue-500 border border-gray-100 shadow-sm" title="Deila">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                 </button>
-                <button onclick="closeModal()" class="bg-gray-50 p-2.5 rounded-full hover:bg-white transition-all text-gray-400 hover:text-red-500 border border-gray-100 shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button onclick="closeModal()" class="bg-gray-50 p-3 rounded-full hover:bg-white transition-all text-gray-400 hover:text-red-500 border border-gray-100 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             
-            <div id="export-container" class="p-8 sm:p-10 bg-white" style="border-radius: 2.5rem;">
-                <div class="flex items-start justify-between mb-6">
-                    <div class="flex flex-wrap gap-2 pr-10">
-                        <span id="modal-tag" class="text-[9px] font-black px-2.5 py-1 rounded-md text-white uppercase tracking-widest shadow-sm"></span>
-                        <span id="modal-vegan" class="hidden text-[9px] font-black px-2.5 py-1 bg-green-500/10 text-green-600 rounded-md uppercase tracking-widest border border-green-500/20">Vegan</span>
+            <!-- Export Container -->
+            <div id="export-container" class="p-10 sm:p-12 bg-white" style="border-radius: 3rem;">
+                <div class="flex items-start justify-between mb-8">
+                    <div class="flex flex-wrap gap-2.5 pr-12">
+                        <span id="modal-tag" class="text-[10px] font-black px-3 py-1.5 rounded-lg text-white uppercase tracking-widest shadow-sm"></span>
+                        <span id="modal-vegan" class="hidden text-[10px] font-black px-3 py-1.5 bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20">Vegan</span>
                     </div>
-                    <img id="export-logo" src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress" class="hidden h-7 w-auto object-contain flex-shrink-0" alt="World Class+">
+                    <img id="export-logo" src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress" class="hidden h-8 w-auto object-contain flex-shrink-0" alt="World Class+">
                 </div>
                 
-                <h2 id="modal-title" class="text-3xl font-black text-gray-900 leading-tight mb-4"></h2>
-                <div id="modal-price-container" class="mb-8 export-hide"></div>
+                <h2 id="modal-title" class="text-4xl font-black text-gray-900 leading-tight mb-6 tracking-tight"></h2>
+                <div id="modal-price-container" class="mb-10 export-hide"></div>
 
-                <div class="mb-8">
-                    <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300 mb-2">Innihaldslýsing</h4>
+                <div class="mb-10">
+                    <h4 id="label-ingredients" class="text-[10px] font-black uppercase tracking-[0.25em] text-gray-300 mb-3">Innihaldslýsing</h4>
                     <p id="modal-description" class="text-gray-700 leading-relaxed text-base font-medium"></p>
                 </div>
 
-                <div class="space-y-6">
-                    <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[2rem] p-6 border border-gray-100/50 hidden">
-                        <div class="flex justify-between items-center mb-6">
-                            <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300">Næringargildi</h4>
-                            <div id="modal-sizes" class="flex gap-1 export-hide"></div>
+                <div class="space-y-8">
+                    <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[2.5rem] p-8 border border-gray-100/50 hidden">
+                        <div class="flex justify-between items-center mb-8">
+                            <h4 id="label-nutrition" class="text-[10px] font-black uppercase tracking-[0.25em] text-gray-300">Næringargildi</h4>
+                            <div id="modal-sizes" class="flex gap-1.5 export-hide"></div>
                         </div>
                         
-                        <div class="flex items-center justify-between gap-8 mb-2">
+                        <div class="flex items-center justify-between gap-10">
                             <div class="relative flex-shrink-0">
-                                <svg width="140" height="140" viewBox="0 0 150 150" class="transform -rotate-90">
+                                <svg width="150" height="150" viewBox="0 0 150 150" class="transform -rotate-90">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
                                     <circle id="circle-protein" cx="75" cy="75" r="65" stroke="#f87171" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
                                     <circle id="circle-carbs" cx="75" cy="75" r="65" stroke="#fdba74" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
                                     <circle id="circle-fat" cx="75" cy="75" r="65" stroke="#7dd3fc" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                    <span id="val-kcal-center" class="text-2xl font-black text-gray-900 leading-none">0</span>
-                                    <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1">kcal</span>
+                                    <span id="val-kcal-center" class="text-3xl font-black text-gray-900 leading-none">0</span>
+                                    <span class="text-[9px] font-black uppercase tracking-widest text-gray-400 mt-1.5">kcal</span>
                                 </div>
                             </div>
-                            <div id="modal-macros" class="flex-grow flex flex-col gap-2.5"></div>
+                            <div id="modal-macros" class="flex-grow flex flex-col gap-3"></div>
                         </div>
                     </div>
                 </div>
@@ -343,7 +355,7 @@
                         top: topOffset,
                         behavior: 'smooth'
                     });
-                }, 50);
+                }, 100);
             }
         }
 
@@ -372,7 +384,7 @@
             else { state.activeCategory = null; state.activeTheme = 'LIGHT'; }
             render();
             scrollToContent();
-            setTimeout(triggerNudgeIfScrollable, 300);
+            setTimeout(triggerNudgeIfScrollable, 400);
         }
 
         function setSort(type) { state.sortBy = type; render(); }
@@ -396,7 +408,7 @@
             const container = document.getElementById('category-tabs');
             container.innerHTML = Object.entries(CATEGORIES).map(([key, info]) => {
                 const active = state.activeCategory === key;
-                return `<button onclick="state.activeCategory='${key}';render();scrollToContent()" class="category-tab px-5 py-2.5 rounded-xl transition-all ${active ? 'bg-[#ef4444] text-white shadow-lg' : 'text-gray-400 hover:text-gray-500'}">${state.isIcelandic ? info.is : info.en}</button>`;
+                return `<button onclick="state.activeCategory='${key}';render();scrollToContent()" class="category-tab px-6 py-2.5 rounded-[1.2rem] transition-all duration-300 ${active ? 'active-tab' : 'text-gray-400 hover:text-gray-600'}">${state.isIcelandic ? info.is : info.en}</button>`;
             }).join('');
         }
 
@@ -406,7 +418,7 @@
             container.innerHTML = sortedThemes.map(key => {
                 const t = THEMES[key];
                 const active = state.activeTheme === t.key;
-                return `<button onclick="state.activeTheme='${t.key}';render();scrollToContent()" class="theme-btn text-left p-3 rounded-2xl flex items-start gap-2.5 bg-white border border-gray-100 ${active ? 'active' : ''}" style="color:${t.color}"><div class="w-3 h-3 rounded-full mt-0.5 flex-shrink-0" style="background-color:${t.color}"></div><div><h5 class="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5><p class="text-[9px] text-gray-400 leading-tight">${state.isIcelandic ? t.descIs : t.descEn}</p></div></button>`;
+                return `<button onclick="state.activeTheme='${t.key}';render();scrollToContent()" class="theme-btn text-left p-4 rounded-3xl flex items-start gap-3 bg-white border border-gray-100 ${active ? 'ring-2 ring-offset-2 ring-red-500 shadow-lg' : ''}" style="color:${t.color}"><div class="w-3 h-3 rounded-full mt-1 flex-shrink-0" style="background-color:${t.color}"></div><div><h5 class="text-[10px] font-black uppercase tracking-widest leading-none mb-1 text-gray-900">${state.isIcelandic ? t.is : t.en}</h5><p class="text-[9px] text-gray-400 leading-tight">${state.isIcelandic ? t.descIs : t.descEn}</p></div></button>`;
             }).join('');
         }
 
@@ -467,7 +479,6 @@
                 });
             }
 
-            // Uppfæra útlit röðunarhnappa (Sort Buttons)
             document.querySelectorAll('.sort-btn').forEach(b => {
                 const isActive = b.id === `sort-${state.sortBy}`;
                 if (isActive) {
@@ -491,17 +502,17 @@
                     const unit = state.sortBy === 'kcal' ? 'kcal' : 'g';
                     sortBadge = `<div class="bg-gray-50 text-gray-400 text-[8px] font-bold px-2 py-0.5 rounded-md uppercase tracking-widest border border-gray-100">${val}${unit} ${lang[state.sortBy]}</div>`;
                 }
-                return `<div class="item-card bg-white p-7 rounded-[2rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up" onclick="openModal(${rawData.indexOf(item)})">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex flex-row flex-wrap gap-1.5 max-w-[70%]">
-                            <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest w-fit" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
+                return `<div class="item-card bg-white p-8 rounded-[2.5rem] border border-gray-50 shadow-sm cursor-pointer animate-slide-up" onclick="openModal(${rawData.indexOf(item)})">
+                    <div class="flex justify-between items-start mb-5">
+                        <div class="flex flex-row flex-wrap gap-2 max-w-[70%]">
+                            <span class="text-[9px] font-black px-2.5 py-1 rounded-lg text-white uppercase tracking-widest w-fit" style="background-color: ${theme.color}">${state.isIcelandic ? theme.is : theme.en}</span>
                             ${sortBadge}
-                            ${item.isVegan ? '<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20 w-fit">Vegan</span>' : ''}
+                            ${item.isVegan ? '<span class="text-[9px] font-black px-2.5 py-1 rounded-lg bg-green-500/10 text-green-600 uppercase tracking-widest border border-green-500/20 w-fit">Vegan</span>' : ''}
                         </div>
-                        <span class="text-base font-black text-red-500 tracking-tight block leading-none">${price || ''}</span>
+                        <span class="text-lg font-black text-red-500 tracking-tight block leading-none">${price || ''}</span>
                     </div>
-                    <h3 class="text-lg font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed line-clamp-2 font-medium">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
+                    <h3 class="text-xl font-black text-gray-900 mb-3 tracking-tight leading-tight">${state.isIcelandic ? item.nameIs : item.nameEn}</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed line-clamp-2 font-medium">${state.isIcelandic ? item.descriptionIs : item.descriptionEn}</p>
                 </div>`;
             }).join('');
         }
@@ -579,11 +590,11 @@
         function updateModalUI() {
             const item = state.modalItem; const lang = getLang(); const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
             const pCont = document.getElementById('modal-price-container'); const mCont = document.getElementById('modal-macros');
-            pCont.innerHTML = item.prices ? `<div class="grid grid-cols-3 gap-2">${Object.entries(item.prices).map(([s, p]) => `<button onclick="state.selectedSize='${s}';updateModalUI();triggerSizeTransition()" class="flex flex-col items-center py-2.5 rounded-xl border ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-bold':'border-gray-100 text-gray-400'}"><span class="text-[8px] font-black uppercase mb-0.5">${lang[s]}</span><span class="text-xs">${p}</span></button>`).join('')}</div>` : `<span class="text-3xl font-black text-red-500">${item.price || ''}</span>`;
+            pCont.innerHTML = item.prices ? `<div class="grid grid-cols-3 gap-2.5">${Object.entries(item.prices).map(([s, p]) => `<button onclick="state.selectedSize='${s}';updateModalUI();triggerSizeTransition()" class="flex flex-col items-center py-3 rounded-2xl border transition-all ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black shadow-inner':'border-gray-100 text-gray-400'}"><span class="text-[9px] font-black uppercase mb-0.5">${lang[s]}</span><span class="text-sm">${p}</span></button>`).join('')}</div>` : `<span class="text-4xl font-black text-red-500">${item.price || ''}</span>`;
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
                 const rows = [ {k:'protein', c:'text-red-500', bg:'bg-red-50'}, {k:'carbs', c:'text-orange-500', bg:'bg-orange-50'}, {k:'fat', c:'text-sky-600', bg:'bg-sky-50'}, {k:'fiber', c:'text-green-600', bg:'bg-green-50'} ];
-                mCont.innerHTML = rows.map(r => `<div class="${r.bg} px-4 py-2 rounded-xl flex items-center justify-between border border-gray-100/10"><span class="text-[8px] font-black uppercase tracking-widest ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-sm font-black text-gray-800">0g</span></div>`).join('');
+                mCont.innerHTML = rows.map(r => `<div class="${r.bg} px-5 py-3 rounded-2xl flex items-center justify-between border border-gray-100/10"><span class="text-[9px] font-black uppercase tracking-widest ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-base font-black text-gray-800">0g</span></div>`).join('');
             } else { document.getElementById('modal-nutrition-section').classList.add('hidden'); }
         }
 
@@ -606,7 +617,7 @@
             try {
                 const canvas = await html2canvas(container, { backgroundColor: "#ffffff", scale: 3, useCORS: true, logging: false, onclone: (clonedDoc) => {
                     const el = clonedDoc.getElementById('export-container');
-                    el.style.borderRadius = "2.5rem";
+                    el.style.borderRadius = "3rem";
                     el.style.padding = "40px";
                     el.style.border = "none";
                 }});
