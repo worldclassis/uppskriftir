@@ -54,28 +54,39 @@
             box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
-        .category-tab {
+        .category-tab, .sort-btn {
             position: relative;
             transition: color 0.3s ease;
             white-space: nowrap;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
             font-weight: 800;
-            font-size: 0.65rem;
-            padding: 0.6rem 1.25rem;
             z-index: 10;
         }
 
-        /* Swoosh Indicator */
-        #nav-indicator {
+        .category-tab {
+            letter-spacing: 0.12em;
+            font-size: 0.65rem;
+            padding: 0.6rem 0.5rem; /* Adjusted padding for justified look */
+        }
+
+        /* Swoosh Indicators */
+        #nav-indicator, #sort-indicator {
             position: absolute;
-            height: 34px;
             background-color: var(--primary);
             border-radius: 9999px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
             z-index: 1;
             pointer-events: none;
+        }
+
+        #nav-indicator {
+            height: 34px;
+        }
+
+        #sort-indicator {
+            height: 28px;
+            top: 4px; /* Align within the padding of the sort container */
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -126,7 +137,7 @@
             <p id="tagline" class="text-gray-400 font-bold text-[10px] text-center tracking-[0.2em] uppercase"></p>
         </header>
 
-        <!-- Sýnar-val - Z-index lækkað í 30 svo það fari undir sticky bar -->
+        <!-- Sýnar-val -->
         <div class="flex justify-center mb-12 relative z-30">
             <div class="bg-gray-100/90 p-1 rounded-2xl flex gap-1 border border-gray-200/40 w-full max-w-[280px] relative shadow-inner">
                 <button onclick="setViewMode('categories')" id="mode-categories" class="view-toggle-btn flex-1 py-2.5 rounded-xl text-[10px] transition-all uppercase font-black tracking-widest z-10">Flokkar</button>
@@ -137,11 +148,11 @@
         <!-- Akkerispunktur fyrir scroll -->
         <div id="scroll-anchor" class="h-px w-full -mt-2"></div>
 
-        <!-- Síustikur - Z-index hækkað í 50 svo hún sé alltaf efst -->
+        <!-- Síustikur -->
         <div id="category-container" class="sticky top-6 z-50 mb-10 hidden">
             <div class="glass rounded-[2rem] overflow-hidden">
                 <div class="scroll-mask-container">
-                    <nav id="category-tabs" class="flex overflow-x-auto no-scrollbar gap-1 w-full py-4 px-6 justify-start items-center relative">
+                    <nav id="category-tabs" class="flex overflow-x-auto no-scrollbar gap-0 w-full py-4 px-4 justify-between items-center relative">
                         <div id="nav-indicator"></div>
                     </nav>
                 </div>
@@ -163,12 +174,15 @@
         <!-- Röðunarstika -->
         <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-10 px-2">
             <span id="sort-label" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">Raða eftir:</span>
-            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 uppercase font-bold">Kcal</button>
-                <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 uppercase font-bold">Prótein</button>
-                <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 uppercase font-bold">Kolvetni</button>
-                <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 uppercase font-bold">Fita</button>
-                <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] border border-gray-200 bg-white text-gray-500 uppercase font-bold">Flokkar</button>
+            <div class="bg-gray-100/50 p-1 rounded-full border border-gray-200/50 flex-1 overflow-hidden">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar relative p-1">
+                    <div id="sort-indicator"></div>
+                    <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Kcal</button>
+                    <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Prótein</button>
+                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Kolvetni</button>
+                    <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Fita</button>
+                    <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Flokkar</button>
+                </div>
             </div>
         </div>
 
@@ -221,7 +235,7 @@
                         </div>
                         
                         <div class="flex items-center justify-between gap-6">
-                            <!-- SVG Hringur ráðandi vinstra megin -->
+                            <!-- SVG Hringur -->
                             <div class="relative w-[55%] flex justify-center items-center">
                                 <svg width="140" height="140" viewBox="0 0 150 150" class="transform -rotate-90">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
@@ -234,7 +248,7 @@
                                     <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1.5">kcal</span>
                                 </div>
                             </div>
-                            <!-- Gildisboxin löng og þunn hægra megin -->
+                            <!-- Gildisboxin -->
                             <div id="modal-macros" class="w-[45%] flex flex-col gap-2"></div>
                         </div>
                     </div>
@@ -285,7 +299,7 @@
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Massi', nameEn: 'Bulk', descriptionIs: 'Jarðarber, döðlur, hnetusmjör og prótein.', descriptionEn: 'Strawberries, dates, peanut butter, and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:636, protein:39, fat:31, carbs:61, fiber:13}, M:{kcal:707, protein:44, fat:35, carbs:68, fiber:14}, L:{kcal:778, protein:48, fat:38, carbs:75, fiber:15} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Orka', nameEn: 'Energy', descriptionIs: 'Banani, haframjöl, haframjólk, möndlusmjör og prótein.', descriptionEn: 'Banana, oatmeal, oat milk, almond butter, and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:833, protein:44, fat:38, carbs:86, fiber:16}, M:{kcal:926, protein:48.9, fat:42.5, carbs:95.7, fiber:17.5}, L:{kcal:1018.6, protein:53.8, fat:46.8, carbs:105.3, fiber:19.3} } },
             { category: 'DRYKKIR', theme: 'STRENGTH', nameIs: 'Berjabomba', nameEn: 'Berry Bomb', descriptionIs: 'Hindber, bláber, ólífuolía, kókosmjólk og prótein.', descriptionEn: 'Raspberries, blueberries, olive oil, coconut milk, and protein.', prices: {S:'1.390 kr', M:'1.590 kr', L:'1.690 kr'}, macros: { S:{kcal:778.5, protein:24.4, fat:67.7, carbs:21.8, fiber:4.8}, M:{kcal:865, protein:27.5, fat:75.2, carbs:24.2, fiber:5.3}, L:{kcal:951, protein:29.8, fat:82.7, carbs:26.6, fiber:5.8} } },
-            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', descriptionEn: 'Vanilla skyr, banana, strawberries, and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:308, protein:38, fat:0.9, carbs:37, fiber:3.6}, M:{kcal:333, protein:40, fat:1, carbs:41, fiber:4}, L:{kcal:354, protein:42, fat:1.1, carbs:44, fiber:4.4} } },
+            { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Kraftur', nameEn: 'Power', descriptionIs: 'Vanillu skyr, banani, jarðarber og prótein.', descriptionEn: 'Vanilla skyr, banner, strawberries, and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:308, protein:38, fat:0.9, carbs:37, fiber:3.6}, M:{kcal:333, protein:40, fat:1, carbs:41, fiber:4}, L:{kcal:354, protein:42, fat:1.1, carbs:44, fiber:4.4} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Prótein ískaffi', nameEn: 'Protein Iced Coffee', descriptionIs: 'Tvöfaldur espresso, möndlumjólk, ólífuolía og prótein.', descriptionEn: 'Double espresso, almond milk, olive oil, and protein.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:180, protein:28, fat:8.7, carbs:3.6, fiber:0}, M:{kcal:200, protein:30, fat:9.7, carbs:4, fiber:0}, L:{kcal:220, protein:32, fat:10.7, carbs:4.4, fiber:0} } },
             { category: 'DRYKKIR', theme: 'ENERGY', nameIs: 'Snerpa', nameEn: 'Vigor', descriptionIs: 'Jarðarber, banani, epli og Amino Energy.', descriptionEn: 'Strawberries, banana, apple, and Amino Energy.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:142, protein:1.4, fat:0.5, carbs:43.5, fiber:3.6}, M:{kcal:157, protein:1.6, fat:0.6, carbs:39, fiber:4}, L:{kcal:173, protein:1.8, fat:0.7, carbs:43, fiber:4.4} }, isVegan: true },
             { category: 'DRYKKIR', theme: 'LIGHT', nameIs: 'Græn heilsa', nameEn: 'Green Health', descriptionIs: 'Spínat, mangó, epli, sellerí og collagen.', descriptionEn: 'Spinach, mango, apple, celery, and collagen.', prices: {S:'1.290 kr', M:'1.490 kr', L:'1.590 kr'}, macros: { S:{kcal:232.2, protein:28.1, fat:1.2, carbs:31.2, fiber:7.3}, M:{kcal:258, protein:31.2, fat:1.3, carbs:34.7, fiber:8.1}, L:{kcal:283.3, protein:34.3, fat:1.4, carbs:38.2, fiber:8.9} } },
@@ -323,12 +337,12 @@
             { category: 'SKOT', theme: 'BALANCE', nameIs: 'Rauðrófa', nameEn: 'Beetroot', price: '350 kr', descriptionIs: 'Hreinn rauðrófusafi.', descriptionEn: 'Pure beetroot juice.', macros: { kcal: 19, protein: 0.6, fat: 0, carbs: 4.1, fiber: 0.5 }, isVegan: true },
 
             // BÖRN
-            { category: 'BÖRN', theme: 'ALL', nameIs: 'Jarðarberjaboost', nameEn: 'Strawberry Boost', price: '890 kr', descriptionIs: 'Jarðarber, banani, epli.', descriptionEn: 'Strawberries, banana, apple.', macros: { kcal: 180, protein: 2.2, fat: 0.8, carbs: 42, fiber: 3.8 }, isVegan: true },
-            { category: 'BÖRN', theme: 'ALL', nameIs: 'Bláberjaboost', nameEn: 'Blueberry Boost', price: '890 kr', descriptionIs: 'Bláber, banani, epli.', descriptionEn: 'Blueberries, banana, apple.', macros: { kcal: 175, protein: 2, fat: 0.7, carbs: 40, fiber: 4.2 }, isVegan: true },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'Jarðarberjaboost', nameEn: 'Strawberry Boost', price: '890 kr', descriptionIs: 'Jarðarber, banani, epli.', descriptionEn: 'Strawberries, banner, apple.', macros: { kcal: 180, protein: 2.2, fat: 0.8, carbs: 42, fiber: 3.8 }, isVegan: true },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'Bláberjaboost', nameEn: 'Blueberry Boost', price: '890 kr', descriptionIs: 'Bláber, banani, epli.', descriptionEn: 'Blueberries, banner, apple.', macros: { kcal: 175, protein: 2, fat: 0.7, carbs: 40, fiber: 4.2 }, isVegan: true },
             { category: 'BÖRN', theme: 'ALL', nameIs: 'Fruit minis', nameEn: 'Fruit minis', price: '190 kr', descriptionIs: 'Hindberja & bláberja.', descriptionEn: 'Raspberry & blueberry.', macros: { kcal: 45, protein: 0.5, fat: 0.1, carbs: 10, fiber: 1.5 }, isVegan: true },
             { category: 'BÖRN', theme: 'ALL', nameIs: 'BEAR ávaxtarúlla', nameEn: 'BEAR Fruit Roll-up', price: '190 kr', descriptionIs: 'Jarðarberja.', descriptionEn: 'Strawberry.', macros: { kcal: 50, protein: 0.4, fat: 0.1, carbs: 11, fiber: 1.2 }, isVegan: true },
             
-            // KAFFI (Uppfært á 500 kr. samkvæmt image_035794.png)
+            // KAFFI
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Americano', nameEn: 'Americano', price: '500 kr', descriptionIs: 'Klassískt svart kaffi.', descriptionEn: 'Classic black coffee.', macros: { kcal: 5, protein: 0.2, fat: 0, carbs: 1, fiber: 0 }, isVegan: true },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Espresso', nameEn: 'Espresso', price: '500 kr', descriptionIs: 'Einfaldur og sterkur espresso.', descriptionEn: 'Single shot of strong espresso.', macros: { kcal: 2, protein: 0.1, fat: 0, carbs: 0.4, fiber: 0 }, isVegan: true },
             { category: 'KAFFI', theme: 'ALL', nameIs: 'Tvöfaldur Espresso', nameEn: 'Double Espresso', price: '500 kr', descriptionIs: 'Tvöfaldur skammtur af espresso.', descriptionEn: 'Double shot of espresso.', macros: { kcal: 4, protein: 0.2, fat: 0, carbs: 0.8, fiber: 0 }, isVegan: true },
@@ -387,7 +401,10 @@
             setTimeout(triggerNudgeIfScrollable, 400);
         }
 
-        function setSort(type) { state.sortBy = type; render(); }
+        function setSort(type) { 
+            state.sortBy = type; 
+            render(); 
+        }
 
         function updateSwoosh() {
             const activeTab = document.querySelector('.active-tab');
@@ -395,6 +412,18 @@
             if (activeTab && indicator) {
                 indicator.style.width = `${activeTab.offsetWidth}px`;
                 indicator.style.left = `${activeTab.offsetLeft}px`;
+            }
+        }
+
+        function updateSortSwoosh() {
+            const activeSort = document.querySelector('.active-sort');
+            const indicator = document.getElementById('sort-indicator');
+            if (activeSort && indicator) {
+                indicator.style.width = `${activeSort.offsetWidth}px`;
+                indicator.style.left = `${activeSort.offsetLeft}px`;
+                indicator.style.display = 'block';
+            } else if (indicator) {
+                indicator.style.display = 'none';
             }
         }
 
@@ -423,7 +452,10 @@
             renderHero();
             renderGrid();
             
-            setTimeout(updateSwoosh, 10);
+            setTimeout(() => {
+                updateSwoosh();
+                updateSortSwoosh();
+            }, 10);
         }
 
         function renderNav() {
@@ -436,7 +468,8 @@
                 const active = state.activeCategory === key;
                 const btn = document.createElement('button');
                 btn.onclick = () => { state.activeCategory = key; render(); scrollToContent(); };
-                btn.className = `category-tab transition-all duration-300 ${active ? 'active-tab' : 'text-gray-400 hover:text-gray-600'}`;
+                // flex-1 ensures even distribution when space is available
+                btn.className = `category-tab flex-1 text-center transition-all duration-300 ${active ? 'active-tab' : 'text-gray-400 hover:text-gray-600'}`;
                 btn.textContent = state.isIcelandic ? info.is : info.en;
                 container.appendChild(btn);
             });
@@ -511,11 +544,10 @@
             document.querySelectorAll('.sort-btn').forEach(b => {
                 const isActive = b.id === `sort-${state.sortBy}`;
                 if (isActive) {
-                    b.classList.remove('bg-white', 'text-gray-500', 'border-gray-200');
-                    b.classList.add('bg-gray-900', 'text-white', 'border-gray-900');
+                    b.classList.add('active-sort', 'text-white');
                 } else {
-                    b.classList.add('bg-white', 'text-gray-500', 'border-gray-200');
-                    b.classList.remove('bg-gray-900', 'text-white', 'border-gray-900');
+                    b.classList.remove('active-sort', 'text-white');
+                    b.classList.add('text-gray-400');
                 }
             });
 
@@ -670,7 +702,10 @@
             if (langParam && langParam.toLowerCase() === 'en') { state.isIcelandic = false; }
             updateFlagAndLabel(); render();
             setTimeout(triggerNudgeIfScrollable, 1000);
-            window.addEventListener('resize', updateSwoosh);
+            window.addEventListener('resize', () => {
+                updateSwoosh();
+                updateSortSwoosh();
+            });
         };
     </script>
 </body>
