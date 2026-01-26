@@ -175,7 +175,7 @@
         <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 min-h-[400px]"></div>
 
         <section class="mt-24 relative rounded-[2.5rem] overflow-hidden shadow-xl">
-            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Auglýsing" class="w-full h-auto object-cover">
+            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Promotion" class="w-full h-auto object-cover">
         </section>
         
         <footer class="mt-24 text-center pb-16">
@@ -221,6 +221,7 @@
                         </div>
                         
                         <div class="flex items-center justify-between gap-6">
+                            <!-- SVG Hringur ráðandi vinstra megin -->
                             <div class="relative w-[55%] flex justify-center items-center">
                                 <svg width="140" height="140" viewBox="0 0 150 150" class="transform -rotate-90">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
@@ -233,6 +234,7 @@
                                     <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1.5">kcal</span>
                                 </div>
                             </div>
+                            <!-- Gildisboxin löng og þunn hægra megin -->
                             <div id="modal-macros" class="w-[45%] flex flex-col gap-2"></div>
                         </div>
                     </div>
@@ -311,7 +313,7 @@
             { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, kjúklingasalat og tómatar.', descriptionEn: '4x Finn Crisp, chicken salad, and tomatoes.', macros: { kcal: 288, protein: 28.8, fat: 12.5, carbs: 14.9, fiber: 4.1 } },
             { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus Krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, hummus og tómatar.', descriptionEn: '4x Finn Crisp, hummus, and tomatoes.', macros: { kcal: 263, protein: 10.8, fat: 7.5, carbs: 49.9, fiber: 18.6 }, isVegan: true },
             
-            // SKOT (Uppfært með réttum markmiðum og lýsingum)
+            // SKOT
             { category: 'SKOT', theme: 'ENERGY', nameIs: 'Orkuskot', nameEn: 'Energy Shot', price: '450 kr', descriptionIs: 'Rauðrófa, túrmerik, engifer, sítróna, epli.', descriptionEn: 'Beetroot, turmeric, ginger, lemon, apple.', macros: { kcal: 22, protein: 0.5, fat: 0, carbs: 5.2, fiber: 0.6 }, isVegan: true },
             { category: 'SKOT', theme: 'STRENGTH', nameIs: 'Kraftskot', nameEn: 'Power Shot', price: '450 kr', descriptionIs: 'Kreatín, epli.', descriptionEn: 'Creatine, apple.', macros: { kcal: 18, protein: 0.2, fat: 0, carbs: 4.5, fiber: 0.4 }, isVegan: true },
             { category: 'SKOT', theme: 'LIGHT', nameIs: 'Ofurskot', nameEn: 'Super Shot', price: '450 kr', descriptionIs: 'Túrmerik, engifer, sítróna, epli, kanill.', descriptionEn: 'Turmeric, ginger, lemon, apple, cinnamon.', macros: { kcal: 20, protein: 0.4, fat: 0, carbs: 4.8, fiber: 0.5 }, isVegan: true },
@@ -321,14 +323,17 @@
             { category: 'SKOT', theme: 'BALANCE', nameIs: 'Rauðrófa', nameEn: 'Beetroot', price: '350 kr', descriptionIs: 'Hreinn rauðrófusafi.', descriptionEn: 'Pure beetroot juice.', macros: { kcal: 19, protein: 0.6, fat: 0, carbs: 4.1, fiber: 0.5 }, isVegan: true },
 
             // BÖRN
-            { category: 'BÖRN', theme: 'ALL', nameIs: 'Krakka Boozt', nameEn: 'Kids Smoothie', price: '890 kr', descriptionIs: 'Jarðarber, banani og eplasafi.', descriptionEn: 'Strawberries, banana, and apple juice.', macros: { kcal: 180, protein: 2.2, fat: 0.8, carbs: 42, fiber: 3.8 }, isVegan: true },
-            { category: 'BÖRN', theme: 'ALL', nameIs: 'Krakka Grautur', nameEn: 'Kids Porridge', price: '690 kr', descriptionIs: 'Hafra- eða skyrgrautur með ferskum ávöxtum.', descriptionEn: 'Oat or skyr porridge with fresh fruit.', macros: { kcal: 240, protein: 12.4, fat: 4.2, carbs: 38.5, fiber: 4.8 } },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'Jarðarberjaboost', nameEn: 'Strawberry Boost', price: '890 kr', descriptionIs: 'Jarðarber, banani, epli.', descriptionEn: 'Strawberries, banana, apple.', macros: { kcal: 180, protein: 2.2, fat: 0.8, carbs: 42, fiber: 3.8 }, isVegan: true },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'Bláberjaboost', nameEn: 'Blueberry Boost', price: '890 kr', descriptionIs: 'Bláber, banani, epli.', descriptionEn: 'Blueberries, banana, apple.', macros: { kcal: 175, protein: 2, fat: 0.7, carbs: 40, fiber: 4.2 }, isVegan: true },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'Fruit minis', nameEn: 'Fruit minis', price: '190 kr', descriptionIs: 'Hindberja & bláberja.', descriptionEn: 'Raspberry & blueberry.', macros: { kcal: 45, protein: 0.5, fat: 0.1, carbs: 10, fiber: 1.5 }, isVegan: true },
+            { category: 'BÖRN', theme: 'ALL', nameIs: 'BEAR ávaxtarúlla', nameEn: 'BEAR Fruit Roll-up', price: '190 kr', descriptionIs: 'Jarðarberja.', descriptionEn: 'Strawberry.', macros: { kcal: 50, protein: 0.4, fat: 0.1, carbs: 11, fiber: 1.2 }, isVegan: true },
             
-            // KAFFI
-            { category: 'KAFFI', theme: 'ALL', nameIs: 'Latte', nameEn: 'Latte', price: '750 kr', descriptionIs: 'Tvöfaldur espresso með jurtamjólk að eigin vali.', descriptionEn: 'Double espresso with your choice of plant-based milk.', macros: { kcal: 120, protein: 4.2, fat: 6.4, carbs: 12, fiber: 1.2 } },
-            { category: 'KAFFI', theme: 'ALL', nameIs: 'Cappuccino', nameEn: 'Cappuccino', price: '750 kr', descriptionIs: 'Espresso með flóaðri jurtamjólk.', descriptionEn: 'Espresso with steamed plant-based milk.', macros: { kcal: 92, protein: 3.4, fat: 4.2, carbs: 9.5, fiber: 0.8 } },
-            { category: 'KAFFI', theme: 'ALL', nameIs: 'Americano', nameEn: 'Americano', price: '550 kr', descriptionIs: 'Tvöfaldur espresso og heitt vatn.', descriptionEn: 'Double espresso and hot water.', macros: { kcal: 5, protein: 0.2, fat: 0, carbs: 1, fiber: 0 }, isVegan: true },
-            { category: 'KAFFI', theme: 'ALL', nameIs: 'Espresso', nameEn: 'Espresso', price: '450 kr', descriptionIs: 'Sterkt og gott ítalskt kaffi.', descriptionEn: 'Strong and authentic Italian coffee.', macros: { kcal: 2, protein: 0.1, fat: 0, carbs: 0.4, fiber: 0 }, isVegan: true },
+            // KAFFI (Uppfært á 500 kr. samkvæmt image_035794.png)
+            { category: 'KAFFI', theme: 'ALL', nameIs: 'Americano', nameEn: 'Americano', price: '500 kr', descriptionIs: 'Klassískt svart kaffi.', descriptionEn: 'Classic black coffee.', macros: { kcal: 5, protein: 0.2, fat: 0, carbs: 1, fiber: 0 }, isVegan: true },
+            { category: 'KAFFI', theme: 'ALL', nameIs: 'Espresso', nameEn: 'Espresso', price: '500 kr', descriptionIs: 'Einfaldur og sterkur espresso.', descriptionEn: 'Single shot of strong espresso.', macros: { kcal: 2, protein: 0.1, fat: 0, carbs: 0.4, fiber: 0 }, isVegan: true },
+            { category: 'KAFFI', theme: 'ALL', nameIs: 'Tvöfaldur Espresso', nameEn: 'Double Espresso', price: '500 kr', descriptionIs: 'Tvöfaldur skammtur af espresso.', descriptionEn: 'Double shot of espresso.', macros: { kcal: 4, protein: 0.2, fat: 0, carbs: 0.8, fiber: 0 }, isVegan: true },
+            { category: 'KAFFI', theme: 'ALL', nameIs: 'Cappuccino', nameEn: 'Cappuccino', price: '500 kr', descriptionIs: 'Espresso með flóaðri jurtamjólk.', descriptionEn: 'Espresso with steamed plant-based milk.', macros: { kcal: 92, protein: 3.4, fat: 4.2, carbs: 9.5, fiber: 0.8 } },
+            { category: 'KAFFI', theme: 'ALL', nameIs: 'Latte', nameEn: 'Latte', price: '500 kr', descriptionIs: 'Tvöfaldur espresso með mjúkri jurtamjólk.', descriptionEn: 'Double espresso with silky plant-based milk.', macros: { kcal: 120, protein: 4.2, fat: 6.4, carbs: 12, fiber: 1.2 } },
             
             // SNARL
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Harðfiskur', nameEn: 'Dried Fish', price: '990 kr', descriptionIs: 'Hágæða íslenskur harðfiskur.', descriptionEn: 'High quality Icelandic dried fish.', macros: { kcal: 320, protein: 78, fat: 1, carbs: 0, fiber: 0 } },
