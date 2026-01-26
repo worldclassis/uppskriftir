@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laugar Cafe | Interactive Menu</title>
+    <title>World Class+ Menu</title>
+    
+    <!-- Meta tags for Social Media Sharing (Facebook, etc.) -->
+    <meta property="og:title" content="World Class+ Menu">
+    <meta property="og:description" content="Gagnvirkur matseðill Laugar Cafe - Þín orka, þinn árangur.">
+    <meta property="og:image" content="https://images.prismic.io/worldclass/aVxY43NYClf9ozUz_menu_21920.jpg?auto=format,compress">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- html2canvas dependency for image export -->
@@ -180,7 +188,7 @@
         <!-- Hero -->
         <div class="mb-8">
             <div id="category-hero" class="rounded-3xl overflow-hidden shadow-2xl relative h-40 sm:h-72 hidden animate-slide-up">
-                <img id="hero-img" src="" class="w-full h-full object-cover" alt="Hero">
+                <img id="hero-img" src="" class="w-full h-full object-cover" alt="Borðamynd">
                 <div id="hero-color-overlay" class="absolute inset-0 transition-all duration-300 pointer-events-none mix-blend-multiply opacity-0 z-10"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-8 z-20">
                     <h2 id="hero-title" class="text-white text-2xl sm:text-5xl font-black uppercase tracking-tighter"></h2>
@@ -207,7 +215,7 @@
         </section>
         
         <footer class="mt-24 text-center pb-16">
-            <p class="text-gray-300 text-[11px] font-black tracking-[0.3em] uppercase">Laugar Cafe &copy; 2026</p>
+            <p class="text-gray-300 text-[11px] font-black tracking-[0.3em] uppercase">World Class &copy; 2026</p>
         </footer>
     </div>
 
@@ -594,7 +602,7 @@
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
                 const rows = [ {k:'protein', c:'text-red-500', bg:'bg-red-50'}, {k:'carbs', c:'text-orange-500', bg:'bg-orange-50'}, {k:'fat', c:'text-sky-600', bg:'bg-sky-50'}, {k:'fiber', c:'text-green-600', bg:'bg-green-50'} ];
-                mCont.innerHTML = rows.map(r => `<div class="${r.bg} px-5 py-3 rounded-2xl flex items-center justify-between border border-gray-100/10"><span class="text-[9px] font-black uppercase tracking-widest ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-base font-black text-gray-800">0g</span></div>`).join('');
+                mCont.innerHTML = rows.map(r => `<div class="${r.bg} px-5 py-3 rounded-2xl flex items-center justify-between border border-gray-100/10"><span class="text-[8px] font-black uppercase tracking-widest ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-base font-black text-gray-800">0g</span></div>`).join('');
             } else { document.getElementById('modal-nutrition-section').classList.add('hidden'); }
         }
 
