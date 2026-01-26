@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --primary: #e35a51;
+            --primary: #ef4444; /* Uppfærður rauður fyrir flottara útlit */
             --secondary: #111827;
             --background: #fafafa;
         }
@@ -57,10 +57,11 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* Nudge animation snúið við (hreyfist til vinstri fyrst) */
         @keyframes nudge {
             0% { transform: translateX(0); }
-            30% { transform: translateX(15px); }
-            60% { transform: translateX(-5px); }
+            30% { transform: translateX(-15px); }
+            60% { transform: translateX(5px); }
             100% { transform: translateX(0); }
         }
         .nudge-effect {
@@ -327,11 +328,9 @@
         
         const getLang = () => state.isIcelandic ? IS_LANG : EN_LANG;
 
-        // Bætt skrun-fall fyrir betri tilfinningu
         function scrollToContent() {
             const anchor = document.getElementById('scroll-anchor');
             if (anchor) {
-                // Notum setTimeout til að leyfa DOM-inu að render-a áður en skrunað er
                 setTimeout(() => {
                     const topOffset = anchor.getBoundingClientRect().top + window.pageYOffset;
                     window.scrollTo({
@@ -388,7 +387,8 @@
             const container = document.getElementById('category-tabs');
             container.innerHTML = Object.entries(CATEGORIES).map(([key, info]) => {
                 const active = state.activeCategory === key;
-                return `<button onclick="state.activeCategory='${key}';render();scrollToContent()" class="category-tab px-5 py-2.5 rounded-xl transition-all ${active ? 'bg-[#e35a51] text-white shadow-lg' : 'text-gray-400 hover:text-gray-500'}">${state.isIcelandic ? info.is : info.en}</button>`;
+                // Rauður litur gerður flottari (vibrant red #ef4444)
+                return `<button onclick="state.activeCategory='${key}';render();scrollToContent()" class="category-tab px-5 py-2.5 rounded-xl transition-all ${active ? 'bg-[#ef4444] text-white shadow-lg' : 'text-gray-400 hover:text-gray-500'}">${state.isIcelandic ? info.is : info.en}</button>`;
             }).join('');
         }
 
