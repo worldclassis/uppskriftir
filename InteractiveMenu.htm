@@ -172,11 +172,10 @@
             </div>
         </div>
 
-        <!-- Grid uppfært með gap-4 fyrir betra bil á milli carda -->
         <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 min-h-[400px]"></div>
 
         <section class="mt-24 relative rounded-[2.5rem] overflow-hidden shadow-xl">
-            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Auglýsing" class="w-full h-auto object-cover">
+            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Promotion" class="w-full h-auto object-cover">
         </section>
         
         <footer class="mt-24 text-center pb-16">
@@ -222,7 +221,6 @@
                         </div>
                         
                         <div class="flex items-center justify-between gap-6">
-                            <!-- SVG Hringur ráðandi vinstra megin -->
                             <div class="relative w-[55%] flex justify-center items-center">
                                 <svg width="140" height="140" viewBox="0 0 150 150" class="transform -rotate-90">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
@@ -235,7 +233,6 @@
                                     <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1.5">kcal</span>
                                 </div>
                             </div>
-                            <!-- Gildisboxin löng og þunn hægra megin -->
                             <div id="modal-macros" class="w-[45%] flex flex-col gap-2"></div>
                         </div>
                     </div>
@@ -306,8 +303,6 @@
             { category: 'KRISP', theme: 'ENERGY', nameIs: 'Kjúklinga Avocado Krisp', nameEn: 'Chicken Avocado Crisp', price: '1.290 kr', descriptionIs: '4x Finn Crisp, kjúklingur, avókadó og sesamfræ.', macros: { kcal: 290, protein: 22.8, fat: 14.5, carbs: 21.9, fiber: 6.6 } },
             { category: 'KRISP', theme: 'LIGHT', nameIs: 'Kjúklinga Krisp', nameEn: 'Chicken Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, kjúklingasalat og tómatar.', macros: { kcal: 288, protein: 28.8, fat: 12.5, carbs: 14.9, fiber: 4.1 } },
             { category: 'KRISP', theme: 'BALANCE', nameIs: 'Hummus Krisp', nameEn: 'Hummus Crisp', price: '1.190 kr', descriptionIs: '4x Finn Crisp, hummus og tómatar.', macros: { kcal: 263, protein: 10.8, fat: 7.5, carbs: 49.9, fiber: 18.6 }, isVegan: true },
-            { category: 'SKOT', theme: 'ALL', nameIs: 'Engifer Skot', nameEn: 'Ginger Shot', price: '450 kr', descriptionIs: 'Ferskt engifer og sítróna.', macros: { kcal: 15, protein: 0.5, fat: 0, carbs: 3, fiber: 0.5 }, isVegan: true },
-            { category: 'SKOT', theme: 'ALL', nameIs: 'Túrmerik Skot', nameEn: 'Turmeric Shot', price: '450 kr', descriptionIs: 'Túrmerik, epli og engifer.', macros: { kcal: 20, protein: 0.5, fat: 0, carbs: 4.5, fiber: 0.5 }, isVegan: true },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Harðfiskur', nameEn: 'Dried Fish', price: '990 kr', descriptionIs: 'Hágæða íslenskur harðfiskur.', macros: { kcal: 320, protein: 78, fat: 1, carbs: 0, fiber: 0 } },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Prótein muffins', nameEn: 'Protein Muffin', price: '590 kr', descriptionIs: 'Próteinrík muffins-kaka.', macros: { kcal: 240, protein: 18, fat: 8, carbs: 22, fiber: 4 } },
             { category: 'GRÍPTU MEÐ', theme: 'ALL', nameIs: 'Hnetumix', nameEn: 'Nut Mix', price: '390 kr', descriptionIs: 'Blanda af völdum hnetum.', macros: { kcal: 180, protein: 8, fat: 14, carbs: 12, fiber: 3 }, isVegan: true },
@@ -576,7 +571,7 @@
         function updateModalUI() {
             const item = state.modalItem; const lang = getLang(); const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
             const pCont = document.getElementById('modal-price-container'); const mCont = document.getElementById('modal-macros');
-            pCont.innerHTML = item.prices ? `<div class="grid grid-cols-3 gap-2.5">${Object.entries(item.prices).map(([s, p]) => `<button onclick="state.selectedSize='${s}';updateModalUI();triggerSizeTransition()" class="flex flex-col items-center py-2.5 rounded-2xl border transition-all ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black shadow-inner':'border-gray-100 text-gray-400'}"><span class="text-[9px] font-black uppercase mb-0.5">${lang[s]}</span><span class="text-sm font-bold">${p}</span></button>`).join('')}</div>` : `<span class="text-2xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`;
+            pCont.innerHTML = item.prices ? `<div class="grid grid-cols-3 gap-2.5">${Object.entries(item.prices).map(([s, p]) => `<button onclick="state.selectedSize='${s}';updateModalUI();triggerSizeTransition()" class="flex flex-col items-center py-2.5 rounded-2xl border transition-all ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black shadow-inner':'border-gray-100 text-gray-400'}"><span class="text-[9px] font-black uppercase mb-0.5">${lang[s]}</span><span class="text-sm font-bold">${p}</span></button>`).join('')}</div>` : `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`;
             
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
