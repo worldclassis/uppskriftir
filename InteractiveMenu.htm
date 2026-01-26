@@ -92,11 +92,6 @@
             font-weight: 700;
             letter-spacing: 0.05em;
         }
-        .sort-btn.active {
-            background-color: var(--secondary);
-            color: white;
-            border-color: var(--secondary);
-        }
 
         .logo-animated {
             width: 280px;
@@ -141,7 +136,6 @@
         <!-- Haus -->
         <header class="flex flex-col items-center mb-8">
             <div class="w-full flex justify-end items-center mb-4 sm:mb-8">
-                <!-- Tungumálaval: Aðeins hringur með fána -->
                 <button onclick="toggleLanguage()" class="group relative flex items-center focus:outline-none" title="Change Language">
                     <div id="lang-flag-container" class="lang-globe w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-md ring-1 ring-gray-100">
                         <img id="lang-flag-img" src="https://flagcdn.com/w80/is.png" class="w-full h-full object-cover" alt="Flag">
@@ -161,7 +155,6 @@
             </div>
         </div>
 
-        <!-- Akkerispunktur fyrir scroll -->
         <div id="scroll-anchor" class="h-1 -mt-4 mb-4"></div>
 
         <!-- Síustikur -->
@@ -200,7 +193,7 @@
         <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]"></div>
 
         <section class="mt-20 relative rounded-2xl overflow-hidden shadow-xl">
-            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Promotion" class="w-full h-auto object-cover">
+            <img src="https://images.prismic.io/worldclass/aWEQsgIvOtkhBOhn_WC%2B_Salatbar2.jpg?" alt="Auglýsing" class="w-full h-auto object-cover">
         </section>
         
         <footer class="mt-20 text-center pb-12">
@@ -213,7 +206,6 @@
         <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-md w-full overflow-hidden transform scale-95 opacity-0 transition-all duration-300 relative" id="modal-content" onclick="event.stopPropagation()">
             
             <div class="absolute top-6 right-6 z-50 flex gap-2 export-hide" data-html2canvas-ignore="true">
-                <!-- Share Button -->
                 <button id="share-img-btn" onclick="shareAsImage()" class="bg-gray-50 p-2.5 rounded-full hover:bg-white transition-all text-gray-400 hover:text-blue-500 border border-gray-100 shadow-sm" title="Share">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                 </button>
@@ -222,7 +214,6 @@
                 </button>
             </div>
             
-            <!-- Export Container -->
             <div id="export-container" class="p-8 sm:p-10 bg-white" style="border-radius: 2.5rem;">
                 <div class="flex items-start justify-between mb-6">
                     <div class="flex flex-wrap gap-2 pr-10">
@@ -373,7 +364,6 @@
 
         function updateFlagAndLabel() {
             document.getElementById('lang-flag-img').src = state.isIcelandic ? "https://flagcdn.com/w80/is.png" : "https://flagcdn.com/w80/gb.png";
-            // Merkimiðinn (span) er farinn samkvæmt beiðni
         }
 
         function setViewMode(mode) {
@@ -450,7 +440,6 @@
                 items = items.filter(i => i.category === state.activeCategory);
             }
 
-            const categoryOrder = ['DRYKKIR', 'SALAT', 'GRAUTUR', 'KRISP', 'SKOT', 'BÖRN', 'KAFFI', 'GRÍPTU MEÐ'];
             const macroKeys = ['kcal', 'protein', 'carbs', 'fat'];
             
             if (macroKeys.includes(state.sortBy)) {
@@ -464,6 +453,7 @@
             } else {
                 items.sort((a, b) => {
                     if (state.viewMode === 'themes') {
+                        const categoryOrder = ['DRYKKIR', 'SALAT', 'GRAUTUR', 'KRISP', 'SKOT', 'BÖRN', 'KAFFI', 'GRÍPTU MEÐ'];
                         const aIdx = categoryOrder.indexOf(a.category);
                         const bIdx = categoryOrder.indexOf(b.category);
                         if (aIdx !== bIdx) return aIdx - bIdx;
@@ -476,6 +466,18 @@
                     return a.nameIs.localeCompare(b.nameIs);
                 });
             }
+
+            // Uppfæra útlit röðunarhnappa (Sort Buttons)
+            document.querySelectorAll('.sort-btn').forEach(b => {
+                const isActive = b.id === `sort-${state.sortBy}`;
+                if (isActive) {
+                    b.classList.remove('bg-white', 'text-gray-500', 'border-gray-200');
+                    b.classList.add('bg-gray-900', 'text-white', 'border-gray-900');
+                } else {
+                    b.classList.add('bg-white', 'text-gray-500', 'border-gray-200');
+                    b.classList.remove('bg-gray-900', 'text-white', 'border-gray-900');
+                }
+            });
 
             if (items.length === 0) { container.innerHTML = `<div class="col-span-full py-20 text-center text-gray-300 font-bold uppercase tracking-widest">${lang.noResults}</div>`; return; }
             
@@ -664,7 +666,7 @@
         window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);
             const langParam = urlParams.get('lang');
-            if (langParam === 'en') {
+            if (langParam && langParam.toLowerCase() === 'en') {
                 state.isIcelandic = false;
             }
             
