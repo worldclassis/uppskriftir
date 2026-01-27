@@ -58,7 +58,7 @@
         .category-tab {
             letter-spacing: 0.12em;
             font-size: 0.65rem;
-            padding: 0.6rem 0.85rem;
+            padding: 0.6rem 0.75rem;
         }
 
         .active-tab, .active-sort { color: white !important; }
@@ -73,12 +73,20 @@
             pointer-events: none;
         }
 
-        /* Miðjum vísinn lóðrétt í flokkastikunni */
         #nav-indicator { height: 34px; top: 0; } 
         #sort-indicator { height: 28px; top: 4px; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes nudge-swipe {
+            0% { transform: translateX(0); }
+            30% { transform: translateX(60px); }
+            100% { transform: translateX(0); }
+        }
+        .nudge-active {
+            animation: nudge-swipe 1.2s cubic-bezier(0.45, 0, 0.55, 1);
+        }
 
         .logo-animated {
             width: 240px;
@@ -179,7 +187,6 @@
             </div>
         </div>
 
-        <!-- Akkeri fyrir skrun -->
         <div id="scroll-anchor" class="h-px w-full -mt-8"></div>
 
         <!-- Síustikur -->
@@ -187,10 +194,8 @@
             <div class="glass rounded-[2rem] overflow-hidden">
                 <div class="scroll-mask-container">
                     <nav id="category-scroll-container" class="flex overflow-x-auto no-scrollbar w-full py-4 px-4 justify-start items-center relative">
-                        <!-- Category tabs með position relative svo vísirinn lendi rétt -->
                         <div id="category-tabs" class="flex gap-0 min-w-full items-center relative">
                             <div id="nav-indicator"></div>
-                            <!-- Takkarnir fara hingað -->
                         </div>
                     </nav>
                 </div>
@@ -217,7 +222,7 @@
                     <div id="sort-indicator"></div>
                     <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Kcal</button>
                     <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Prótein</button>
-                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Kolvetni</button>
+                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Kolv</button>
                     <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Fita</button>
                     <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Flokkar</button>
                 </div>
@@ -244,11 +249,17 @@
             </div>
             
             <div id="export-container" class="p-8 sm:p-10 bg-white" style="border-radius: 3rem;">
-                <div class="flex items-start justify-between mb-8">
-                    <div class="flex flex-wrap gap-2.5 pr-10">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex flex-wrap gap-2.5 items-center">
                         <span id="modal-tag" class="text-[9px] font-black px-2.5 py-1.5 rounded-lg text-white uppercase tracking-widest shadow-sm"></span>
                         <span id="modal-vegan" class="hidden text-[9px] font-black px-2.5 py-1.5 bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20">Vegan</span>
                     </div>
+                    <img id="modal-logo-export" 
+                         src="https://images.prismic.io/worldclass/aVxQ23NYClf9ozTn_WorldClass%2B_Logo_black.png?auto=format,compress" 
+                         crossorigin="anonymous" 
+                         alt="World Class Logo" 
+                         class="hidden w-24 sm:w-32 h-auto object-contain flex-shrink-0"
+                         style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                 </div>
                 
                 <h2 id="modal-title" class="text-2xl font-black text-gray-900 leading-tight mb-4 tracking-tighter"></h2>
@@ -286,7 +297,6 @@
     </div>
 
     <script>
-        // --- SUPABASE CONFIG ---
         const SUPABASE_URL = 'https://pgyxzuehdnahoyxagwzr.supabase.co'; 
         const SUPABASE_ANON_KEY = 'sb_publishable_zT8C817F-niuGOA4bA9Jbg_vz-VsYQq';
 
@@ -296,14 +306,12 @@
         }
 
         let rawData = [];
-
         const THEMES = {
             LIGHT: { key: 'LIGHT', is: 'Light', en: 'Light', color: '#34d399', descIs: 'Næringarríkt án auka hitaeininga', descEn: 'Nutritious & light' },
             BALANCE: { key: 'BALANCE', is: 'Balance', en: 'Balance', color: '#38bdf8', descIs: 'Stuðlar að einbeitingu og jafnvægi', descEn: 'Focus & balance' },
             ENERGY: { key: 'ENERGY', is: 'Energy', en: 'Energy', color: '#fb923c', descIs: 'Gefur þér orkuna som þú þarft', descEn: 'Energy boost' },
             STRENGTH: { key: 'STRENGTH', is: 'Strength', en: 'Strength', color: '#ef4444', descIs: 'Byggir upp og styrkir líkamann', descEn: 'Build & strengthen' }
         };
-
         const CATEGORIES = {
             'DRYKKIR': { is: 'Drykkir', en: 'Drinks', img: 'https://images.prismic.io/worldclass/aVxY43NYClf9ozUz_menu_21920.jpg?auto=format,compress' },
             'SALAT': { is: 'Salöt', en: 'Salads', img: 'https://images.prismic.io/worldclass/aVxTN3NYClf9ozUA_menu_11920.jpg' },
@@ -314,46 +322,12 @@
             'KAFFI': { is: 'Kaffi', en: 'Coffee', img: 'https://kitchenaid.com.au/cdn/shop/articles/Untitled_design_22_a34b9e85-b904-4444-b67b-c0cb895357ea.png?v=1728611009' },
             'GRÍPTU MEÐ': { is: 'Gríptu með', en: 'Grab & Go', img: 'https://images.prismic.io/worldclass/aXQ2UQIvOtkhB5U_gripamed.jpg?auto=format,compress' }
         };
-
-        const IS_LANG = {
-            tagline: 'þín orka, þinn árangur.',
-            labelIngredients: 'Innihaldslýsing', labelNutrition: 'Næringargildi', labelSortBy: 'Raða eftir:', labelCat: 'Flokkar', labelGoals: 'Markmið',
-            sortKcal: 'Kcal', sortProtein: 'Prót', sortCarbs: 'Kolv', sortFat: 'Fita', sortCategory: 'Flokkar',
-            searchPlaceholder: 'Leita á matseðli...',
-            noResults: 'Engar niðurstöður fundust.',
-            kcal: 'Kcal', protein: 'Prótein', fat: 'Fita', carbs: 'Kolvetni', fiber: 'Trefjar',
-            S: 'Lítill', M: 'Mið', L: 'Stór'
-        };
-
-        const EN_LANG = {
-            tagline: 'Your energy, your success.',
-            labelIngredients: 'Ingredients', labelNutrition: 'Nutrition Facts', labelSortBy: 'Sort by:', labelCat: 'Categories', labelGoals: 'Goals',
-            sortKcal: 'Kcal', sortProtein: 'Prot', sortCarbs: 'Carbs', sortFat: 'Fat', sortCategory: 'Categories',
-            searchPlaceholder: 'Search the menu...',
-            noResults: 'No items found.',
-            kcal: 'Kcal', protein: 'Protein', fat: 'Fat', carbs: 'Carbs', fiber: 'Fiber',
-            S: 'Small', M: 'Medium', L: 'Large'
-        };
+        const IS_LANG = { tagline: 'þín orka, þinn árangur.', kcal: 'Kcal', S: 'Lítill', M: 'Mið', L: 'Stór', protein: 'Prót', fat: 'Fita', carbs: 'Kolv', fiber: 'Trefjar' };
+        const EN_LANG = { tagline: 'Your energy, your success.', kcal: 'Kcal', S: 'Small', M: 'Medium', L: 'Large', protein: 'Prot', fat: 'Fat', carbs: 'Carbs', fiber: 'Fiber' };
 
         let lastAnimatedMacros = { kcal: 0, protein: 0, fat: 0, carbs: 0, fiber: 0 };
-        let currentCircleStates = {
-            protein: { offset: 408.4, rotate: 0 },
-            carbs: { offset: 408.4, rotate: 0 },
-            fat: { offset: 408.4, rotate: 0 }
-        };
-
-        let state = { 
-            isIcelandic: true, 
-            viewMode: 'categories', 
-            activeCategory: 'DRYKKIR', 
-            activeTheme: null, 
-            activeLocation: 'LAUGAR',
-            selectedSize: 'M', 
-            sortBy: 'category',
-            searchQuery: '',
-            modalItem: null
-        };
-        
+        let currentCircleStates = { protein: { offset: 408.4, rotate: 0 }, carbs: { offset: 408.4, rotate: 0 }, fat: { offset: 408.4, rotate: 0 } };
+        let state = { isIcelandic: true, viewMode: 'categories', activeCategory: 'DRYKKIR', activeTheme: null, activeLocation: 'LAUGAR', selectedSize: 'M', sortBy: 'category', modalItem: null };
         const getLang = () => state.isIcelandic ? IS_LANG : EN_LANG;
 
         async function fetchMenuFromSupabase() {
@@ -361,103 +335,42 @@
             try {
                 const { data, error } = await supabaseClient.from('menu_items').select('*');
                 if (error) throw error;
-                rawData = data.map(item => ({
-                    ...item,
-                    nameIs: item.name_is,
-                    nameEn: item.name_en,
-                    descriptionIs: item.description_is,
-                    descriptionEn: item.description_en,
-                    isVegan: item.is_vegan
-                }));
+                rawData = data.map(item => ({ ...item, nameIs: item.name_is, nameEn: item.name_en, descriptionIs: item.description_is, descriptionEn: item.description_en, isVegan: item.is_vegan }));
                 const overlay = document.getElementById('loading-overlay');
-                if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.remove(), 500);
-                }
+                if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 500); }
                 render();
-                
-                // Nudge hreyfing eftir að allt hefur hlaðist
-                setTimeout(nudgeCategoryBar, 1500);
-            } catch (err) {
-                console.error("Villa við að sækja matseðil:", err);
-            }
+                checkAndTriggerNudge();
+            } catch (err) { console.error("Error:", err); }
         }
 
-        function nudgeCategoryBar() {
-            const container = document.getElementById('category-scroll-container');
-            if (!container) return;
-            
-            // Mýkjum hreyfinguna með smooth skruni
-            container.scrollTo({ left: 80, behavior: 'smooth' });
+        function checkAndTriggerNudge() {
             setTimeout(() => {
-                if (container.scrollLeft > 0) {
-                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                const container = document.getElementById('category-scroll-container');
+                const tabs = document.getElementById('category-tabs');
+                if (container && tabs && container.scrollWidth > container.clientWidth) {
+                    tabs.classList.add('nudge-active');
                 }
-            }, 800);
+            }, 1800);
         }
 
         function toggleLocMenu() { document.getElementById('loc-dropdown').classList.toggle('active'); }
-        
-        function setLocation(loc) {
-            state.activeLocation = loc;
-            document.getElementById('active-loc-name').textContent = loc === 'LAUGAR' ? 'Laugar' : loc === 'VATNSMYRI' ? 'Vatnsmýri' : 'Seltjarnarnes';
-            document.getElementById('loc-dropdown').classList.remove('active');
-            const availableCategories = getAvailableCategories();
-            if (!availableCategories.includes(state.activeCategory)) {
-                state.activeCategory = availableCategories[0] || null;
-            }
-            render();
-        }
-
-        function toggleLanguage() {
-            state.isIcelandic = !state.isIcelandic;
-            updateFlagAndLabel();
-            render();
-        }
-
-        function updateFlagAndLabel() {
-            document.getElementById('lang-flag-img').src = state.isIcelandic ? "https://flagcdn.com/w80/is.png" : "https://flagcdn.com/w80/gb.png";
-        }
-
-        function setViewMode(mode) {
-            state.viewMode = mode;
-            if (mode === 'categories') { 
-                state.activeTheme = null; 
-                state.activeCategory = getAvailableCategories()[0] || 'DRYKKIR'; 
-            } 
-            else { state.activeCategory = null; state.activeTheme = 'LIGHT'; }
-            render();
-            scrollToMenuAnchor();
-        }
-
-        function scrollToMenuAnchor() {
-            setTimeout(() => {
-                const anchor = document.getElementById('scroll-anchor');
-                if (anchor) {
-                    const offset = 32;
-                    const y = anchor.getBoundingClientRect().top + window.pageYOffset - offset;
-                    window.scrollTo({ top: y, behavior: 'smooth' });
-                }
-            }, 100);
-        }
-
+        function setLocation(loc) { state.activeLocation = loc; document.getElementById('active-loc-name').textContent = loc; document.getElementById('loc-dropdown').classList.remove('active'); render(); }
+        function toggleLanguage() { state.isIcelandic = !state.isIcelandic; updateFlagAndLabel(); render(); }
+        function updateFlagAndLabel() { document.getElementById('lang-flag-img').src = state.isIcelandic ? "https://flagcdn.com/w80/is.png" : "https://flagcdn.com/w80/gb.png"; }
+        function setViewMode(mode) { state.viewMode = mode; if (mode === 'categories') state.activeCategory = getAvailableCategories()[0] || 'DRYKKIR'; else state.activeTheme = 'LIGHT'; render(); scrollToMenuAnchor(); }
+        function scrollToMenuAnchor() { setTimeout(() => { const anchor = document.getElementById('scroll-anchor'); if (anchor) window.scrollTo({ top: anchor.getBoundingClientRect().top + window.pageYOffset - 32, behavior: 'smooth' }); }, 100); }
         function setSort(type) { state.sortBy = type; render(); }
 
         function getAvailableCategories() {
             const categoriesAtLoc = new Set();
-            rawData.forEach(item => {
-                if (item.locations && item.locations.includes(state.activeLocation)) {
-                    categoriesAtLoc.add(item.category);
-                }
-            });
+            rawData.forEach(item => { if (item.locations?.includes(state.activeLocation)) categoriesAtLoc.add(item.category); });
             return Object.keys(CATEGORIES).filter(key => categoriesAtLoc.has(key));
         }
 
         function animateSynchronized(targetMacros) {
             const startMacros = Object.assign({}, lastAnimatedMacros);
             const endMacros = { kcal: targetMacros.kcal || 0, protein: targetMacros.protein || 0, carbs: targetMacros.carbs || 0, fat: targetMacros.fat || 0, fiber: targetMacros.fiber || 0 };
-            const circ = 408.4; 
-            const duration = 1000; 
+            const circ = 408.4; const duration = 1000; 
             const total = endMacros.protein + endMacros.carbs + endMacros.fat || 1;
             const targetRatios = { p: endMacros.protein / total, c: endMacros.carbs / total, f: endMacros.fat / total };
             const targetVisuals = { protein: { offset: circ - (targetRatios.p * circ), rotate: 0 }, carbs: { offset: circ - (targetRatios.c * circ), rotate: targetRatios.p * 360 }, fat: { offset: circ - (targetRatios.f * circ), rotate: (targetRatios.p + targetRatios.c) * 360 } };
@@ -469,17 +382,13 @@
                 const progress = Math.min((timestamp - startTime) / duration, 1);
                 const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
                 elements.valK.textContent = Math.round(startMacros.kcal + (endMacros.kcal - startMacros.kcal) * ease);
-                ['protein', 'carbs', 'fat', 'fiber'].forEach(key => {
-                    const el = document.getElementById('val-' + key);
-                    if (el) el.textContent = Math.round(startMacros[key] + (endMacros[key] - startMacros[key]) * ease) + 'g';
-                });
+                ['protein', 'carbs', 'fat', 'fiber'].forEach(key => { const el = document.getElementById('val-' + key); if (el) el.textContent = Math.round(startMacros[key] + (endMacros[key] - startMacros[key]) * ease) + 'g'; });
                 ['protein', 'carbs', 'fat'].forEach(key => {
                     const currentOffset = startVisuals[key].offset + (targetVisuals[key].offset - startVisuals[key].offset) * ease;
                     const currentRotate = startVisuals[key].rotate + (targetVisuals[key].rotate - startVisuals[key].rotate) * ease;
                     elements[key].style.strokeDashoffset = currentOffset;
                     elements[key].style.transform = `rotate(${currentRotate}deg)`;
-                    currentCircleStates[key].offset = currentOffset;
-                    currentCircleStates[key].rotate = currentRotate;
+                    currentCircleStates[key].offset = currentOffset; currentCircleStates[key].rotate = currentRotate;
                 });
                 if (progress < 1) requestAnimationFrame(step); 
                 else { lastAnimatedMacros = Object.assign({}, endMacros); currentCircleStates = JSON.parse(JSON.stringify(targetVisuals)); }
@@ -488,8 +397,7 @@
         }
 
         function resetMacroVisuals() {
-            const circ = 408.4;
-            const elements = { protein: document.getElementById('circle-protein'), carbs: document.getElementById('circle-carbs'), fat: document.getElementById('circle-fat'), valK: document.getElementById('val-kcal-center') };
+            const circ = 408.4; const elements = { protein: document.getElementById('circle-protein'), carbs: document.getElementById('circle-carbs'), fat: document.getElementById('circle-fat'), valK: document.getElementById('val-kcal-center') };
             if (elements.protein) { elements.protein.style.strokeDashoffset = circ; elements.carbs.style.strokeDashoffset = circ; elements.fat.style.strokeDashoffset = circ; elements.protein.style.transform = 'rotate(0deg)'; elements.carbs.style.transform = 'rotate(0deg)'; elements.fat.style.transform = 'rotate(0deg)'; }
             if (elements.valK) elements.valK.textContent = '0';
             ['protein', 'carbs', 'fat', 'fiber'].forEach(key => { if (document.getElementById('val-' + key)) document.getElementById('val-' + key).textContent = '0g'; });
@@ -501,7 +409,6 @@
             const activeTab = document.querySelector('.active-tab');
             const indicator = document.getElementById('nav-indicator');
             if (activeTab && indicator) {
-                // Notum hálfa breidd til að finna nákvæma miðju
                 indicator.style.width = activeTab.offsetWidth + 'px';
                 indicator.style.left = activeTab.offsetLeft + 'px';
                 indicator.style.opacity = "1";
@@ -512,23 +419,13 @@
         function updateSortSwoosh() {
             const activeSort = document.querySelector('.active-sort');
             const indicator = document.getElementById('sort-indicator');
-            if (activeSort && indicator) {
-                indicator.style.width = activeSort.offsetWidth + 'px';
-                indicator.style.left = activeSort.offsetLeft + 'px';
-                indicator.style.opacity = "1";
-            } else if (indicator) indicator.style.opacity = "0";
+            if (activeSort && indicator) { indicator.style.width = activeSort.offsetWidth + 'px'; indicator.style.left = activeSort.offsetLeft + 'px'; indicator.style.opacity = "1"; } else if (indicator) indicator.style.opacity = "0";
         }
 
         function render() {
             const lang = getLang();
             document.getElementById('tagline').textContent = lang.tagline;
-            document.getElementById('sort-label').textContent = lang.labelSortBy;
-            document.getElementById('mode-categories').textContent = lang.labelCat;
-            document.getElementById('mode-themes').textContent = lang.labelGoals;
-            document.querySelectorAll('.view-toggle-btn').forEach(btn => {
-                const active = btn.id === 'mode-' + state.viewMode;
-                btn.classList.toggle('bg-white', active); btn.classList.toggle('text-gray-900', active); btn.classList.toggle('text-gray-400', !active);
-            });
+            document.querySelectorAll('.view-toggle-btn').forEach(btn => { const active = btn.id === 'mode-' + state.viewMode; btn.classList.toggle('bg-white', active); btn.classList.toggle('text-gray-900', active); btn.classList.toggle('text-gray-400', !active); });
             document.getElementById('category-container').classList.toggle('hidden', state.viewMode !== 'categories');
             document.getElementById('theme-container').classList.toggle('hidden', state.viewMode !== 'themes');
             renderNav(); renderThemeButtons(); renderHero(); renderGrid();
@@ -538,10 +435,8 @@
         function renderNav() {
             const container = document.getElementById('category-tabs');
             const availableCategories = getAvailableCategories();
-            // Fjarlægjum gamla takka en geymum indicatorinn
             const existingTabs = container.querySelectorAll('.category-tab');
             existingTabs.forEach(tab => tab.remove());
-
             availableCategories.forEach(key => {
                 const info = CATEGORIES[key];
                 const active = state.activeCategory === key;
@@ -569,33 +464,30 @@
             let src="", title="", color="", op="0";
             if (state.viewMode==='themes' && state.activeTheme) { const t = THEMES[state.activeTheme]; src="https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg"; title=state.isIcelandic?t.is:t.en; color=t.color; op="0.5"; }
             else if (state.viewMode==='categories' && state.activeCategory) { const c = CATEGORIES[state.activeCategory]; src=c.img; title=state.isIcelandic?c.is:c.en; }
-            if (src && !state.searchQuery) { hero.classList.remove('hidden'); heroImg.src=src; heroTitle.textContent=title; overlay.style.backgroundColor=color; overlay.style.opacity=op; }
-            else hero.classList.add('hidden');
+            if (src) { hero.classList.remove('hidden'); heroImg.src=src; heroTitle.textContent=title; overlay.style.backgroundColor=color; overlay.style.opacity=op; } else hero.classList.add('hidden');
         }
 
         function renderGrid() {
             const container = document.getElementById('menu-grid');
             const lang = getLang();
-            let items = rawData.filter(i => i.locations && i.locations.includes(state.activeLocation));
+            let items = rawData.filter(i => i.locations?.includes(state.activeLocation));
             if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
-            document.querySelectorAll('.sort-btn').forEach(btn => { const isActive = btn.id === 'sort-' + state.sortBy; btn.classList.toggle('active-sort', isActive); btn.classList.toggle('text-white', isActive); btn.classList.toggle('text-gray-400', !isActive); });
+            if (state.sortBy !== 'category') { items.sort((a, b) => { const getVal = (item) => { const m = item.prices ? item.macros.M : item.macros; return m ? (m[state.sortBy] || 0) : 0; }; return getVal(a) - getVal(b); }); }
+            const highlight = (key) => state.sortBy === key ? 'bg-red-50 ring-1 ring-red-400 p-1 -m-1 rounded-lg' : '';
             container.innerHTML = items.map(item => {
                 const theme = THEMES[item.theme] || { color:'#9ca3af' };
-                const price = item.prices ? item.prices.M : item.price;
-                const m = item.macros ? (item.prices ? item.macros.M : item.macros) : null;
+                const price = item.prices?.M || item.price;
+                const m = item.prices ? item.macros.M : item.macros;
                 return `<div class="item-card bg-white p-7 rounded-[2.2rem] border border-gray-50 shadow-sm cursor-pointer" onclick="openModal(${rawData.indexOf(item)})">
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span>
-                        <span class="text-base font-black text-red-500 tracking-tight block leading-none">${price || ''}</span>
-                    </div>
+                    <div class="flex justify-between items-start mb-4"><span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span><span class="text-base font-black text-red-500 tracking-tight block leading-none">${price || ''}</span></div>
                     <h3 class="text-lg font-black text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic?item.nameIs:item.nameEn}</h3>
                     <p class="text-gray-400 text-xs leading-relaxed line-clamp-2 mb-4">${state.isIcelandic?item.descriptionIs:item.descriptionEn}</p>
                     ${m ? `<div class="card-macro-grid grid grid-cols-4 gap-2">
-                        <div class="flex flex-col"><span class="text-[7px] uppercase font-black text-gray-300">${lang.kcal}</span><span class="text-[11px] font-black">${Math.round(m.kcal)}</span></div>
-                        <div class="flex flex-col"><span class="text-[7px] uppercase font-black text-red-400">${lang.sortProtein}</span><span class="text-[11px] font-black">${Math.round(m.protein)}g</span></div>
-                        <div class="flex flex-col"><span class="text-[7px] uppercase font-black text-orange-400">${lang.sortCarbs}</span><span class="text-[11px] font-black">${Math.round(m.carbs)}g</span></div>
-                        <div class="flex flex-col"><span class="text-[7px] uppercase font-black text-blue-400">${lang.sortFat}</span><span class="text-[11px] font-black">${Math.round(m.fat)}g</span></div>
+                        <div class="flex flex-col ${highlight('kcal')}"><span class="text-[7px] uppercase font-black text-gray-300">${lang.kcal}</span><span class="text-[11px] font-black">${Math.round(m.kcal)}</span></div>
+                        <div class="flex flex-col ${highlight('protein')}"><span class="text-[7px] uppercase font-black text-red-400">${lang.protein}</span><span class="text-[11px] font-black">${Math.round(m.protein)}g</span></div>
+                        <div class="flex flex-col ${highlight('carbs')}"><span class="text-[7px] uppercase font-black text-orange-400">${lang.carbs}</span><span class="text-[11px] font-black">${Math.round(m.carbs)}g</span></div>
+                        <div class="flex flex-col ${highlight('fat')}"><span class="text-[7px] uppercase font-black text-blue-400">${lang.fat}</span><span class="text-[11px] font-black">${Math.round(m.fat)}g</span></div>
                     </div>` : ''}
                 </div>`;
             }).join('');
@@ -604,10 +496,12 @@
 
         async function shareAsImage() {
             const container = document.getElementById('export-container');
+            const exportLogo = document.getElementById('modal-logo-export');
             const btns = document.querySelectorAll('.export-hide');
+            if (exportLogo) exportLogo.classList.remove('hidden');
             btns.forEach(b => b.style.display = 'none');
-            try { const canvas = await html2canvas(container, { backgroundColor: '#ffffff', borderRadius: 48, scale: 2 }); const imgData = canvas.toDataURL('image/png'); const link = document.createElement('a'); link.download = `menu-${state.modalItem.nameIs || 'item'}.png`; link.href = imgData; link.click(); } 
-            catch (err) { console.error("Villa við að deila mynd:", err); } finally { btns.forEach(b => b.style.display = ''); }
+            try { const canvas = await html2canvas(container, { backgroundColor: '#ffffff', borderRadius: 48, scale: 3, useCORS: true, logging: false, imageTimeout: 0, dpi: 300 }); const link = document.createElement('a'); link.download = `menu-${state.modalItem.nameIs || 'item'}.png`; link.href = canvas.toDataURL('image/png'); link.click(); } 
+            catch (err) { console.error("Error:", err); } finally { if (exportLogo) exportLogo.classList.add('hidden'); btns.forEach(b => b.style.display = ''); }
         }
 
         function openModal(idx) {
@@ -619,41 +513,42 @@
             const themeInfo = THEMES[item.theme] || { is: '', en: '', color: '#9ca3af' };
             document.getElementById('modal-tag').textContent = state.isIcelandic ? themeInfo.is : themeInfo.en;
             document.getElementById('modal-tag').style.backgroundColor = themeInfo.color;
-            const veganTag = document.getElementById('modal-vegan');
-            if (item.isVegan) veganTag.classList.remove('hidden'); else veganTag.classList.add('hidden');
+            document.getElementById('modal-vegan').classList.toggle('hidden', !item.isVegan);
             updateModalUI();
             const modal = document.getElementById('item-modal');
-            const modalContent = document.getElementById('modal-content');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => { modalContent.classList.remove('opacity-0', 'scale-95'); modalContent.classList.add('opacity-100', 'scale-100'); const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null; if (m) animateSynchronized(m); }, 50);
+            setTimeout(() => { document.getElementById('modal-content').classList.remove('opacity-0', 'scale-95'); document.getElementById('modal-content').classList.add('opacity-100', 'scale-100'); const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null; if (m) animateSynchronized(m); }, 50);
         }
-
-        function triggerSizeTransition() { const m = state.modalItem.macros ? (state.modalItem.prices ? state.modalItem.macros[state.selectedSize] : state.modalItem.macros) : null; if (m) animateSynchronized(m); }
 
         function updateModalUI() {
             const item = state.modalItem; const lang = getLang();
             const pCont = document.getElementById('modal-price-container');
             const mCont = document.getElementById('modal-macros');
-            if (item.prices) {
-                const sizeOrder = ['S', 'M', 'L'];
-                const availableSizes = sizeOrder.filter(s => item.prices[s]);
-                pCont.innerHTML = `<div class="grid grid-cols-3 gap-2">${availableSizes.map(s => `<button onclick="state.selectedSize='${s}';updateModalUI();triggerSizeTransition()" class="flex flex-col items-center py-2.5 rounded-2xl border ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black':'border-gray-100'}"><span class="text-[9px] uppercase font-black">${lang[s]}</span><span class="text-sm font-bold">${item.prices[s]}</span></button>`).join('')}</div>`;
-            } else { pCont.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`; }
+            if (item.prices) { const sizeOrder = ['S', 'M', 'L']; pCont.innerHTML = `<div class="grid grid-cols-3 gap-2">${sizeOrder.filter(s => item.prices[s]).map(s => `<button onclick="state.selectedSize='${s}';updateModalUI();animateSynchronized(state.modalItem.macros[state.selectedSize])" class="flex flex-col items-center py-2.5 rounded-2xl border ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black':'border-gray-100'}"><span class="text-[9px] uppercase font-black">${lang[s]}</span><span class="text-sm font-bold">${item.prices[s]}</span></button>`).join('')}</div>`; } else { pCont.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`; }
             const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
                 const rows = [{k:'protein', c:'text-[#dc2626]', bg:'bg-[#fff1f2]'},{k:'carbs', c:'text-[#ea580c]', bg:'bg-[#fff7ed]'},{k:'fat', c:'text-[#0284c7]', bg:'bg-[#f0f9ff]'},{k:'fiber', c:'text-[#16a34a]', bg:'bg-[#f0fdf4]'}];
-                mCont.innerHTML = rows.map(r => {
-                    const currentVal = Math.round(lastAnimatedMacros[r.k] || 0);
-                    return `<div class="${r.bg} px-5 py-2.5 rounded-[1.4rem] flex items-center justify-between border border-white/50 shadow-sm w-full"><span class="text-[6.5px] font-black uppercase tracking-[0.2em] ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-sm font-black text-gray-800 w-14 text-right">${currentVal}g</span></div>`;
-                }).join('');
-                document.getElementById('val-kcal-center').textContent = Math.round(lastAnimatedMacros.kcal || 0);
+                mCont.innerHTML = rows.map(r => `<div class="${r.bg} px-5 py-2.5 rounded-[1.4rem] flex items-center justify-between border border-white/50 shadow-sm w-full"><span class="text-[6.5px] font-black uppercase tracking-[0.2em] ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-sm font-black text-gray-800 w-14 text-right">0g</span></div>`).join('');
             } else { document.getElementById('modal-nutrition-section').classList.add('hidden'); }
         }
 
-        function closeModal() { const modal = document.getElementById('item-modal'); const modalContent = document.getElementById('modal-content'); modalContent.classList.remove('opacity-100', 'scale-100'); modalContent.classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); }
+        function closeModal() { const modal = document.getElementById('item-modal'); document.getElementById('modal-content').classList.remove('opacity-100', 'scale-100'); document.getElementById('modal-content').classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); }
 
-        window.onload = function() { fetchMenuFromSupabase(); const p = new URLSearchParams(window.location.search); if (p.get('lang')==='en') state.isIcelandic=false; if (p.get('loc')) setLocation(p.get('loc').toUpperCase()); updateFlagAndLabel(); };
+        window.onload = function() {
+            fetchMenuFromSupabase();
+            updateFlagAndLabel();
+            
+            // Bæta við stuðningi fyrir Esc takkann
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('item-modal');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        closeModal();
+                    }
+                }
+            });
+        };
     </script>
 </body>
 </html>
