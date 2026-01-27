@@ -21,6 +21,7 @@
             background-color: var(--background);
             color: var(--secondary);
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
         }
         
         .glass {
@@ -57,7 +58,7 @@
         .category-tab {
             letter-spacing: 0.12em;
             font-size: 0.65rem;
-            padding: 0.6rem 0.75rem;
+            padding: 0.6rem 0.85rem;
         }
 
         .active-tab, .active-sort { color: white !important; }
@@ -66,14 +67,14 @@
             position: absolute;
             background-color: var(--primary);
             border-radius: 9999px;
-            /* Cubic-bezier fyrir mýkt „swoosh“ */
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
             z-index: 1;
             pointer-events: none;
         }
 
-        #nav-indicator { height: 34px; top: 16px; } 
+        /* Miðjum vísinn lóðrétt í flokkastikunni */
+        #nav-indicator { height: 34px; top: 0; } 
         #sort-indicator { height: 28px; top: 4px; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -185,9 +186,10 @@
         <div id="category-container" class="sticky top-6 z-50 mb-10 hidden">
             <div class="glass rounded-[2rem] overflow-hidden">
                 <div class="scroll-mask-container">
-                    <nav id="category-scroll-container" class="flex overflow-x-auto no-scrollbar gap-0 w-full py-4 px-4 justify-start items-center relative">
-                        <div id="nav-indicator"></div>
-                        <div id="category-tabs" class="flex gap-0 w-full items-center relative">
+                    <nav id="category-scroll-container" class="flex overflow-x-auto no-scrollbar w-full py-4 px-4 justify-start items-center relative">
+                        <!-- Category tabs með position relative svo vísirinn lendi rétt -->
+                        <div id="category-tabs" class="flex gap-0 min-w-full items-center relative">
+                            <div id="nav-indicator"></div>
                             <!-- Takkarnir fara hingað -->
                         </div>
                     </nav>
@@ -375,7 +377,7 @@
                 render();
                 
                 // Nudge hreyfing eftir að allt hefur hlaðist
-                setTimeout(nudgeCategoryBar, 1200);
+                setTimeout(nudgeCategoryBar, 1500);
             } catch (err) {
                 console.error("Villa við að sækja matseðil:", err);
             }
@@ -385,11 +387,13 @@
             const container = document.getElementById('category-scroll-container');
             if (!container) return;
             
-            // Skrunum örlítið til hliðar og svo aftur til baka
-            container.scrollTo({ left: 60, behavior: 'smooth' });
+            // Mýkjum hreyfinguna með smooth skruni
+            container.scrollTo({ left: 80, behavior: 'smooth' });
             setTimeout(() => {
-                container.scrollTo({ left: 0, behavior: 'smooth' });
-            }, 600);
+                if (container.scrollLeft > 0) {
+                    container.scrollTo({ left: 0, behavior: 'smooth' });
+                }
+            }, 800);
         }
 
         function toggleLocMenu() { document.getElementById('loc-dropdown').classList.toggle('active'); }
@@ -434,7 +438,7 @@
                     const y = anchor.getBoundingClientRect().top + window.pageYOffset - offset;
                     window.scrollTo({ top: y, behavior: 'smooth' });
                 }
-            }, 60);
+            }, 100);
         }
 
         function setSort(type) { state.sortBy = type; render(); }
@@ -451,46 +455,24 @@
 
         function animateSynchronized(targetMacros) {
             const startMacros = Object.assign({}, lastAnimatedMacros);
-            const endMacros = { 
-                kcal: targetMacros.kcal || 0, 
-                protein: targetMacros.protein || 0, 
-                carbs: targetMacros.carbs || 0, 
-                fat: targetMacros.fat || 0,
-                fiber: targetMacros.fiber || 0
-            };
-
+            const endMacros = { kcal: targetMacros.kcal || 0, protein: targetMacros.protein || 0, carbs: targetMacros.carbs || 0, fat: targetMacros.fat || 0, fiber: targetMacros.fiber || 0 };
             const circ = 408.4; 
             const duration = 1000; 
-
             const total = endMacros.protein + endMacros.carbs + endMacros.fat || 1;
             const targetRatios = { p: endMacros.protein / total, c: endMacros.carbs / total, f: endMacros.fat / total };
-            
-            const targetVisuals = {
-                protein: { offset: circ - (targetRatios.p * circ), rotate: 0 },
-                carbs: { offset: circ - (targetRatios.c * circ), rotate: targetRatios.p * 360 },
-                fat: { offset: circ - (targetRatios.f * circ), rotate: (targetRatios.p + targetRatios.c) * 360 }
-            };
-
+            const targetVisuals = { protein: { offset: circ - (targetRatios.p * circ), rotate: 0 }, carbs: { offset: circ - (targetRatios.c * circ), rotate: targetRatios.p * 360 }, fat: { offset: circ - (targetRatios.f * circ), rotate: (targetRatios.p + targetRatios.c) * 360 } };
             const startVisuals = JSON.parse(JSON.stringify(currentCircleStates));
             const elements = { protein: document.getElementById('circle-protein'), carbs: document.getElementById('circle-carbs'), fat: document.getElementById('circle-fat'), valK: document.getElementById('val-kcal-center') };
             let startTime = null;
-            
             function step(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const progress = Math.min((timestamp - startTime) / duration, 1);
                 const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
-                
-                const currentKcal = startMacros.kcal + (endMacros.kcal - startMacros.kcal) * ease;
-                elements.valK.textContent = Math.round(currentKcal);
-                
+                elements.valK.textContent = Math.round(startMacros.kcal + (endMacros.kcal - startMacros.kcal) * ease);
                 ['protein', 'carbs', 'fat', 'fiber'].forEach(key => {
                     const el = document.getElementById('val-' + key);
-                    if (el) {
-                        const val = Math.round(startMacros[key] + (endMacros[key] - startMacros[key]) * ease);
-                        el.textContent = val + 'g';
-                    }
+                    if (el) el.textContent = Math.round(startMacros[key] + (endMacros[key] - startMacros[key]) * ease) + 'g';
                 });
-                
                 ['protein', 'carbs', 'fat'].forEach(key => {
                     const currentOffset = startVisuals[key].offset + (targetVisuals[key].offset - startVisuals[key].offset) * ease;
                     const currentRotate = startVisuals[key].rotate + (targetVisuals[key].rotate - startVisuals[key].rotate) * ease;
@@ -499,12 +481,8 @@
                     currentCircleStates[key].offset = currentOffset;
                     currentCircleStates[key].rotate = currentRotate;
                 });
-                
                 if (progress < 1) requestAnimationFrame(step); 
-                else {
-                    lastAnimatedMacros = Object.assign({}, endMacros);
-                    currentCircleStates = JSON.parse(JSON.stringify(targetVisuals));
-                }
+                else { lastAnimatedMacros = Object.assign({}, endMacros); currentCircleStates = JSON.parse(JSON.stringify(targetVisuals)); }
             }
             requestAnimationFrame(step);
         }
@@ -512,15 +490,9 @@
         function resetMacroVisuals() {
             const circ = 408.4;
             const elements = { protein: document.getElementById('circle-protein'), carbs: document.getElementById('circle-carbs'), fat: document.getElementById('circle-fat'), valK: document.getElementById('val-kcal-center') };
-            if (elements.protein) {
-                elements.protein.style.strokeDashoffset = circ; elements.carbs.style.strokeDashoffset = circ; elements.fat.style.strokeDashoffset = circ;
-                elements.protein.style.transform = 'rotate(0deg)'; elements.carbs.style.transform = 'rotate(0deg)'; elements.fat.style.transform = 'rotate(0deg)';
-            }
+            if (elements.protein) { elements.protein.style.strokeDashoffset = circ; elements.carbs.style.strokeDashoffset = circ; elements.fat.style.strokeDashoffset = circ; elements.protein.style.transform = 'rotate(0deg)'; elements.carbs.style.transform = 'rotate(0deg)'; elements.fat.style.transform = 'rotate(0deg)'; }
             if (elements.valK) elements.valK.textContent = '0';
-            ['protein', 'carbs', 'fat', 'fiber'].forEach(key => {
-                const el = document.getElementById('val-' + key);
-                if (el) el.textContent = '0g';
-            });
+            ['protein', 'carbs', 'fat', 'fiber'].forEach(key => { if (document.getElementById('val-' + key)) document.getElementById('val-' + key).textContent = '0g'; });
             currentCircleStates = { protein: { offset: circ, rotate: 0 }, carbs: { offset: circ, rotate: 0 }, fat: { offset: circ, rotate: 0 } };
             lastAnimatedMacros = { kcal: 0, protein: 0, fat: 0, carbs: 0, fiber: 0 };
         }
@@ -529,10 +501,10 @@
             const activeTab = document.querySelector('.active-tab');
             const indicator = document.getElementById('nav-indicator');
             if (activeTab && indicator) {
+                // Notum hálfa breidd til að finna nákvæma miðju
                 indicator.style.width = activeTab.offsetWidth + 'px';
                 indicator.style.left = activeTab.offsetLeft + 'px';
                 indicator.style.opacity = "1";
-                // Passum að virkur flokkur sé sýnilegur
                 activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             } else if (indicator) indicator.style.opacity = "0";
         }
@@ -553,39 +525,28 @@
             document.getElementById('sort-label').textContent = lang.labelSortBy;
             document.getElementById('mode-categories').textContent = lang.labelCat;
             document.getElementById('mode-themes').textContent = lang.labelGoals;
-            
             document.querySelectorAll('.view-toggle-btn').forEach(btn => {
                 const active = btn.id === 'mode-' + state.viewMode;
-                btn.classList.toggle('bg-white', active); btn.classList.toggle('text-gray-900', active);
-                btn.classList.toggle('text-gray-400', !active);
+                btn.classList.toggle('bg-white', active); btn.classList.toggle('text-gray-900', active); btn.classList.toggle('text-gray-400', !active);
             });
-
             document.getElementById('category-container').classList.toggle('hidden', state.viewMode !== 'categories');
             document.getElementById('theme-container').classList.toggle('hidden', state.viewMode !== 'themes');
             renderNav(); renderThemeButtons(); renderHero(); renderGrid();
-            
-            setTimeout(() => {
-                updateSwoosh();
-                updateSortSwoosh();
-            }, 50);
+            setTimeout(() => { updateSwoosh(); updateSortSwoosh(); }, 50);
         }
 
         function renderNav() {
             const container = document.getElementById('category-tabs');
             const availableCategories = getAvailableCategories();
-            
-            // Fjarlægjum gamla takka
-            container.innerHTML = '';
+            // Fjarlægjum gamla takka en geymum indicatorinn
+            const existingTabs = container.querySelectorAll('.category-tab');
+            existingTabs.forEach(tab => tab.remove());
 
             availableCategories.forEach(key => {
                 const info = CATEGORIES[key];
                 const active = state.activeCategory === key;
                 const btn = document.createElement('button');
-                btn.onclick = () => { 
-                    state.activeCategory = key; 
-                    render(); 
-                    scrollToMenuAnchor();
-                };
+                btn.onclick = () => { state.activeCategory = key; render(); scrollToMenuAnchor(); };
                 btn.className = `category-tab flex-1 text-center transition-all ${active ? 'active-tab text-white' : 'text-gray-400'}`;
                 btn.textContent = state.isIcelandic ? info.is : info.en;
                 container.appendChild(btn);
@@ -606,11 +567,8 @@
             const heroTitle = document.getElementById('hero-title');
             const overlay = document.getElementById('hero-color-overlay');
             let src="", title="", color="", op="0";
-            if (state.viewMode==='themes' && state.activeTheme) {
-                const t = THEMES[state.activeTheme]; src="https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg"; title=state.isIcelandic?t.is:t.en; color=t.color; op="0.5";
-            } else if (state.viewMode==='categories' && state.activeCategory) {
-                const c = CATEGORIES[state.activeCategory]; src=c.img; title=state.isIcelandic?c.is:c.en;
-            }
+            if (state.viewMode==='themes' && state.activeTheme) { const t = THEMES[state.activeTheme]; src="https://images.prismic.io/worldclass/aVxTO3NYClf9ozUE_menu1920.jpg"; title=state.isIcelandic?t.is:t.en; color=t.color; op="0.5"; }
+            else if (state.viewMode==='categories' && state.activeCategory) { const c = CATEGORIES[state.activeCategory]; src=c.img; title=state.isIcelandic?c.is:c.en; }
             if (src && !state.searchQuery) { hero.classList.remove('hidden'); heroImg.src=src; heroTitle.textContent=title; overlay.style.backgroundColor=color; overlay.style.opacity=op; }
             else hero.classList.add('hidden');
         }
@@ -619,17 +577,9 @@
             const container = document.getElementById('menu-grid');
             const lang = getLang();
             let items = rawData.filter(i => i.locations && i.locations.includes(state.activeLocation));
-            
-            if (state.searchQuery) items = items.filter(i => (i.nameIs && i.nameIs.toLowerCase().includes(state.searchQuery)) || (i.nameEn && i.nameEn.toLowerCase().includes(state.searchQuery)));
-            else if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
+            if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
-
-            document.querySelectorAll('.sort-btn').forEach(btn => {
-                const isActive = btn.id === 'sort-' + state.sortBy;
-                btn.classList.toggle('active-sort', isActive); btn.classList.toggle('text-white', isActive);
-                btn.classList.toggle('text-gray-400', !isActive);
-            });
-
+            document.querySelectorAll('.sort-btn').forEach(btn => { const isActive = btn.id === 'sort-' + state.sortBy; btn.classList.toggle('active-sort', isActive); btn.classList.toggle('text-white', isActive); btn.classList.toggle('text-gray-400', !isActive); });
             container.innerHTML = items.map(item => {
                 const theme = THEMES[item.theme] || { color:'#9ca3af' };
                 const price = item.prices ? item.prices.M : item.price;
@@ -656,13 +606,8 @@
             const container = document.getElementById('export-container');
             const btns = document.querySelectorAll('.export-hide');
             btns.forEach(b => b.style.display = 'none');
-            try {
-                const canvas = await html2canvas(container, { backgroundColor: '#ffffff', borderRadius: 48, scale: 2 });
-                const imgData = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.download = `menu-${state.modalItem.nameIs || 'item'}.png`;
-                link.href = imgData; link.click();
-            } catch (err) { console.error("Villa við að deila mynd:", err); } finally { btns.forEach(b => b.style.display = ''); }
+            try { const canvas = await html2canvas(container, { backgroundColor: '#ffffff', borderRadius: 48, scale: 2 }); const imgData = canvas.toDataURL('image/png'); const link = document.createElement('a'); link.download = `menu-${state.modalItem.nameIs || 'item'}.png`; link.href = imgData; link.click(); } 
+            catch (err) { console.error("Villa við að deila mynd:", err); } finally { btns.forEach(b => b.style.display = ''); }
         }
 
         function openModal(idx) {
@@ -680,24 +625,19 @@
             const modal = document.getElementById('item-modal');
             const modalContent = document.getElementById('modal-content');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => { 
-                modalContent.classList.remove('opacity-0', 'scale-95'); modalContent.classList.add('opacity-100', 'scale-100');
-                const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
-                if (m) animateSynchronized(m);
-            }, 50);
+            setTimeout(() => { modalContent.classList.remove('opacity-0', 'scale-95'); modalContent.classList.add('opacity-100', 'scale-100'); const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null; if (m) animateSynchronized(m); }, 50);
         }
 
-        function triggerSizeTransition() {
-            const m = state.modalItem.macros ? (state.modalItem.prices ? state.modalItem.macros[state.selectedSize] : state.modalItem.macros) : null;
-            if (m) animateSynchronized(m);
-        }
+        function triggerSizeTransition() { const m = state.modalItem.macros ? (state.modalItem.prices ? state.modalItem.macros[state.selectedSize] : state.modalItem.macros) : null; if (m) animateSynchronized(m); }
 
         function updateModalUI() {
             const item = state.modalItem; const lang = getLang();
             const pCont = document.getElementById('modal-price-container');
             const mCont = document.getElementById('modal-macros');
             if (item.prices) {
-                pCont.innerHTML = `<div class="grid grid-cols-3 gap-2">${Object.keys(item.prices).map(s => `<button onclick="state.selectedSize='${s}';updateModalUI();triggerSizeTransition()" class="flex flex-col items-center py-2.5 rounded-2xl border ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black':'border-gray-100'}"><span class="text-[9px] uppercase font-black">${lang[s]}</span><span class="text-sm font-bold">${item.prices[s]}</span></button>`).join('')}</div>`;
+                const sizeOrder = ['S', 'M', 'L'];
+                const availableSizes = sizeOrder.filter(s => item.prices[s]);
+                pCont.innerHTML = `<div class="grid grid-cols-3 gap-2">${availableSizes.map(s => `<button onclick="state.selectedSize='${s}';updateModalUI();triggerSizeTransition()" class="flex flex-col items-center py-2.5 rounded-2xl border ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black':'border-gray-100'}"><span class="text-[9px] uppercase font-black">${lang[s]}</span><span class="text-sm font-bold">${item.prices[s]}</span></button>`).join('')}</div>`;
             } else { pCont.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`; }
             const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
             if (m) {
@@ -711,20 +651,9 @@
             } else { document.getElementById('modal-nutrition-section').classList.add('hidden'); }
         }
 
-        function closeModal() { 
-            const modal = document.getElementById('item-modal');
-            const modalContent = document.getElementById('modal-content');
-            modalContent.classList.remove('opacity-100', 'scale-100'); modalContent.classList.add('opacity-0', 'scale-95');
-            setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300);
-        }
+        function closeModal() { const modal = document.getElementById('item-modal'); const modalContent = document.getElementById('modal-content'); modalContent.classList.remove('opacity-100', 'scale-100'); modalContent.classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); }
 
-        window.onload = function() {
-            fetchMenuFromSupabase();
-            const p = new URLSearchParams(window.location.search);
-            if (p.get('lang')==='en') state.isIcelandic=false;
-            if (p.get('loc')) setLocation(p.get('loc').toUpperCase());
-            updateFlagAndLabel();
-        };
+        window.onload = function() { fetchMenuFromSupabase(); const p = new URLSearchParams(window.location.search); if (p.get('lang')==='en') state.isIcelandic=false; if (p.get('loc')) setLocation(p.get('loc').toUpperCase()); updateFlagAndLabel(); };
     </script>
 </body>
 </html>
