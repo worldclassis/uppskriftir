@@ -46,7 +46,7 @@
 
         .category-tab, .sort-btn {
             position: relative;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease;
             white-space: nowrap;
             text-transform: uppercase;
             font-weight: 800;
@@ -95,7 +95,10 @@
             100% { background-position: 0% 50%; }
         }
 
-        .macro-circle { transform-origin: center; transition: stroke-dashoffset 0.8s ease, transform 0.8s ease; }
+        /* Fjarlægði transition hér til að stoppa titring þegar JS er að hreyfa hringina */
+        .macro-circle { 
+            transform-origin: center; 
+        }
         
         .search-container { transition: all 0.3s ease; }
         .search-container:focus-within {
@@ -483,15 +486,15 @@
                 const f = start.fat + (end.fat - start.fat) * ease;
                 const total = p + c + f || 1;
                 const ratios = { p: p/total, c: c/total, f: f/total };
-                const fillFactor = (start.protein === 0 && start.carbs === 0 && start.fat === 0) ? ease : 1;
                 
-                elements.protein.style.strokeDashoffset = circ - (ratios.p * fillFactor * circ);
-                elements.carbs.style.strokeDashoffset = circ - (ratios.c * fillFactor * circ);
-                elements.fat.style.strokeDashoffset = circ - (ratios.f * fillFactor * circ);
+                // Myndum fyllinguna miðað við framvindu (ease)
+                elements.protein.style.strokeDashoffset = circ - (ratios.p * ease * circ);
+                elements.carbs.style.strokeDashoffset = circ - (ratios.c * ease * circ);
+                elements.fat.style.strokeDashoffset = circ - (ratios.f * ease * circ);
                 
                 elements.protein.style.transform = 'rotate(0deg)';
-                elements.carbs.style.transform = 'rotate(' + (ratios.p * fillFactor * 360) + 'deg)';
-                elements.fat.style.transform = 'rotate(' + ((ratios.p + ratios.c) * fillFactor * 360) + 'deg)';
+                elements.carbs.style.transform = 'rotate(' + (ratios.p * ease * 360) + 'deg)';
+                elements.fat.style.transform = 'rotate(' + ((ratios.p + ratios.c) * ease * 360) + 'deg)';
                 
                 if (progress < 1) requestAnimationFrame(step); 
                 else lastAnimatedMacros = Object.assign({}, end);
