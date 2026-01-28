@@ -359,6 +359,13 @@
                 rawData = data.map(item => ({ ...item, nameIs: item.name_is, nameEn: item.name_en, descriptionIs: item.description_is, descriptionEn: item.description_en, isVegan: item.is_vegan }));
                 const overlay = document.getElementById('loading-overlay');
                 if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 500); }
+                
+                // Mikilvægt: Uppfæra activeCategory miðað við hlaðna staðsetningu
+                const available = getAvailableCategories();
+                if (available.length > 0 && !available.includes(state.activeCategory)) {
+                    state.activeCategory = available[0];
+                }
+
                 render();
                 checkAndTriggerNudge();
             } catch (err) { console.error("Error:", err); }
@@ -379,8 +386,15 @@
         function setLocation(loc) { 
             state.activeLocation = loc.toUpperCase(); 
             const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
-            document.getElementById('active-loc-name').textContent = locMap[state.activeLocation] || state.activeLocation; 
+            const activeLocNameEl = document.getElementById('active-loc-name');
+            if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation; 
             document.getElementById('loc-dropdown').classList.remove('active'); 
+            
+            // Tryggja að valið sé flokkur sem er til á staðnum
+            const available = getAvailableCategories();
+            if (available.length > 0 && !available.includes(state.activeCategory)) {
+                state.activeCategory = available[0];
+            }
             render(); 
         }
         
@@ -488,7 +502,6 @@
             document.getElementById('theme-container').classList.toggle('hidden', state.viewMode !== 'themes');
             renderNav(); renderThemeButtons(); renderHero(); renderGrid();
             
-            // Uppfæra virkt state á sort tökkum áður en vísirinn er uppfærður
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 const isActive = btn.id === 'sort-' + state.sortBy;
                 btn.classList.toggle('active-sort', isActive);
@@ -496,10 +509,7 @@
                 btn.classList.toggle('text-gray-400', !isActive);
             });
 
-            setTimeout(() => { 
-                updateSwoosh(); 
-                updateSortSwoosh(); 
-            }, 50);
+            setTimeout(() => { updateSwoosh(); updateSortSwoosh(); }, 50);
         }
 
         function renderNav() {
@@ -545,7 +555,6 @@
             if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
 
-            // Sorting logic
             if (state.sortBy !== 'category') {
                 items.sort((a, b) => {
                     const getVal = (item) => {
@@ -574,10 +583,7 @@
 
                 return `<div class="item-card bg-white p-7 rounded-[2.2rem] border border-gray-50 shadow-sm cursor-pointer" onclick="openModal(${rawData.indexOf(item)})">
                     <div class="flex justify-between items-start mb-4"><span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span><span class="text-base font-black text-red-500 tracking-tight block leading-none">${price || ''}</span></div>
-                    
-                    <!-- Stækkað heiti í korti -->
                     <h3 class="text-xl sm:text-2xl font-black text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic?item.nameIs:item.nameEn}</h3>
-                    
                     <p class="text-gray-400 text-xs leading-relaxed line-clamp-2 mb-4">${state.isIcelandic?item.descriptionIs:item.descriptionEn}</p>
                     ${m ? `<div class="card-macro-grid grid grid-cols-4 gap-2 items-center text-center">
                         <div class="flex flex-col transition-all duration-300 ${highlightClass('kcal')}"><span class="text-[7px] uppercase font-black ${labelColor('kcal', 'text-gray-300')}">${lang.kcal}</span><span class="text-[11px] font-black ${valueColor('kcal', 'text-gray-800')}">${Math.round(m.kcal)}</span></div>
@@ -645,6 +651,7 @@
             const locParam = params.get('loc');
             if (locParam) {
                 state.activeLocation = locParam.toUpperCase();
+                // Uppfæra texta í dropdown takkanum strax
                 const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
                 const activeLocNameEl = document.getElementById('active-loc-name');
                 if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation;
