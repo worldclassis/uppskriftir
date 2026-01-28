@@ -48,7 +48,7 @@
 
         .category-tab, .sort-btn {
             position: relative;
-            transition: all 0.4s ease;
+            transition: color 0.4s ease;
             white-space: nowrap;
             text-transform: uppercase;
             font-weight: 800;
@@ -236,11 +236,11 @@
             <div class="bg-gray-100/50 p-1 rounded-full border border-gray-200/50 flex-1 overflow-hidden relative">
                 <div class="flex gap-2 overflow-x-auto no-scrollbar relative p-1" id="sort-tabs-container">
                     <div id="sort-indicator"></div>
-                    <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Kcal</button>
-                    <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Prótein</button>
-                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Kolv</button>
-                    <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Fita</button>
-                    <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Flokkar</button>
+                    <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold flex items-center gap-1">Kcal</button>
+                    <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold flex items-center gap-1">Prótein</button>
+                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold flex items-center gap-1">Kolv</button>
+                    <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold flex items-center gap-1">Fita</button>
+                    <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold flex items-center gap-1">Flokkar</button>
                 </div>
             </div>
         </div>
@@ -280,9 +280,17 @@
                 
                 <h2 id="modal-title" class="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-4 tracking-tighter"></h2>
                 <div id="modal-price-container" class="mb-10 export-hide"></div>
-                <div id="modal-ingredients-container" class="mb-10">
+                
+                <!-- Innihald -->
+                <div id="modal-ingredients-container" class="mb-6">
                     <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.25em] text-gray-300 mb-2">Innihaldslýsing</h4>
                     <p id="modal-description" class="text-gray-700 leading-relaxed text-[14px] font-medium"></p>
+                </div>
+
+                <!-- Ofnæmisvaldar úr gagnagrunni -->
+                <div id="modal-allergens-container" class="mb-10 hidden">
+                    <h4 class="text-[9px] font-black uppercase tracking-[0.25em] text-gray-300 mb-3">Ofnæmisvaldar</h4>
+                    <div id="modal-allergens-list" class="flex flex-wrap gap-1.5"></div>
                 </div>
 
                 <div class="space-y-8">
@@ -322,6 +330,7 @@
         }
 
         let rawData = [];
+
         const THEMES = {
             LIGHT: { key: 'LIGHT', is: 'Light', en: 'Light', color: '#34d399', descIs: 'Næringarríkt án auka hitaeininga', descEn: 'Nutritious & light' },
             BALANCE: { key: 'BALANCE', is: 'Balance', en: 'Balance', color: '#38bdf8', descIs: 'Stuðlar að einbeitingu og jafnvægi', descEn: 'Focus & balance' },
@@ -361,18 +370,16 @@
         async function fetchMenuFromSupabase() {
             if (!supabaseClient) return;
             try {
+                // Við sækjum allergens dálkinn líka
                 const { data, error } = await supabaseClient.from('menu_items').select('*');
                 if (error) throw error;
                 rawData = data.map(item => ({ ...item, nameIs: item.name_is, nameEn: item.name_en, descriptionIs: item.description_is, descriptionEn: item.description_en, isVegan: item.is_vegan }));
                 const overlay = document.getElementById('loading-overlay');
                 if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 500); }
                 
-                // Lesa URL breytur eftir að gögn eru hlaðin
                 const params = new URLSearchParams(window.location.search);
                 const langParam = params.get('lang');
-                if (langParam && langParam.toLowerCase() === 'en') {
-                    state.isIcelandic = false;
-                }
+                if (langParam && langParam.toLowerCase() === 'en') state.isIcelandic = false;
                 
                 const locParam = params.get('loc');
                 if (locParam) {
@@ -411,7 +418,6 @@
             const activeLocNameEl = document.getElementById('active-loc-name');
             if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation; 
             document.getElementById('loc-dropdown').classList.remove('active'); 
-            
             const available = getAvailableCategories();
             if (available.length > 0 && !available.includes(state.activeCategory)) {
                 state.activeCategory = available[0];
@@ -438,11 +444,6 @@
                 state.sortOrder = 'asc';
             }
             render(); 
-        }
-
-        function toggleSortOrder() {
-            state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
-            render();
         }
 
         function getAvailableCategories() {
@@ -507,12 +508,9 @@
                 indicator.style.width = activeSort.offsetWidth + 'px'; 
                 indicator.style.left = activeSort.offsetLeft + 'px'; 
                 indicator.style.opacity = "1"; 
-
                 const colors = { kcal: '#000000', protein: '#ef4444', carbs: '#f97316', fat: '#0ea5e9', category: '#ef4444' };
                 indicator.style.backgroundColor = colors[state.sortBy] || '#ef4444';
-            } else if (indicator) {
-                indicator.style.opacity = "0";
-            }
+            } else if (indicator) indicator.style.opacity = "0";
         }
 
         function render() {
@@ -522,7 +520,6 @@
             document.getElementById('category-container').classList.toggle('hidden', state.viewMode !== 'categories');
             document.getElementById('theme-container').classList.toggle('hidden', state.viewMode !== 'themes');
             renderNav(); renderThemeButtons(); renderHero(); renderGrid();
-            
             setTimeout(() => { updateSwoosh(); updateSortSwoosh(); }, 50);
         }
 
@@ -565,7 +562,6 @@
             const container = document.getElementById('menu-grid');
             const lang = getLang();
             let items = rawData.filter(i => i.locations?.includes(state.activeLocation));
-            
             if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
 
@@ -663,7 +659,35 @@
             const item = state.modalItem; const lang = getLang();
             const pCont = document.getElementById('modal-price-container');
             const mCont = document.getElementById('modal-macros');
+            const allergenCont = document.getElementById('modal-allergens-container');
+            const allergenList = document.getElementById('modal-allergens-list');
+
             if (item.prices) { const sizeOrder = ['S', 'M', 'L']; pCont.innerHTML = `<div class="grid grid-cols-3 gap-2">${sizeOrder.filter(s => item.prices[s]).map(s => `<button onclick="state.selectedSize='${s}';updateModalUI();animateSynchronized(state.modalItem.macros[state.selectedSize])" class="flex flex-col items-center py-2.5 rounded-2xl border ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black':'border-gray-100'}"><span class="text-[9px] uppercase font-black">${lang[s]}</span><span class="text-sm font-bold">${item.prices[s]}</span></button>`).join('')}</div>`; } else { pCont.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`; }
+            
+            // Ofnæmisvaldar úr gagnagrunni (item.allergens)
+            const info = item.allergens;
+            if (info && (info.gluten || info.milk || info.nuts || info.soja || info.egg || info.other)) {
+                allergenCont.classList.remove('hidden');
+                let allAllergenItems = [];
+                const labels = { gluten: 'Glúten', milk: 'Mjólk', nuts: 'Hnetur', soja: 'Soja', egg: 'Egg' };
+                Object.keys(labels).forEach(key => {
+                    if (info[key]) allAllergenItems.push(labels[key]);
+                });
+                if (info.other) {
+                    const others = info.other.split(',').map(s => s.trim());
+                    allAllergenItems = [...allAllergenItems, ...others];
+                }
+                allAllergenItems = [...new Set(allAllergenItems)];
+                allergenList.innerHTML = allAllergenItems.map(a => `
+                    <span class="bg-gray-50 text-gray-400 text-[9px] font-medium px-2 py-1 rounded-full border border-gray-100 uppercase tracking-tight">
+                        ${a}
+                    </span>
+                `).join('');
+                if (allAllergenItems.length === 0) allergenCont.classList.add('hidden');
+            } else {
+                allergenCont.classList.add('hidden');
+            }
+
             const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
@@ -676,7 +700,6 @@
 
         window.onload = function() {
             fetchMenuFromSupabase();
-            
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('item-modal');
