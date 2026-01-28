@@ -48,7 +48,7 @@
 
         .category-tab, .sort-btn {
             position: relative;
-            transition: color 0.4s ease;
+            transition: all 0.4s ease;
             white-space: nowrap;
             text-transform: uppercase;
             font-weight: 800;
@@ -139,6 +139,19 @@
             justify-content: center;
             transition: opacity 0.5s ease;
         }
+        
+        /* Stílar fyrir röðunar-örina */
+        .sort-arrow-svg {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-left: 4px;
+            transition: transform 0.3s ease;
+            vertical-align: middle;
+        }
+        .sort-arrow-svg.desc {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-600">
@@ -220,20 +233,15 @@
         <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-10 px-2">
             <div class="flex items-center gap-3">
                 <span id="sort-label" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">Raða eftir:</span>
-                <button onclick="toggleSortOrder()" class="bg-white border border-gray-100 rounded-full p-1.5 shadow-sm active:scale-90 transition-all group">
-                    <div id="sort-order-icon" class="text-red-500 transition-transform duration-300">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path></svg>
-                    </div>
-                </button>
             </div>
             <div class="bg-gray-100/50 p-1 rounded-full border border-gray-200/50 flex-1 overflow-hidden relative">
                 <div class="flex gap-2 overflow-x-auto no-scrollbar relative p-1" id="sort-tabs-container">
                     <div id="sort-indicator"></div>
-                    <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Kcal</button>
-                    <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Prótein</button>
-                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Kolv</button>
-                    <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Fita</button>
-                    <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Flokkar</button>
+                    <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Kcal</button>
+                    <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Prótein</button>
+                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Kolv</button>
+                    <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Fita</button>
+                    <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-all duration-300 uppercase font-bold flex items-center gap-1">Flokkar</button>
                 </div>
             </div>
         </div>
@@ -360,7 +368,6 @@
                 const overlay = document.getElementById('loading-overlay');
                 if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 500); }
                 
-                // Lesa breytur úr URL strax þegar gögn koma inn
                 const params = new URLSearchParams(window.location.search);
                 const langParam = params.get('lang');
                 if (langParam && langParam.toLowerCase() === 'en') state.isIcelandic = false;
@@ -373,7 +380,6 @@
                     if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation;
                 }
 
-                // Mikilvægt: Uppfæra activeCategory miðað við hlaðna staðsetningu
                 const available = getAvailableCategories();
                 if (available.length > 0 && !available.includes(state.activeCategory)) {
                     state.activeCategory = available[0];
@@ -423,18 +429,18 @@
         function scrollToMenuAnchor() { setTimeout(() => { const anchor = document.getElementById('scroll-anchor'); if (anchor) window.scrollTo({ top: anchor.getBoundingClientRect().top + window.pageYOffset - 32, behavior: 'smooth' }); }, 100); }
         
         function setSort(type) { 
-            state.sortBy = type; 
+            // Ef ýtt er aftur á sama dálk, skipta um röðunarátt
+            if (state.sortBy === type) {
+                state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
+            } else {
+                state.sortBy = type;
+                state.sortOrder = 'asc'; // Sjálfgefið hækkandi við nýtt val
+            }
             render(); 
         }
 
         function toggleSortOrder() {
             state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
-            const icon = document.getElementById('sort-order-icon');
-            if (state.sortOrder === 'desc') {
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                icon.style.transform = 'rotate(0deg)';
-            }
             render();
         }
 
@@ -516,13 +522,6 @@
             document.getElementById('theme-container').classList.toggle('hidden', state.viewMode !== 'themes');
             renderNav(); renderThemeButtons(); renderHero(); renderGrid();
             
-            document.querySelectorAll('.sort-btn').forEach(btn => {
-                const isActive = btn.id === 'sort-' + state.sortBy;
-                btn.classList.toggle('active-sort', isActive);
-                btn.classList.toggle('text-white', isActive);
-                btn.classList.toggle('text-gray-400', !isActive);
-            });
-
             setTimeout(() => { updateSwoosh(); updateSortSwoosh(); }, 50);
         }
 
@@ -569,7 +568,6 @@
             if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
 
-            // Priority sorting for Themes when sorting by Category
             const themePriority = { 'LIGHT': 1, 'BALANCE': 2, 'ENERGY': 3, 'STRENGTH': 4, 'ALL': 5 };
 
             if (state.sortBy !== 'category') {
@@ -596,6 +594,25 @@
             const highlightClass = (key) => state.sortBy === key ? `${colorMap[key]} text-white rounded-2xl shadow-sm scale-110 z-10 p-1.5 -m-1.5` : 'p-1';
             const labelColor = (key, defaultClass) => state.sortBy === key ? 'text-white/80' : defaultClass;
             const valueColor = (key, defaultClass) => state.sortBy === key ? 'text-white' : defaultClass;
+
+            // Arrow SVG til að sýna röðunarátt í stikunni
+            const arrowSvg = `<svg class="sort-arrow-svg ${state.sortOrder === 'desc' ? 'desc' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 15l7-7 7 7"></path></svg>`;
+
+            // Uppfæra hnappana í stikunni með örvum
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                const key = btn.id.replace('sort-', '');
+                const isActive = key === state.sortBy;
+                btn.classList.toggle('active-sort', isActive);
+                btn.classList.toggle('text-white', isActive);
+                btn.classList.toggle('text-gray-400', !isActive);
+                
+                // Endurstilla texta og bæta við ör ef virkt
+                const baseText = key === 'kcal' ? lang.kcal : 
+                                 key === 'protein' ? 'PRÓT' : 
+                                 key === 'carbs' ? 'KOLV' : 
+                                 key === 'fat' ? 'FITA' : 'FLOKKAR';
+                btn.innerHTML = baseText + (isActive ? arrowSvg : '');
+            });
 
             container.innerHTML = items.map(item => {
                 const theme = THEMES[item.theme] || { color:'#9ca3af' };
