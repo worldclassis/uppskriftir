@@ -68,7 +68,7 @@
             background-color: var(--primary);
             border-radius: 9999px;
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             z-index: 1;
             pointer-events: none;
         }
@@ -220,19 +220,18 @@
                 <span id="sort-label" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">Raða eftir:</span>
                 <button onclick="toggleSortOrder()" class="bg-white border border-gray-100 rounded-full p-1.5 shadow-sm active:scale-90 transition-all group">
                     <div id="sort-order-icon" class="text-red-500 transition-transform duration-300">
-                        <!-- Upp ör (hækkandi) sjálfgefið -->
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path></svg>
                     </div>
                 </button>
             </div>
             <div class="bg-gray-100/50 p-1 rounded-full border border-gray-200/50 flex-1 overflow-hidden relative">
-                <div class="flex gap-2 overflow-x-auto no-scrollbar relative p-1">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar relative p-1" id="sort-tabs-container">
                     <div id="sort-indicator"></div>
-                    <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Kcal</button>
-                    <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Prótein</button>
-                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Kolv</button>
-                    <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Fita</button>
-                    <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] text-gray-400 uppercase font-bold">Flokkar</button>
+                    <button onclick="setSort('kcal')" id="sort-kcal" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Kcal</button>
+                    <button onclick="setSort('protein')" id="sort-protein" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Prótein</button>
+                    <button onclick="setSort('carbs')" id="sort-carbs" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Kolv</button>
+                    <button onclick="setSort('fat')" id="sort-fat" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Fita</button>
+                    <button onclick="setSort('category')" id="sort-category" class="sort-btn px-4 py-1.5 rounded-full text-[9px] transition-colors duration-300 uppercase font-bold">Flokkar</button>
                 </div>
             </div>
         </div>
@@ -270,7 +269,7 @@
                          style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                 </div>
                 
-                <h2 id="modal-title" class="text-2xl font-black text-gray-900 leading-tight mb-4 tracking-tighter"></h2>
+                <h2 id="modal-title" class="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-4 tracking-tighter"></h2>
                 <div id="modal-price-container" class="mb-10 export-hide"></div>
                 <div id="modal-ingredients-container" class="mb-10">
                     <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.25em] text-gray-300 mb-2">Innihaldslýsing</h4>
@@ -344,7 +343,7 @@
             activeLocation: 'LAUGAR', 
             selectedSize: 'M', 
             sortBy: 'category', 
-            sortOrder: 'asc', // asc eða desc
+            sortOrder: 'asc', 
             modalItem: null 
         };
 
@@ -374,10 +373,23 @@
         }
 
         function toggleLocMenu() { document.getElementById('loc-dropdown').classList.toggle('active'); }
-        function setLocation(loc) { state.activeLocation = loc; document.getElementById('active-loc-name').textContent = loc; document.getElementById('loc-dropdown').classList.remove('active'); render(); }
+        
+        function setLocation(loc) { 
+            state.activeLocation = loc.toUpperCase(); 
+            const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
+            document.getElementById('active-loc-name').textContent = locMap[state.activeLocation] || state.activeLocation; 
+            document.getElementById('loc-dropdown').classList.remove('active'); 
+            render(); 
+        }
+        
         function toggleLanguage() { state.isIcelandic = !state.isIcelandic; updateFlagAndLabel(); render(); }
-        function updateFlagAndLabel() { document.getElementById('lang-flag-img').src = state.isIcelandic ? "https://flagcdn.com/w80/is.png" : "https://flagcdn.com/w80/gb.png"; }
+        
+        function updateFlagAndLabel() { 
+            document.getElementById('lang-flag-img').src = state.isIcelandic ? "https://flagcdn.com/w80/is.png" : "https://flagcdn.com/w80/gb.png"; 
+        }
+        
         function setViewMode(mode) { state.viewMode = mode; if (mode === 'categories') state.activeCategory = getAvailableCategories()[0] || 'DRYKKIR'; else state.activeTheme = 'LIGHT'; render(); scrollToMenuAnchor(); }
+        
         function scrollToMenuAnchor() { setTimeout(() => { const anchor = document.getElementById('scroll-anchor'); if (anchor) window.scrollTo({ top: anchor.getBoundingClientRect().top + window.pageYOffset - 32, behavior: 'smooth' }); }, 100); }
         
         function setSort(type) { 
@@ -458,6 +470,9 @@
                 indicator.style.width = activeSort.offsetWidth + 'px'; 
                 indicator.style.left = activeSort.offsetLeft + 'px'; 
                 indicator.style.opacity = "1"; 
+
+                const colors = { kcal: '#000000', protein: '#ef4444', carbs: '#f97316', fat: '#0ea5e9', category: '#ef4444' };
+                indicator.style.backgroundColor = colors[state.sortBy] || '#ef4444';
             } else if (indicator) {
                 indicator.style.opacity = "0";
             }
@@ -471,10 +486,14 @@
             document.getElementById('theme-container').classList.toggle('hidden', state.viewMode !== 'themes');
             renderNav(); renderThemeButtons(); renderHero(); renderGrid();
             
-            setTimeout(() => { 
-                updateSwoosh(); 
-                updateSortSwoosh(); 
-            }, 50);
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                const isActive = btn.id === 'sort-' + state.sortBy;
+                btn.classList.toggle('active-sort', isActive);
+                btn.classList.toggle('text-white', isActive);
+                btn.classList.toggle('text-gray-400', !isActive);
+            });
+
+            setTimeout(() => { updateSwoosh(); updateSortSwoosh(); }, 50);
         }
 
         function renderNav() {
@@ -520,15 +539,6 @@
             if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
 
-            // Uppfæra virkt state á sort tökkum
-            document.querySelectorAll('.sort-btn').forEach(btn => {
-                const isActive = btn.id === 'sort-' + state.sortBy;
-                btn.classList.toggle('active-sort', isActive);
-                btn.classList.toggle('text-white', isActive);
-                btn.classList.toggle('text-gray-400', !isActive);
-            });
-
-            // Sorting logic
             if (state.sortBy !== 'category') {
                 items.sort((a, b) => {
                     const getVal = (item) => {
@@ -545,14 +555,7 @@
                 });
             }
 
-            // Highlighting colors
-            const colorMap = {
-                kcal: 'bg-red-500',
-                protein: 'bg-red-500',
-                carbs: 'bg-orange-500',
-                fat: 'bg-blue-500'
-            };
-
+            const colorMap = { kcal: 'bg-black', protein: 'bg-red-500', carbs: 'bg-orange-500', fat: 'bg-blue-500' };
             const highlightClass = (key) => state.sortBy === key ? `${colorMap[key]} text-white rounded-2xl shadow-sm scale-110 z-10 p-1.5 -m-1.5` : 'p-1';
             const labelColor = (key, defaultClass) => state.sortBy === key ? 'text-white/80' : defaultClass;
             const valueColor = (key, defaultClass) => state.sortBy === key ? 'text-white' : defaultClass;
@@ -564,7 +567,7 @@
 
                 return `<div class="item-card bg-white p-7 rounded-[2.2rem] border border-gray-50 shadow-sm cursor-pointer" onclick="openModal(${rawData.indexOf(item)})">
                     <div class="flex justify-between items-start mb-4"><span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span><span class="text-base font-black text-red-500 tracking-tight block leading-none">${price || ''}</span></div>
-                    <h3 class="text-lg font-black text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic?item.nameIs:item.nameEn}</h3>
+                    <h3 class="text-xl sm:text-2xl font-black text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic?item.nameIs:item.nameEn}</h3>
                     <p class="text-gray-400 text-xs leading-relaxed line-clamp-2 mb-4">${state.isIcelandic?item.descriptionIs:item.descriptionEn}</p>
                     ${m ? `<div class="card-macro-grid grid grid-cols-4 gap-2 items-center text-center">
                         <div class="flex flex-col transition-all duration-300 ${highlightClass('kcal')}"><span class="text-[7px] uppercase font-black ${labelColor('kcal', 'text-gray-300')}">${lang.kcal}</span><span class="text-[11px] font-black ${valueColor('kcal', 'text-gray-800')}">${Math.round(m.kcal)}</span></div>
@@ -619,6 +622,24 @@
         function closeModal() { const modal = document.getElementById('item-modal'); document.getElementById('modal-content').classList.remove('opacity-100', 'scale-100'); document.getElementById('modal-content').classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); }
 
         window.onload = function() {
+            // Lesa breytur úr URL áður en gögn eru sótt
+            const params = new URLSearchParams(window.location.search);
+            
+            // Tungumál
+            if (params.get('lang') === 'en') {
+                state.isIcelandic = false;
+            }
+            
+            // Staðsetning
+            const locParam = params.get('loc');
+            if (locParam) {
+                state.activeLocation = locParam.toUpperCase();
+                // Uppfæra texta í dropdown takkanum strax
+                const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
+                const activeLocNameEl = document.getElementById('active-loc-name');
+                if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation;
+            }
+            
             fetchMenuFromSupabase();
             updateFlagAndLabel();
             
