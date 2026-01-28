@@ -360,6 +360,19 @@
                 const overlay = document.getElementById('loading-overlay');
                 if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 500); }
                 
+                // Lesa breytur úr URL strax þegar gögn koma inn
+                const params = new URLSearchParams(window.location.search);
+                const langParam = params.get('lang');
+                if (langParam && langParam.toLowerCase() === 'en') state.isIcelandic = false;
+                
+                const locParam = params.get('loc');
+                if (locParam) {
+                    state.activeLocation = locParam.toUpperCase();
+                    const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
+                    const activeLocNameEl = document.getElementById('active-loc-name');
+                    if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation;
+                }
+
                 // Mikilvægt: Uppfæra activeCategory miðað við hlaðna staðsetningu
                 const available = getAvailableCategories();
                 if (available.length > 0 && !available.includes(state.activeCategory)) {
@@ -367,6 +380,7 @@
                 }
 
                 render();
+                updateFlagAndLabel();
                 checkAndTriggerNudge();
             } catch (err) { console.error("Error:", err); }
         }
@@ -390,7 +404,6 @@
             if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation; 
             document.getElementById('loc-dropdown').classList.remove('active'); 
             
-            // Tryggja að valið sé flokkur sem er til á staðnum
             const available = getAvailableCategories();
             if (available.length > 0 && !available.includes(state.activeCategory)) {
                 state.activeCategory = available[0];
@@ -401,7 +414,8 @@
         function toggleLanguage() { state.isIcelandic = !state.isIcelandic; updateFlagAndLabel(); render(); }
         
         function updateFlagAndLabel() { 
-            document.getElementById('lang-flag-img').src = state.isIcelandic ? "https://flagcdn.com/w80/is.png" : "https://flagcdn.com/w80/gb.png"; 
+            const img = document.getElementById('lang-flag-img');
+            if (img) img.src = state.isIcelandic ? "https://flagcdn.com/w80/is.png" : "https://flagcdn.com/w80/gb.png"; 
         }
         
         function setViewMode(mode) { state.viewMode = mode; if (mode === 'categories') state.activeCategory = getAvailableCategories()[0] || 'DRYKKIR'; else state.activeTheme = 'LIGHT'; render(); scrollToMenuAnchor(); }
@@ -555,6 +569,9 @@
             if (state.viewMode==='themes' && state.activeTheme) items = items.filter(i => i.theme === state.activeTheme || i.theme === 'ALL');
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
 
+            // Priority sorting for Themes when sorting by Category
+            const themePriority = { 'LIGHT': 1, 'BALANCE': 2, 'ENERGY': 3, 'STRENGTH': 4, 'ALL': 5 };
+
             if (state.sortBy !== 'category') {
                 items.sort((a, b) => {
                     const getVal = (item) => {
@@ -565,6 +582,10 @@
                 });
             } else {
                 items.sort((a, b) => {
+                    const pA = themePriority[a.theme] || 99;
+                    const pB = themePriority[b.theme] || 99;
+                    if (pA !== pB) return state.sortOrder === 'asc' ? pA - pB : pB - pA;
+                    
                     const nameA = state.isIcelandic ? (a.nameIs || "") : (a.nameEn || "");
                     const nameB = state.isIcelandic ? (b.nameIs || "") : (b.nameEn || "");
                     return state.sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
@@ -638,27 +659,7 @@
         function closeModal() { const modal = document.getElementById('item-modal'); document.getElementById('modal-content').classList.remove('opacity-100', 'scale-100'); document.getElementById('modal-content').classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); }
 
         window.onload = function() {
-            // Lesa breytur úr URL áður en gögn eru sótt
-            const params = new URLSearchParams(window.location.search);
-            
-            // Tungumál (Case-insensitive)
-            const langParam = params.get('lang');
-            if (langParam && langParam.toLowerCase() === 'en') {
-                state.isIcelandic = false;
-            }
-            
-            // Staðsetning
-            const locParam = params.get('loc');
-            if (locParam) {
-                state.activeLocation = locParam.toUpperCase();
-                // Uppfæra texta í dropdown takkanum strax
-                const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
-                const activeLocNameEl = document.getElementById('active-loc-name');
-                if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation;
-            }
-            
             fetchMenuFromSupabase();
-            updateFlagAndLabel();
             
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
