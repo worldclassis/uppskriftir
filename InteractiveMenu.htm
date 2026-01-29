@@ -303,7 +303,7 @@
                 </button>
             </div>
             
-            <div id="export-container" class="p-8 sm:p-10 bg-white" style="border-radius: 3rem;">
+            <div id="export-container" class="p-8 sm:p-10 bg-white rounded-[3rem] overflow-hidden">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex flex-wrap gap-2.5 items-center">
                         <span id="modal-tag" class="text-[9px] font-black px-2.5 py-1.5 rounded-lg text-white uppercase tracking-widest shadow-sm"></span>
@@ -317,7 +317,7 @@
                          style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                 </div>
                 
-                <h2 id="modal-title" class="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-2 tracking-tighter"></h2>
+                <h2 id="modal-title" class="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-6 tracking-tighter"></h2>
                 <div id="modal-price-container" class="mb-6 export-hide"></div>
                 
                 <!-- Innihald -->
@@ -326,8 +326,8 @@
                     <p id="modal-description" class="text-gray-700 leading-relaxed text-[13px] font-medium"></p>
                 </div>
 
-                <!-- Ofnæmisvaldar (Compact) -->
-                <div id="modal-allergens-container" class="mb-8 hidden flex items-center gap-3 py-2 border-y border-gray-50">
+                <!-- Ofnæmisvaldar (Compact & Hidden on export) -->
+                <div id="modal-allergens-container" class="mb-8 hidden flex items-center gap-3 py-2 border-y border-gray-50 export-hide">
                     <h4 class="text-[8px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Ofnæmi:</h4>
                     <div id="modal-allergens-list" class="flex flex-wrap gap-1"></div>
                 </div>
@@ -998,15 +998,24 @@
             const btns = document.querySelectorAll('.export-hide');
             if (exportLogo) exportLogo.classList.remove('hidden');
             btns.forEach(b => b.style.display = 'none');
+            
+            // Try to force better rounding on the export
+            container.style.borderRadius = "3rem";
+            
             try { 
                 const canvas = await html2canvas(container, { 
-                    backgroundColor: '#ffffff', 
-                    borderRadius: 48, 
+                    backgroundColor: null, // Transparent background to allow rounding to show
+                    borderRadius: 48,
                     scale: 3, 
                     useCORS: true, 
                     logging: false, 
                     imageTimeout: 0, 
-                    dpi: 300 
+                    dpi: 300,
+                    onclone: (clonedDoc) => {
+                        const clonedContainer = clonedDoc.getElementById('export-container');
+                        clonedContainer.style.borderRadius = "3rem";
+                        clonedContainer.style.overflow = "hidden";
+                    }
                 }); 
                 const link = document.createElement('a'); 
                 link.download = `menu-${state.modalItem.nameIs || 'item'}.png`; 
