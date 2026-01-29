@@ -151,6 +151,23 @@
         .sort-arrow-svg.desc {
             transform: rotate(180deg);
         }
+
+        /* --- Admin Styles --- */
+        .admin-only { display: none !important; }
+        body.is-admin .admin-only { display: flex !important; }
+        body.is-admin .admin-block { display: block !important; }
+        
+        /* Inputs for Admin Modal */
+        .admin-input {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+        .admin-input:focus { border-color: #ef4444; }
     </style>
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-600">
@@ -163,28 +180,36 @@
         
         <!-- Haus -->
         <header class="flex flex-col items-center mb-10 sm:mb-16">
-            <div class="w-full flex justify-end items-center gap-3 mb-10">
+            <div class="w-full flex justify-between items-center mb-10">
                 
-                <!-- Location Dropdown -->
-                <div class="relative">
-                    <button onclick="toggleLocMenu()" class="flex items-center gap-2 bg-white border border-gray-100 px-3 py-2 rounded-full shadow-sm hover:shadow-md transition-all active:scale-95">
-                        <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        <span id="active-loc-name" class="text-[10px] font-black uppercase tracking-widest text-gray-700">Laugar</span>
-                    </button>
-                    
-                    <div id="loc-dropdown" class="dropdown-menu overflow-hidden p-2">
-                        <button onclick="setLocation('LAUGAR')" class="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 rounded-xl transition-colors">Laugar (Allt)</button>
-                        <button onclick="setLocation('VATNSMYRI')" class="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 rounded-xl transition-colors border-t border-gray-50">Vatnsmýri</button>
-                        <button onclick="setLocation('SELTJARNARNES')" class="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 rounded-xl transition-colors border-t border-gray-50">Seltjarnarnes</button>
-                    </div>
+                <!-- Admin Controls -->
+                <div class="flex gap-2">
+                    <button onclick="handleLogout()" class="admin-only bg-red-50 text-red-500 text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-full border border-red-100 hover:bg-red-100 transition-colors">Útskrá</button>
+                    <button onclick="openEditor()" class="admin-only bg-gray-900 text-white text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg hover:bg-black transition-colors">+ Nýr réttur</button>
                 </div>
 
-                <!-- Language Toggle -->
-                <button onclick="toggleLanguage()" class="focus:outline-none group">
-                    <div id="lang-flag-container" class="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-md transition-all group-hover:scale-110 group-hover:shadow-lg">
-                        <img id="lang-flag-img" src="https://flagcdn.com/w80/is.png" class="w-full h-full object-cover" alt="Flag">
+                <div class="flex items-center gap-3">
+                    <!-- Location Dropdown -->
+                    <div class="relative">
+                        <button onclick="toggleLocMenu()" class="flex items-center gap-2 bg-white border border-gray-100 px-3 py-2 rounded-full shadow-sm hover:shadow-md transition-all active:scale-95">
+                            <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            <span id="active-loc-name" class="text-[10px] font-black uppercase tracking-widest text-gray-700">Laugar</span>
+                        </button>
+                        
+                        <div id="loc-dropdown" class="dropdown-menu overflow-hidden p-2">
+                            <button onclick="setLocation('LAUGAR')" class="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 rounded-xl transition-colors">Laugar (Allt)</button>
+                            <button onclick="setLocation('VATNSMYRI')" class="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 rounded-xl transition-colors border-t border-gray-50">Vatnsmýri</button>
+                            <button onclick="setLocation('SELTJARNARNES')" class="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 rounded-xl transition-colors border-t border-gray-50">Seltjarnarnes</button>
+                        </div>
                     </div>
-                </button>
+
+                    <!-- Language Toggle -->
+                    <button onclick="toggleLanguage()" class="focus:outline-none group">
+                        <div id="lang-flag-container" class="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-md transition-all group-hover:scale-110 group-hover:shadow-lg">
+                            <img id="lang-flag-img" src="https://flagcdn.com/w80/is.png" class="w-full h-full object-cover" alt="Flag">
+                        </div>
+                    </button>
+                </div>
             </div>
             
             <div class="logo-animated mb-6"></div>
@@ -206,10 +231,8 @@
             <div class="glass rounded-[2rem] overflow-hidden">
                 <div class="scroll-mask-container">
                     <nav id="category-scroll-container" class="flex overflow-x-auto no-scrollbar w-full py-4 px-4 justify-start items-center relative">
-                        <!-- Category tabs með position relative svo vísirinn lendi rétt -->
                         <div id="category-tabs" class="flex gap-0 min-w-full items-center relative">
                             <div id="nav-indicator"></div>
-                            <!-- Takkarnir fara hingað -->
                         </div>
                     </nav>
                 </div>
@@ -247,8 +270,10 @@
 
         <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]"></div>
 
-        <footer class="mt-24 text-center pb-16">
+        <footer class="mt-24 text-center pb-16 relative">
             <p class="text-gray-300 text-[11px] font-bold tracking-[0.3em] uppercase text-center">World Class &copy; 2026</p>
+            <!-- Látlaus Admin Login Takki -->
+            <button onclick="openLoginModal()" class="absolute bottom-0 right-0 p-4 opacity-20 hover:opacity-100 text-[9px] text-gray-300 uppercase font-black tracking-widest transition-opacity">Admin</button>
         </footer>
     </div>
 
@@ -287,7 +312,7 @@
                     <p id="modal-description" class="text-gray-700 leading-relaxed text-[14px] font-medium"></p>
                 </div>
 
-                <!-- Ofnæmisvaldar úr gagnagrunni -->
+                <!-- Ofnæmisvaldar -->
                 <div id="modal-allergens-container" class="mb-10 hidden">
                     <h4 class="text-[9px] font-black uppercase tracking-[0.25em] text-gray-300 mb-3">Ofnæmisvaldar</h4>
                     <div id="modal-allergens-list" class="flex flex-wrap gap-1.5"></div>
@@ -316,6 +341,86 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Editor Modal (Hidden by default) -->
+    <div id="admin-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-gray-950/80 backdrop-blur-md">
+        <div class="bg-white rounded-[2rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative shadow-2xl">
+            <button onclick="closeEditor()" class="absolute top-6 right-6 text-gray-400 hover:text-red-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-2xl font-black mb-8 uppercase tracking-tighter" id="admin-modal-title">Breyta rétti</h2>
+            <form id="admin-form" onsubmit="handleSave(event)" class="space-y-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="edit-name-is" placeholder="Heiti (Ísl)" class="admin-input" required>
+                    <input type="text" id="edit-name-en" placeholder="Heiti (En)" class="admin-input" required>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <textarea id="edit-desc-is" placeholder="Lýsing (Ísl)" rows="2" class="admin-input"></textarea>
+                    <textarea id="edit-desc-en" placeholder="Lýsing (En)" rows="2" class="admin-input"></textarea>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <select id="edit-category" class="admin-input">
+                        <option value="DRYKKIR">DRYKKIR</option>
+                        <option value="SALAT">SALAT</option>
+                        <option value="GRAUTUR">GRAUTUR</option>
+                        <option value="KRISP">KRISP</option>
+                        <option value="SKOT">SKOT</option>
+                        <option value="BÖRN">BÖRN</option>
+                        <option value="KAFFI">KAFFI</option>
+                        <option value="GRÍPTU MEÐ">GRÍPTU MEÐ</option>
+                    </select>
+                    <select id="edit-theme" class="admin-input">
+                        <option value="LIGHT">LIGHT</option>
+                        <option value="BALANCE">BALANCE</option>
+                        <option value="ENERGY">ENERGY</option>
+                        <option value="STRENGTH">STRENGTH</option>
+                        <option value="ALL">ALL</option>
+                    </select>
+                    <div class="flex items-center gap-2 border border-gray-200 rounded-xl px-3 bg-white">
+                        <input type="checkbox" id="edit-vegan" class="accent-red-500 w-5 h-5"> 
+                        <span class="text-xs font-bold text-gray-500 uppercase">Vegan?</span>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-4">
+                    <h3 class="text-xs font-black uppercase text-gray-400 mb-2">Stærðir & Næring (S/M/L)</h3>
+                    <div id="size-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+                </div>
+
+                <div class="border-t pt-4">
+                    <h3 class="text-xs font-black uppercase text-gray-400 mb-2">Ofnæmisvaldar</h3>
+                    <div class="flex flex-wrap gap-4 text-[10px] font-bold uppercase items-center">
+                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-gluten" class="accent-red-500"> Glúten</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-milk" class="accent-red-500"> Mjólk</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-nuts" class="accent-red-500"> Hnetur</label>
+                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-egg" class="accent-red-500"> Egg</label>
+                        <input type="text" id="aller-other" placeholder="Annað (komma á milli)" class="admin-input text-xs" style="width: 150px;">
+                    </div>
+                </div>
+
+                <div class="border-t pt-4 flex gap-4 text-xs font-bold text-gray-500">
+                    <label class="flex items-center gap-2"><input type="checkbox" value="LAUGAR" name="loc-check" class="accent-red-500"> Laugar</label>
+                    <label class="flex items-center gap-2"><input type="checkbox" value="VATNSMYRI" name="loc-check" class="accent-red-500"> Vatnsmýri</label>
+                    <label class="flex items-center gap-2"><input type="checkbox" value="SELTJARNARNES" name="loc-check" class="accent-red-500"> Seltjarnarnes</label>
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-xl bg-gray-900 text-white font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-black transition-all">Vista Breytingar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal (Hidden by default) -->
+    <div id="login-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-gray-950/80 backdrop-blur-md">
+        <div class="bg-white rounded-[2rem] p-10 w-full max-w-sm shadow-2xl">
+            <h2 class="text-xl font-black mb-6 text-center uppercase tracking-tighter">Admin Innskráning</h2>
+            <div class="space-y-4">
+                <input type="email" id="login-email" placeholder="Netfang" class="admin-input">
+                <input type="password" id="login-password" placeholder="Lykilorð" class="admin-input">
+                <button onclick="handleLogin()" id="login-submit-btn" class="w-full py-4 bg-red-500 text-white rounded-xl font-black uppercase text-[10px] shadow-lg hover:bg-red-600 transition-all">Skrá inn</button>
+                <button onclick="closeLoginModal()" class="w-full text-[9px] font-bold uppercase text-gray-400 mt-2">Loka</button>
             </div>
         </div>
     </div>
@@ -362,7 +467,9 @@
             selectedSize: 'M', 
             sortBy: 'category', 
             sortOrder: 'asc', 
-            modalItem: null 
+            modalItem: null,
+            isAdmin: false, // Bætt við: Admin staða
+            editingId: null // Bætt við: Hvaða hlut er verið að breyta
         };
 
         const getLang = () => state.isIcelandic ? IS_LANG : EN_LANG;
@@ -370,23 +477,21 @@
         async function fetchMenuFromSupabase() {
             if (!supabaseClient) return;
             try {
-                // Við sækjum allergens dálkinn líka
                 const { data, error } = await supabaseClient.from('menu_items').select('*');
                 if (error) throw error;
                 rawData = data.map(item => ({ ...item, nameIs: item.name_is, nameEn: item.name_en, descriptionIs: item.description_is, descriptionEn: item.description_en, isVegan: item.is_vegan }));
                 const overlay = document.getElementById('loading-overlay');
                 if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 500); }
                 
+                // URL Params handling (Eins og í V1)
                 const params = new URLSearchParams(window.location.search);
-                const langParam = params.get('lang');
-                if (langParam && langParam.toLowerCase() === 'en') state.isIcelandic = false;
-                
+                if (params.get('lang')?.toLowerCase() === 'en') state.isIcelandic = false;
                 const locParam = params.get('loc');
                 if (locParam) {
                     state.activeLocation = locParam.toUpperCase();
                     const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
-                    const activeLocNameEl = document.getElementById('active-loc-name');
-                    if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation;
+                    const el = document.getElementById('active-loc-name');
+                    if (el) el.textContent = locMap[state.activeLocation] || state.activeLocation;
                 }
 
                 const available = getAvailableCategories();
@@ -399,6 +504,163 @@
                 checkAndTriggerNudge();
             } catch (err) { console.error("Error:", err); }
         }
+
+        // --- AUTH & ADMIN FUNCTIONS (Viðbót) ---
+        async function checkSession() {
+            if (!supabaseClient) return;
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                state.isAdmin = true;
+                document.body.classList.add('is-admin');
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-submit-btn');
+            btn.textContent = '...';
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) { alert(error.message); btn.textContent = 'Skrá inn'; }
+            else {
+                state.isAdmin = true;
+                document.body.classList.add('is-admin');
+                closeLoginModal();
+                render(); // Endurhlaða til að sýna takka
+            }
+        }
+
+        async function handleLogout() {
+            await supabaseClient.auth.signOut();
+            state.isAdmin = false;
+            document.body.classList.remove('is-admin');
+            render();
+        }
+
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('login-modal').classList.add('flex');
+        }
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        // --- CRUD / Editor Functions (Viðbót) ---
+        function openEditor(id = null) {
+            state.editingId = id;
+            const item = id ? rawData.find(i => i.id == id) : null;
+            document.getElementById('admin-modal-title').textContent = id ? 'Breyta rétti' : 'Nýr réttur';
+            
+            // Fylla form
+            document.getElementById('edit-name-is').value = item?.nameIs || '';
+            document.getElementById('edit-name-en').value = item?.nameEn || '';
+            document.getElementById('edit-desc-is').value = item?.descriptionIs || '';
+            document.getElementById('edit-desc-en').value = item?.descriptionEn || '';
+            document.getElementById('edit-category').value = item?.category || 'DRYKKIR';
+            document.getElementById('edit-theme').value = item?.theme || 'ALL';
+            document.getElementById('edit-vegan').checked = item?.isVegan || false;
+
+            // Stærðir Grid (S/M/L)
+            const sizes = ['S', 'M', 'L'];
+            const grid = document.getElementById('size-grid');
+            grid.innerHTML = sizes.map(s => {
+                const p = item?.prices?.[s] || '';
+                const m = item?.macros?.[s] || { kcal:0, protein:0, carbs:0, fat:0, fiber:0 };
+                return `
+                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 text-center">
+                        <div class="text-[9px] font-black uppercase text-red-500 mb-2">${s} Stærð</div>
+                        <input type="text" id="price-${s}" value="${p}" placeholder="Verð" class="admin-input text-xs mb-2">
+                        <div class="grid grid-cols-2 gap-1 mb-1">
+                            <input type="number" id="kcal-${s}" value="${m.kcal}" placeholder="Kcal" class="admin-input text-xs px-1">
+                            <input type="number" id="prot-${s}" value="${m.protein}" placeholder="P" class="admin-input text-xs px-1">
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 mb-1">
+                            <input type="number" id="carb-${s}" value="${m.carbs}" placeholder="C" class="admin-input text-xs px-1">
+                            <input type="number" id="fat-${s}" value="${m.fat}" placeholder="F" class="admin-input text-xs px-1">
+                        </div>
+                        <input type="number" id="fiber-${s}" value="${m.fiber}" placeholder="Trefjar" class="admin-input text-xs w-full">
+                    </div>
+                `;
+            }).join('');
+
+            // Allergens & Locs
+            const a = item?.allergens || {};
+            document.getElementById('aller-gluten').checked = a.gluten || false;
+            document.getElementById('aller-milk').checked = a.milk || false;
+            document.getElementById('aller-nuts').checked = a.nuts || false;
+            document.getElementById('aller-egg').checked = a.egg || false;
+            document.getElementById('aller-other').value = a.other || '';
+
+            const itemLocs = item?.locations || [];
+            document.querySelectorAll('input[name="loc-check"]').forEach(el => {
+                el.checked = itemLocs.includes(el.value) || (!id && el.value === 'LAUGAR');
+            });
+
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-modal').classList.add('flex');
+        }
+
+        function closeEditor() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        async function handleSave(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.textContent = "Vistar...";
+
+            const prices = {};
+            const macros = {};
+            ['S', 'M', 'L'].forEach(s => {
+                const p = document.getElementById(`price-${s}`).value;
+                if (p) {
+                    prices[s] = p.includes('kr') ? p : p + ' kr.';
+                    macros[s] = {
+                        kcal: Number(document.getElementById(`kcal-${s}`).value) || 0,
+                        protein: Number(document.getElementById(`prot-${s}`).value) || 0,
+                        carbs: Number(document.getElementById(`carb-${s}`).value) || 0,
+                        fat: Number(document.getElementById(`fat-${s}`).value) || 0,
+                        fiber: Number(document.getElementById(`fiber-${s}`).value) || 0
+                    };
+                }
+            });
+
+            const locs = Array.from(document.querySelectorAll('input[name="loc-check"]:checked')).map(el => el.value);
+            const payload = {
+                name_is: document.getElementById('edit-name-is').value,
+                name_en: document.getElementById('edit-name-en').value,
+                description_is: document.getElementById('edit-desc-is').value,
+                description_en: document.getElementById('edit-desc-en').value,
+                category: document.getElementById('edit-category').value,
+                theme: document.getElementById('edit-theme').value,
+                is_vegan: document.getElementById('edit-vegan').checked,
+                prices, macros, locations: locs,
+                allergens: {
+                    gluten: document.getElementById('aller-gluten').checked,
+                    milk: document.getElementById('aller-milk').checked,
+                    nuts: document.getElementById('aller-nuts').checked,
+                    egg: document.getElementById('aller-egg').checked,
+                    other: document.getElementById('aller-other').value
+                }
+            };
+
+            const { error } = state.editingId 
+                ? await supabaseClient.from('menu_items').update(payload).eq('id', state.editingId) 
+                : await supabaseClient.from('menu_items').insert([payload]);
+
+            if (error) alert("Villa: " + error.message);
+            else { closeEditor(); fetchMenuFromSupabase(); }
+            btn.textContent = "Vista Breytingar";
+        }
+
+        async function confirmDelete(id, name) {
+            if (confirm(`Ertu viss um að þú viljir eyða "${name}"?`)) {
+                await supabaseClient.from('menu_items').delete().eq('id', id);
+                fetchMenuFromSupabase();
+            }
+        }
+
+        // --- END OF ADMIN FUNCTIONS ---
 
         function checkAndTriggerNudge() {
             setTimeout(() => {
@@ -415,8 +677,8 @@
         function setLocation(loc) { 
             state.activeLocation = loc.toUpperCase(); 
             const locMap = { 'LAUGAR': 'Laugar', 'VATNSMYRI': 'Vatnsmýri', 'SELTJARNARNES': 'Seltjarnarnes' };
-            const activeLocNameEl = document.getElementById('active-loc-name');
-            if (activeLocNameEl) activeLocNameEl.textContent = locMap[state.activeLocation] || state.activeLocation; 
+            const el = document.getElementById('active-loc-name');
+            if (el) el.textContent = locMap[state.activeLocation] || state.activeLocation; 
             document.getElementById('loc-dropdown').classList.remove('active'); 
             const available = getAvailableCategories();
             if (available.length > 0 && !available.includes(state.activeCategory)) {
@@ -453,28 +715,39 @@
         }
 
         function animateSynchronized(targetMacros) {
+            // Check for valid input
+            if (!targetMacros) return;
+
             const startMacros = Object.assign({}, lastAnimatedMacros);
             const endMacros = { kcal: targetMacros.kcal || 0, protein: targetMacros.protein || 0, carbs: targetMacros.carbs || 0, fat: targetMacros.fat || 0, fiber: targetMacros.fiber || 0 };
             const circ = 408.4; const duration = 1000; 
-            const total = endMacros.protein + endMacros.carbs + endMacros.fat || 1;
+            const total = (endMacros.protein + endMacros.carbs + endMacros.fat) || 1;
+            
             const targetRatios = { p: endMacros.protein / total, c: endMacros.carbs / total, f: endMacros.fat / total };
             const targetVisuals = { protein: { offset: circ - (targetRatios.p * circ), rotate: 0 }, carbs: { offset: circ - (targetRatios.c * circ), rotate: targetRatios.p * 360 }, fat: { offset: circ - (targetRatios.f * circ), rotate: (targetRatios.p + targetRatios.c) * 360 } };
+            
             const startVisuals = JSON.parse(JSON.stringify(currentCircleStates));
             const elements = { protein: document.getElementById('circle-protein'), carbs: document.getElementById('circle-carbs'), fat: document.getElementById('circle-fat'), valK: document.getElementById('val-kcal-center') };
+            
             let startTime = null;
             function step(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const progress = Math.min((timestamp - startTime) / duration, 1);
                 const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
-                elements.valK.textContent = Math.round(startMacros.kcal + (endMacros.kcal - startMacros.kcal) * ease);
+                
+                if (elements.valK) elements.valK.textContent = Math.round(startMacros.kcal + (endMacros.kcal - startMacros.kcal) * ease);
                 ['protein', 'carbs', 'fat', 'fiber'].forEach(key => { const el = document.getElementById('val-' + key); if (el) el.textContent = Math.round(startMacros[key] + (endMacros[key] - startMacros[key]) * ease) + 'g'; });
+                
                 ['protein', 'carbs', 'fat'].forEach(key => {
                     const currentOffset = startVisuals[key].offset + (targetVisuals[key].offset - startVisuals[key].offset) * ease;
                     const currentRotate = startVisuals[key].rotate + (targetVisuals[key].rotate - startVisuals[key].rotate) * ease;
-                    elements[key].style.strokeDashoffset = currentOffset;
-                    elements[key].style.transform = `rotate(${currentRotate}deg)`;
+                    if (elements[key]) {
+                        elements[key].style.strokeDashoffset = currentOffset;
+                        elements[key].style.transform = `rotate(${currentRotate}deg)`;
+                    }
                     currentCircleStates[key].offset = currentOffset; currentCircleStates[key].rotate = currentRotate;
                 });
+                
                 if (progress < 1) requestAnimationFrame(step); 
                 else { lastAnimatedMacros = Object.assign({}, endMacros); currentCircleStates = JSON.parse(JSON.stringify(targetVisuals)); }
             }
@@ -516,6 +789,9 @@
         function render() {
             const lang = getLang();
             document.getElementById('tagline').textContent = lang.tagline;
+            document.getElementById('mode-categories').textContent = state.isIcelandic ? 'Flokkar' : 'Categories';
+            document.getElementById('mode-themes').textContent = state.isIcelandic ? 'Markmið' : 'Goals';
+            
             document.querySelectorAll('.view-toggle-btn').forEach(btn => { const active = btn.id === 'mode-' + state.viewMode; btn.classList.toggle('bg-white', active); btn.classList.toggle('text-gray-900', active); btn.classList.toggle('text-gray-400', !active); });
             document.getElementById('category-container').classList.toggle('hidden', state.viewMode !== 'categories');
             document.getElementById('theme-container').classList.toggle('hidden', state.viewMode !== 'themes');
@@ -567,13 +843,22 @@
 
             const themePriority = { 'LIGHT': 1, 'BALANCE': 2, 'ENERGY': 3, 'STRENGTH': 4, 'ALL': 5 };
 
+            // Helper to safely get macros
+            const getM = (item) => {
+                if (!item.macros) return null;
+                // If it has kcal directly, use it (flat structure)
+                if (typeof item.macros.kcal === 'number') return item.macros;
+                // Otherwise try sizes: M, S, L, or first available
+                return item.macros.M || item.macros.S || item.macros.L || Object.values(item.macros)[0];
+            };
+
             if (state.sortBy !== 'category') {
                 items.sort((a, b) => {
-                    const getVal = (item) => {
-                        const m = item.prices ? item.macros.M : item.macros;
-                        return m ? (m[state.sortBy] || 0) : 0;
-                    };
-                    return state.sortOrder === 'asc' ? getVal(a) - getVal(b) : getVal(b) - getVal(a);
+                    const mA = getM(a);
+                    const mB = getM(b);
+                    const valA = mA ? (mA[state.sortBy] || 0) : 0;
+                    const valB = mB ? (mB[state.sortBy] || 0) : 0;
+                    return state.sortOrder === 'asc' ? valA - valB : valB - valA;
                 });
             } else {
                 items.sort((a, b) => {
@@ -599,30 +884,48 @@
 
             const arrowSvg = `<svg class="sort-arrow-svg ${state.sortOrder === 'desc' ? 'desc' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 15l7-7 7 7"></path></svg>`;
 
+            // Dynamic Labels for Sort Bar
+            const sortLabels = state.isIcelandic 
+                ? { p: 'PRÓT', c: 'KOLV', f: 'FITA', cat: 'FLOKKAR' }
+                : { p: 'PROT', c: 'CARBS', f: 'FAT', cat: 'CATEGORY' };
+
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 const key = btn.id.replace('sort-', '');
                 const isActive = key === state.sortBy;
                 btn.classList.toggle('active-sort', isActive);
                 btn.classList.toggle('text-white', isActive);
                 btn.classList.toggle('text-gray-400', !isActive);
-                const baseText = key === 'kcal' ? lang.kcal : key === 'protein' ? 'PRÓT' : key === 'carbs' ? 'KOLV' : key === 'fat' ? 'FITA' : 'FLOKKAR';
+                const baseText = key === 'kcal' ? lang.kcal : key === 'protein' ? sortLabels.p : key === 'carbs' ? sortLabels.c : key === 'fat' ? sortLabels.f : sortLabels.cat;
                 btn.innerHTML = baseText + (isActive ? arrowSvg : '');
             });
 
             container.innerHTML = items.map(item => {
                 const theme = THEMES[item.theme] || { color:'#9ca3af' };
-                const price = item.prices?.M || item.price;
-                const m = item.prices ? item.macros.M : item.macros;
+                // Safe Price Logic
+                const price = item.prices ? (item.prices.M || Object.values(item.prices)[0] || '') : item.price;
+                const m = getM(item); // Use helper
 
-                return `<div class="item-card bg-white p-7 rounded-[2.2rem] border border-gray-50 shadow-sm cursor-pointer" onclick="openModal(${rawData.indexOf(item)})">
-                    <div class="flex justify-between items-start mb-4"><span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span><span class="text-base font-black text-red-500 tracking-tight block leading-none">${price || ''}</span></div>
+                return `<div class="item-card bg-white p-7 rounded-[2.2rem] border border-gray-50 shadow-sm cursor-pointer relative" onclick="openModal(${rawData.indexOf(item)})">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span>
+                        <!-- Admin hnappar (Edit/Delete) -->
+                        <div class="admin-only absolute top-6 right-6 flex gap-1 bg-white p-1 rounded-full shadow-md z-20">
+                            <button onclick="event.stopPropagation(); openEditor('${item.id}')" class="p-1.5 bg-gray-100 rounded-full text-gray-500 hover:text-blue-500 hover:bg-blue-50">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </button>
+                            <button onclick="event.stopPropagation(); confirmDelete('${item.id}', '${item.nameIs}')" class="p-1.5 bg-gray-100 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                        <span class="text-base font-black text-red-500 tracking-tight block leading-none admin-only:opacity-0">${price || ''}</span>
+                    </div>
                     <h3 class="text-xl sm:text-2xl font-black text-gray-900 mb-2 tracking-tight leading-tight">${state.isIcelandic?item.nameIs:item.nameEn}</h3>
                     <p class="text-gray-400 text-xs leading-relaxed line-clamp-2 mb-4">${state.isIcelandic?item.descriptionIs:item.descriptionEn}</p>
                     ${m ? `<div class="card-macro-grid grid grid-cols-4 gap-2 items-center text-center">
-                        <div class="flex flex-col transition-all duration-300 ${highlightClass('kcal')}"><span class="text-[7px] uppercase font-black ${labelColor('kcal', 'text-gray-300')}">${lang.kcal}</span><span class="text-[11px] font-black ${valueColor('kcal', 'text-gray-800')}">${Math.round(m.kcal)}</span></div>
-                        <div class="flex flex-col transition-all duration-300 ${highlightClass('protein')}"><span class="text-[7px] uppercase font-black ${labelColor('protein', 'text-red-400')}">PRÓT</span><span class="text-[11px] font-black ${valueColor('protein', 'text-gray-800')}">${Math.round(m.protein)}g</span></div>
-                        <div class="flex flex-col transition-all duration-300 ${highlightClass('carbs')}"><span class="text-[7px] uppercase font-black ${labelColor('carbs', 'text-orange-400')}">KOLV</span><span class="text-[11px] font-black ${valueColor('carbs', 'text-gray-800')}">${Math.round(m.carbs)}g</span></div>
-                        <div class="flex flex-col transition-all duration-300 ${highlightClass('fat')}"><span class="text-[7px] uppercase font-black ${labelColor('fat', 'text-blue-400')}">FITA</span><span class="text-[11px] font-black ${valueColor('fat', 'text-gray-800')}">${Math.round(m.fat)}g</span></div>
+                        <div class="flex flex-col transition-all duration-300 ${highlightClass('kcal')}"><span class="text-[7px] uppercase font-black ${labelColor('kcal', 'text-gray-300')}">${lang.kcal}</span><span class="text-[11px] font-black ${valueColor('kcal', 'text-gray-800')}">${Math.round(m.kcal || 0)}</span></div>
+                        <div class="flex flex-col transition-all duration-300 ${highlightClass('protein')}"><span class="text-[7px] uppercase font-black ${labelColor('protein', 'text-red-400')}">${sortLabels.p}</span><span class="text-[11px] font-black ${valueColor('protein', 'text-gray-800')}">${Math.round(m.protein || 0)}g</span></div>
+                        <div class="flex flex-col transition-all duration-300 ${highlightClass('carbs')}"><span class="text-[7px] uppercase font-black ${labelColor('carbs', 'text-orange-400')}">${sortLabels.c}</span><span class="text-[11px] font-black ${valueColor('carbs', 'text-gray-800')}">${Math.round(m.carbs || 0)}g</span></div>
+                        <div class="flex flex-col transition-all duration-300 ${highlightClass('fat')}"><span class="text-[7px] uppercase font-black ${labelColor('fat', 'text-blue-400')}">${sortLabels.f}</span><span class="text-[11px] font-black ${valueColor('fat', 'text-gray-800')}">${Math.round(m.fat || 0)}g</span></div>
                     </div>` : ''}
                 </div>`;
             }).join('');
@@ -641,7 +944,9 @@
 
         function openModal(idx) {
             const item = rawData[idx]; if (!item) return;
-            state.modalItem = item; state.selectedSize = item.prices ? 'M' : null;
+            state.modalItem = item; 
+            // Velja stærð M sjálfgefið, eða fyrstu stærð ef M er ekki til
+            state.selectedSize = item.prices ? (item.prices.M ? 'M' : Object.keys(item.prices)[0]) : null;
             resetMacroVisuals();
             document.getElementById('modal-title').textContent = state.isIcelandic ? item.nameIs : item.nameEn;
             document.getElementById('modal-description').textContent = state.isIcelandic ? item.descriptionIs : item.descriptionEn;
@@ -652,7 +957,10 @@
             updateModalUI();
             const modal = document.getElementById('item-modal');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => { document.getElementById('modal-content').classList.remove('opacity-0', 'scale-95'); document.getElementById('modal-content').classList.add('opacity-100', 'scale-100'); const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null; if (m) animateSynchronized(m); }, 50);
+            setTimeout(() => { document.getElementById('modal-content').classList.remove('opacity-0', 'scale-95'); document.getElementById('modal-content').classList.add('opacity-100', 'scale-100'); 
+                const m = item.macros ? (state.selectedSize ? item.macros[state.selectedSize] : item.macros) : null; 
+                if (m) animateSynchronized(m); 
+            }, 50);
         }
 
         function updateModalUI() {
@@ -662,7 +970,25 @@
             const allergenCont = document.getElementById('modal-allergens-container');
             const allergenList = document.getElementById('modal-allergens-list');
 
-            if (item.prices) { const sizeOrder = ['S', 'M', 'L']; pCont.innerHTML = `<div class="grid grid-cols-3 gap-2">${sizeOrder.filter(s => item.prices[s]).map(s => `<button onclick="state.selectedSize='${s}';updateModalUI();animateSynchronized(state.modalItem.macros[state.selectedSize])" class="flex flex-col items-center py-2.5 rounded-2xl border ${state.selectedSize===s?'border-red-400 bg-red-50 text-red-500 font-black':'border-gray-100'}"><span class="text-[9px] uppercase font-black">${lang[s]}</span><span class="text-sm font-bold">${item.prices[s]}</span></button>`).join('')}</div>`; } else { pCont.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`; }
+            if (item.prices) { 
+                const sizeOrder = ['S', 'M', 'L']; 
+                const currentPrice = item.prices[state.selectedSize] || "";
+                pCont.innerHTML = `
+                    <div class="flex flex-col gap-4">
+                        <span class="text-3xl font-black text-red-500 tracking-tighter">${currentPrice}</span>
+                        <div class="flex gap-2">
+                            ${sizeOrder.filter(s => item.prices[s]).map(s => `
+                                <button onclick="state.selectedSize='${s}';updateModalUI();animateSynchronized(state.modalItem.macros[state.selectedSize])" 
+                                    class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase border transition-all 
+                                    ${state.selectedSize===s ? 'bg-red-500 text-white border-red-500 shadow-md' : 'bg-gray-50 text-gray-400 border-gray-100 hover:border-gray-200'}">
+                                    ${lang[s]}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>`; 
+            } else { 
+                pCont.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`; 
+            }
             
             // Ofnæmisvaldar úr gagnagrunni (item.allergens)
             const info = item.allergens;
@@ -688,7 +1014,7 @@
                 allergenCont.classList.add('hidden');
             }
 
-            const m = item.macros ? (item.prices ? item.macros[state.selectedSize] : item.macros) : null;
+            const m = item.macros ? (state.selectedSize ? item.macros[state.selectedSize] : item.macros) : null;
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
                 const rows = [{k:'protein', c:'text-[#dc2626]', bg:'bg-[#fff1f2]'},{k:'carbs', c:'text-[#ea580c]', bg:'bg-[#fff7ed]'},{k:'fat', c:'text-[#0284c7]', bg:'bg-[#f0f9ff]'},{k:'fiber', c:'text-[#16a34a]', bg:'bg-[#f0fdf4]'}];
@@ -699,6 +1025,7 @@
         function closeModal() { const modal = document.getElementById('item-modal'); document.getElementById('modal-content').classList.remove('opacity-100', 'scale-100'); document.getElementById('modal-content').classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); }
 
         window.onload = function() {
+            checkSession(); // Athuga admin stöðu við hleðslu
             fetchMenuFromSupabase();
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
