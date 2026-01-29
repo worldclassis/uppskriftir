@@ -161,13 +161,28 @@
         .admin-input {
             border: 1px solid #e5e7eb;
             border-radius: 0.75rem;
-            padding: 0.5rem 0.75rem;
+            padding: 0.6rem 0.75rem;
             font-size: 0.875rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
             width: 100%;
+            background: #fff;
         }
-        .admin-input:focus { border-color: #ef4444; }
+        .admin-input:focus { 
+            border-color: #ef4444; 
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .admin-label {
+            display: block;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #9ca3af;
+            margin-bottom: 0.25rem;
+            margin-left: 0.25rem;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-red-100 selection:text-red-600">
@@ -272,7 +287,6 @@
 
         <footer class="mt-24 text-center pb-16 relative">
             <p class="text-gray-300 text-[11px] font-bold tracking-[0.3em] uppercase text-center">World Class &copy; 2026</p>
-            <!-- Látlaus Admin Login Takki -->
             <button onclick="openLoginModal()" class="absolute bottom-0 right-0 p-4 opacity-20 hover:opacity-100 text-[9px] text-gray-300 uppercase font-black tracking-widest transition-opacity">Admin</button>
         </footer>
     </div>
@@ -290,7 +304,7 @@
             </div>
             
             <div id="export-container" class="p-8 sm:p-10 bg-white" style="border-radius: 3rem;">
-                <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center justify-between mb-6">
                     <div class="flex flex-wrap gap-2.5 items-center">
                         <span id="modal-tag" class="text-[9px] font-black px-2.5 py-1.5 rounded-lg text-white uppercase tracking-widest shadow-sm"></span>
                         <span id="modal-vegan" class="hidden text-[9px] font-black px-2.5 py-1.5 bg-green-500/10 text-green-600 rounded-lg uppercase tracking-widest border border-green-500/20">Vegan</span>
@@ -303,41 +317,41 @@
                          style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                 </div>
                 
-                <h2 id="modal-title" class="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-4 tracking-tighter"></h2>
-                <div id="modal-price-container" class="mb-10 export-hide"></div>
+                <h2 id="modal-title" class="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-2 tracking-tighter"></h2>
+                <div id="modal-price-container" class="mb-6 export-hide"></div>
                 
                 <!-- Innihald -->
-                <div id="modal-ingredients-container" class="mb-6">
-                    <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.25em] text-gray-300 mb-2">Innihaldslýsing</h4>
-                    <p id="modal-description" class="text-gray-700 leading-relaxed text-[14px] font-medium"></p>
+                <div id="modal-ingredients-container" class="mb-4">
+                    <h4 id="label-ingredients" class="text-[9px] font-black uppercase tracking-[0.2em] text-gray-300 mb-1">Innihaldslýsing</h4>
+                    <p id="modal-description" class="text-gray-700 leading-relaxed text-[13px] font-medium"></p>
                 </div>
 
-                <!-- Ofnæmisvaldar -->
-                <div id="modal-allergens-container" class="mb-10 hidden">
-                    <h4 class="text-[9px] font-black uppercase tracking-[0.25em] text-gray-300 mb-3">Ofnæmisvaldar</h4>
-                    <div id="modal-allergens-list" class="flex flex-wrap gap-1.5"></div>
+                <!-- Ofnæmisvaldar (Compact) -->
+                <div id="modal-allergens-container" class="mb-8 hidden flex items-center gap-3 py-2 border-y border-gray-50">
+                    <h4 class="text-[8px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Ofnæmi:</h4>
+                    <div id="modal-allergens-list" class="flex flex-wrap gap-1"></div>
                 </div>
 
-                <div class="space-y-8">
-                    <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[2.5rem] p-8 border border-gray-100/50 hidden">
-                        <div class="flex justify-between items-center mb-8">
-                            <h4 id="label-nutrition" class="text-[10px] font-black uppercase tracking-[0.25em] text-gray-300">Næringargildi</h4>
+                <div class="space-y-4">
+                    <div id="modal-nutrition-section" class="bg-gray-50/50 rounded-[2rem] p-6 border border-gray-100/50 hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h4 id="label-nutrition" class="text-[9px] font-black uppercase tracking-[0.25em] text-gray-300">Næringargildi</h4>
                             <div id="modal-sizes" class="flex gap-2 export-hide"></div>
                         </div>
                         <div class="flex items-center justify-between gap-6">
-                            <div class="relative w-[55%] flex justify-center items-center flex-shrink-0">
-                                <svg width="140" height="140" viewBox="0 0 150 150" class="transform -rotate-90">
+                            <div class="relative w-[50%] flex justify-center items-center flex-shrink-0">
+                                <svg width="120" height="120" viewBox="0 0 150 150" class="transform -rotate-90">
                                     <circle cx="75" cy="75" r="65" stroke="#f3f4f6" stroke-width="14" fill="transparent" />
                                     <circle id="circle-protein" cx="75" cy="75" r="65" stroke="#f87171" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
                                     <circle id="circle-carbs" cx="75" cy="75" r="65" stroke="#fdba74" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
                                     <circle id="circle-fat" cx="75" cy="75" r="65" stroke="#7dd3fc" stroke-width="14" fill="transparent" stroke-dasharray="408.4" stroke-dashoffset="408.4" stroke-linecap="butt" class="macro-circle" />
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                    <span id="val-kcal-center" class="text-2xl font-black text-gray-900 leading-none tracking-tighter">0</span>
-                                    <span class="text-[8px] font-black uppercase tracking-widest text-gray-400 mt-1.5">kcal</span>
+                                    <span id="val-kcal-center" class="text-xl font-black text-gray-900 leading-none tracking-tighter">0</span>
+                                    <span class="text-[7px] font-black uppercase tracking-widest text-gray-400 mt-1">kcal</span>
                                 </div>
                             </div>
-                            <div id="modal-macros" class="w-[45%] flex flex-col gap-2"></div>
+                            <div id="modal-macros" class="w-[50%] flex flex-col gap-1.5"></div>
                         </div>
                     </div>
                 </div>
@@ -345,74 +359,103 @@
         </div>
     </div>
 
-    <!-- Admin Editor Modal (Hidden by default) -->
+    <!-- Admin Editor Modal -->
     <div id="admin-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-gray-950/80 backdrop-blur-md">
-        <div class="bg-white rounded-[2rem] w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative shadow-2xl">
+        <div class="bg-white rounded-[2rem] w-full max-w-2xl max-h-[95vh] overflow-y-auto p-8 relative shadow-2xl">
             <button onclick="closeEditor()" class="absolute top-6 right-6 text-gray-400 hover:text-red-500">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             <h2 class="text-2xl font-black mb-8 uppercase tracking-tighter" id="admin-modal-title">Breyta rétti</h2>
             <form id="admin-form" onsubmit="handleSave(event)" class="space-y-6">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="edit-name-is" placeholder="Heiti (Ísl)" class="admin-input" required>
-                    <input type="text" id="edit-name-en" placeholder="Heiti (En)" class="admin-input" required>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="admin-label">Heiti (Ísl)</label>
+                        <input type="text" id="edit-name-is" class="admin-input" required>
+                    </div>
+                    <div>
+                        <label class="admin-label">Heiti (En)</label>
+                        <input type="text" id="edit-name-en" class="admin-input" required>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <textarea id="edit-desc-is" placeholder="Lýsing (Ísl)" rows="2" class="admin-input"></textarea>
-                    <textarea id="edit-desc-en" placeholder="Lýsing (En)" rows="2" class="admin-input"></textarea>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="admin-label">Lýsing (Ísl)</label>
+                        <textarea id="edit-desc-is" rows="2" class="admin-input"></textarea>
+                    </div>
+                    <div>
+                        <label class="admin-label">Lýsing (En)</label>
+                        <textarea id="edit-desc-en" rows="2" class="admin-input"></textarea>
+                    </div>
                 </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <select id="edit-category" class="admin-input">
-                        <option value="DRYKKIR">DRYKKIR</option>
-                        <option value="SALAT">SALAT</option>
-                        <option value="GRAUTUR">GRAUTUR</option>
-                        <option value="KRISP">KRISP</option>
-                        <option value="SKOT">SKOT</option>
-                        <option value="BÖRN">BÖRN</option>
-                        <option value="KAFFI">KAFFI</option>
-                        <option value="GRÍPTU MEÐ">GRÍPTU MEÐ</option>
-                    </select>
-                    <select id="edit-theme" class="admin-input">
-                        <option value="LIGHT">LIGHT</option>
-                        <option value="BALANCE">BALANCE</option>
-                        <option value="ENERGY">ENERGY</option>
-                        <option value="STRENGTH">STRENGTH</option>
-                        <option value="ALL">ALL</option>
-                    </select>
-                    <div class="flex items-center gap-2 border border-gray-200 rounded-xl px-3 bg-white">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                    <div>
+                        <label class="admin-label">Flokkur</label>
+                        <select id="edit-category" class="admin-input">
+                            <option value="DRYKKIR">DRYKKIR</option>
+                            <option value="SALAT">SALAT</option>
+                            <option value="GRAUTUR">GRAUTUR</option>
+                            <option value="KRISP">KRISP</option>
+                            <option value="SKOT">SKOT</option>
+                            <option value="BÖRN">BÖRN</option>
+                            <option value="KAFFI">KAFFI</option>
+                            <option value="GRÍPTU MEÐ">GRÍPTU MEÐ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="admin-label">Markmið</label>
+                        <select id="edit-theme" class="admin-input">
+                            <option value="LIGHT">LIGHT</option>
+                            <option value="BALANCE">BALANCE</option>
+                            <option value="ENERGY">ENERGY</option>
+                            <option value="STRENGTH">STRENGTH</option>
+                            <option value="ALL">ALL</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2 border border-gray-200 rounded-xl px-3 bg-gray-50 h-[48px]">
                         <input type="checkbox" id="edit-vegan" class="accent-red-500 w-5 h-5"> 
-                        <span class="text-xs font-bold text-gray-500 uppercase">Vegan?</span>
+                        <span class="text-[10px] font-black text-gray-500 uppercase">Vegan?</span>
                     </div>
                 </div>
                 
-                <div class="border-t pt-4">
-                    <h3 class="text-xs font-black uppercase text-gray-400 mb-2">Stærðir & Næring (S/M/L)</h3>
-                    <div id="size-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+                <div class="border-t border-gray-100 pt-6">
+                    <h3 class="text-[11px] font-black uppercase text-gray-400 mb-4 tracking-widest">Stærðir & Næring (S/M/L)</h3>
+                    <div id="size-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6"></div>
                 </div>
 
-                <div class="border-t pt-4">
-                    <h3 class="text-xs font-black uppercase text-gray-400 mb-2">Ofnæmisvaldar</h3>
-                    <div class="flex flex-wrap gap-4 text-[10px] font-bold uppercase items-center">
-                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-gluten" class="accent-red-500"> Glúten</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-milk" class="accent-red-500"> Mjólk</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-nuts" class="accent-red-500"> Hnetur</label>
-                        <label class="flex items-center gap-1"><input type="checkbox" id="aller-egg" class="accent-red-500"> Egg</label>
-                        <input type="text" id="aller-other" placeholder="Annað (komma á milli)" class="admin-input text-xs" style="width: 150px;">
+                <div class="border-t border-gray-100 pt-6">
+                    <h3 class="text-[11px] font-black uppercase text-gray-400 mb-4 tracking-widest">Ofnæmisvaldar</h3>
+                    <div class="flex flex-wrap gap-x-6 gap-y-4 text-[10px] font-bold uppercase items-center bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" id="aller-gluten" class="accent-red-500 w-4 h-4"> <span class="group-hover:text-red-500 transition-colors">Glúten</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" id="aller-milk" class="accent-red-500 w-4 h-4"> <span class="group-hover:text-red-500 transition-colors">Mjólk</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" id="aller-nuts" class="accent-red-500 w-4 h-4"> <span class="group-hover:text-red-500 transition-colors">Hnetur</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" id="aller-egg" class="accent-red-500 w-4 h-4"> <span class="group-hover:text-red-500 transition-colors">Egg</span></label>
+                        <div class="flex-1 min-w-[150px]">
+                            <label class="text-[8px] text-gray-400 block mb-1">Annað (skilið að með kommu)</label>
+                            <input type="text" id="aller-other" class="admin-input text-xs" style="padding: 0.4rem 0.75rem;">
+                        </div>
                     </div>
                 </div>
 
-                <div class="border-t pt-4 flex gap-4 text-xs font-bold text-gray-500">
-                    <label class="flex items-center gap-2"><input type="checkbox" value="LAUGAR" name="loc-check" class="accent-red-500"> Laugar</label>
-                    <label class="flex items-center gap-2"><input type="checkbox" value="VATNSMYRI" name="loc-check" class="accent-red-500"> Vatnsmýri</label>
-                    <label class="flex items-center gap-2"><input type="checkbox" value="SELTJARNARNES" name="loc-check" class="accent-red-500"> Seltjarnarnes</label>
+                <div class="border-t border-gray-100 pt-6">
+                    <h3 class="text-[11px] font-black uppercase text-gray-400 mb-4 tracking-widest">Staðsetningar</h3>
+                    <div class="flex flex-wrap gap-6 text-[10px] font-bold uppercase text-gray-600 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="LAUGAR" name="loc-check" class="accent-red-500 w-4 h-4"> <span class="group-hover:text-red-500 transition-colors">Laugar</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="VATNSMYRI" name="loc-check" class="accent-red-500 w-4 h-4"> <span class="group-hover:text-red-500 transition-colors">Vatnsmýri</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="SELTJARNARNES" name="loc-check" class="accent-red-500 w-4 h-4"> <span class="group-hover:text-red-500 transition-colors">Seltjarnarnes</span></label>
+                    </div>
                 </div>
 
-                <button type="submit" class="w-full py-4 rounded-xl bg-gray-900 text-white font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-black transition-all">Vista Breytingar</button>
+                <div class="pt-4">
+                    <button type="submit" class="w-full py-5 rounded-2xl bg-gray-900 text-white font-black uppercase text-[11px] tracking-[0.2em] shadow-2xl hover:bg-black transition-all transform hover:-translate-y-1 active:scale-95">Vista Breytingar</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- Login Modal (Hidden by default) -->
+    <!-- Login Modal -->
     <div id="login-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-gray-950/80 backdrop-blur-md">
         <div class="bg-white rounded-[2rem] p-10 w-full max-w-sm shadow-2xl">
             <h2 class="text-xl font-black mb-6 text-center uppercase tracking-tighter">Admin Innskráning</h2>
@@ -439,8 +482,9 @@
         const THEMES = {
             LIGHT: { key: 'LIGHT', is: 'Light', en: 'Light', color: '#34d399', descIs: 'Næringarríkt án auka hitaeininga', descEn: 'Nutritious & light' },
             BALANCE: { key: 'BALANCE', is: 'Balance', en: 'Balance', color: '#38bdf8', descIs: 'Stuðlar að einbeitingu og jafnvægi', descEn: 'Focus & balance' },
-            ENERGY: { key: 'ENERGY', is: 'Energy', en: 'Energy', color: '#fb923c', descIs: 'Gefur þér orkuna som þú þarft', descEn: 'Energy boost' },
-            STRENGTH: { key: 'STRENGTH', is: 'Strength', en: 'Strength', color: '#ef4444', descIs: 'Byggir upp og styrkir líkamann', descEn: 'Build & strengthen' }
+            ENERGY: { key: 'ENERGY', is: 'Energy', en: 'Energy', color: '#fb923c', descIs: 'Gefur þér orkuna sem þú þarft', descEn: 'Energy boost' },
+            STRENGTH: { key: 'STRENGTH', is: 'Strength', en: 'Strength', color: '#ef4444', descIs: 'Byggir upp og styrkir líkamann', descEn: 'Build & strengthen' },
+            ALL: { key: 'ALL', is: 'Allt', en: 'All', color: '#9ca3af' }
         };
         const CATEGORIES = {
             'DRYKKIR': { is: 'Drykkir', en: 'Drinks', img: 'https://images.prismic.io/worldclass/aVxY43NYClf9ozUz_menu_21920.jpg?auto=format,compress' },
@@ -468,8 +512,8 @@
             sortBy: 'category', 
             sortOrder: 'asc', 
             modalItem: null,
-            isAdmin: false, // Bætt við: Admin staða
-            editingId: null // Bætt við: Hvaða hlut er verið að breyta
+            isAdmin: false,
+            editingId: null
         };
 
         const getLang = () => state.isIcelandic ? IS_LANG : EN_LANG;
@@ -483,7 +527,6 @@
                 const overlay = document.getElementById('loading-overlay');
                 if (overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 500); }
                 
-                // URL Params handling (Eins og í V1)
                 const params = new URLSearchParams(window.location.search);
                 if (params.get('lang')?.toLowerCase() === 'en') state.isIcelandic = false;
                 const locParam = params.get('loc');
@@ -505,7 +548,6 @@
             } catch (err) { console.error("Error:", err); }
         }
 
-        // --- AUTH & ADMIN FUNCTIONS (Viðbót) ---
         async function checkSession() {
             if (!supabaseClient) return;
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -526,7 +568,7 @@
                 state.isAdmin = true;
                 document.body.classList.add('is-admin');
                 closeLoginModal();
-                render(); // Endurhlaða til að sýna takka
+                render();
             }
         }
 
@@ -545,13 +587,11 @@
             document.getElementById('login-modal').classList.add('hidden');
         }
 
-        // --- CRUD / Editor Functions (Viðbót) ---
         function openEditor(id = null) {
             state.editingId = id;
             const item = id ? rawData.find(i => i.id == id) : null;
             document.getElementById('admin-modal-title').textContent = id ? 'Breyta rétti' : 'Nýr réttur';
             
-            // Fylla form
             document.getElementById('edit-name-is').value = item?.nameIs || '';
             document.getElementById('edit-name-en').value = item?.nameEn || '';
             document.getElementById('edit-desc-is').value = item?.descriptionIs || '';
@@ -560,30 +600,51 @@
             document.getElementById('edit-theme').value = item?.theme || 'ALL';
             document.getElementById('edit-vegan').checked = item?.isVegan || false;
 
-            // Stærðir Grid (S/M/L)
             const sizes = ['S', 'M', 'L'];
             const grid = document.getElementById('size-grid');
             grid.innerHTML = sizes.map(s => {
                 const p = item?.prices?.[s] || '';
                 const m = item?.macros?.[s] || { kcal:0, protein:0, carbs:0, fat:0, fiber:0 };
+                const sizeNames = { S: 'Lítill', M: 'Mið', L: 'Stór' };
                 return `
-                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 text-center">
-                        <div class="text-[9px] font-black uppercase text-red-500 mb-2">${s} Stærð</div>
-                        <input type="text" id="price-${s}" value="${p}" placeholder="Verð" class="admin-input text-xs mb-2">
-                        <div class="grid grid-cols-2 gap-1 mb-1">
-                            <input type="number" id="kcal-${s}" value="${m.kcal}" placeholder="Kcal" class="admin-input text-xs px-1">
-                            <input type="number" id="prot-${s}" value="${m.protein}" placeholder="P" class="admin-input text-xs px-1">
+                    <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 flex flex-col gap-4">
+                        <div class="text-[10px] font-black uppercase text-red-500 border-b border-red-100 pb-2">${sizeNames[s]} (${s})</div>
+                        
+                        <div>
+                            <label class="admin-label">Verð (kr.)</label>
+                            <input type="text" id="price-${s}" value="${p}" placeholder="Td. 1.290 kr." class="admin-input text-xs">
                         </div>
-                        <div class="grid grid-cols-2 gap-1 mb-1">
-                            <input type="number" id="carb-${s}" value="${m.carbs}" placeholder="C" class="admin-input text-xs px-1">
-                            <input type="number" id="fat-${s}" value="${m.fat}" placeholder="F" class="admin-input text-xs px-1">
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="admin-label text-gray-500">Kcal</label>
+                                <input type="number" id="kcal-${s}" value="${m.kcal}" class="admin-input text-xs font-bold bg-white">
+                            </div>
+                            <div>
+                                <label class="admin-label text-red-500">Prótein (g)</label>
+                                <input type="number" id="prot-${s}" value="${m.protein}" class="admin-input text-xs font-bold border-red-100">
+                            </div>
                         </div>
-                        <input type="number" id="fiber-${s}" value="${m.fiber}" placeholder="Trefjar" class="admin-input text-xs w-full">
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="admin-label text-orange-500">Kolvetni (g)</label>
+                                <input type="number" id="carb-${s}" value="${m.carbs}" class="admin-input text-xs font-bold border-orange-100">
+                            </div>
+                            <div>
+                                <label class="admin-label text-blue-500">Fita (g)</label>
+                                <input type="number" id="fat-${s}" value="${m.fat}" class="admin-input text-xs font-bold border-blue-100">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="admin-label text-green-600">Trefjar (g)</label>
+                            <input type="number" id="fiber-${s}" value="${m.fiber}" class="admin-input text-xs font-bold border-green-100">
+                        </div>
                     </div>
                 `;
             }).join('');
 
-            // Allergens & Locs
             const a = item?.allergens || {};
             document.getElementById('aller-gluten').checked = a.gluten || false;
             document.getElementById('aller-milk').checked = a.milk || false;
@@ -660,8 +721,6 @@
             }
         }
 
-        // --- END OF ADMIN FUNCTIONS ---
-
         function checkAndTriggerNudge() {
             setTimeout(() => {
                 const container = document.getElementById('category-scroll-container');
@@ -715,7 +774,6 @@
         }
 
         function animateSynchronized(targetMacros) {
-            // Check for valid input
             if (!targetMacros) return;
 
             const startMacros = Object.assign({}, lastAnimatedMacros);
@@ -842,34 +900,33 @@
             else if (state.viewMode==='categories' && state.activeCategory) items = items.filter(i => i.category === state.activeCategory);
 
             const themePriority = { 'LIGHT': 1, 'BALANCE': 2, 'ENERGY': 3, 'STRENGTH': 4, 'ALL': 5 };
+            const categoryOrder = Object.keys(CATEGORIES);
 
-            // Helper to safely get macros
             const getM = (item) => {
                 if (!item.macros) return null;
-                // If it has kcal directly, use it (flat structure)
                 if (typeof item.macros.kcal === 'number') return item.macros;
-                // Otherwise try sizes: M, S, L, or first available
                 return item.macros.M || item.macros.S || item.macros.L || Object.values(item.macros)[0];
             };
 
-            if (state.sortBy !== 'category') {
-                items.sort((a, b) => {
+            items.sort((a, b) => {
+                if (state.sortBy === 'category') {
+                    const catA = categoryOrder.indexOf(a.category);
+                    const catB = categoryOrder.indexOf(b.category);
+                    if (catA !== catB) return state.sortOrder === 'asc' ? catA - catB : catB - catA;
+                    const pA = themePriority[a.theme] || 99;
+                    const pB = themePriority[b.theme] || 99;
+                    if (pA !== pB) return pA - pB;
+                    const nameA = state.isIcelandic ? (a.nameIs || "") : (a.nameEn || "");
+                    const nameB = state.isIcelandic ? (b.nameIs || "") : (b.nameEn || "");
+                    return nameA.localeCompare(nameB);
+                } else {
                     const mA = getM(a);
                     const mB = getM(b);
                     const valA = mA ? (mA[state.sortBy] || 0) : 0;
                     const valB = mB ? (mB[state.sortBy] || 0) : 0;
                     return state.sortOrder === 'asc' ? valA - valB : valB - valA;
-                });
-            } else {
-                items.sort((a, b) => {
-                    const pA = themePriority[a.theme] || 99;
-                    const pB = themePriority[b.theme] || 99;
-                    if (pA !== pB) return state.sortOrder === 'asc' ? pA - pB : pB - pA;
-                    const nameA = state.isIcelandic ? (a.nameIs || "") : (a.nameEn || "");
-                    const nameB = state.isIcelandic ? (b.nameIs || "") : (b.nameEn || "");
-                    return state.sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-                });
-            }
+                }
+            });
 
             const highlightConfig = {
                 kcal: { bg: 'bg-black/5', text: 'text-black', label: 'text-black/60' },
@@ -884,7 +941,6 @@
 
             const arrowSvg = `<svg class="sort-arrow-svg ${state.sortOrder === 'desc' ? 'desc' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 15l7-7 7 7"></path></svg>`;
 
-            // Dynamic Labels for Sort Bar
             const sortLabels = state.isIcelandic 
                 ? { p: 'PRÓT', c: 'KOLV', f: 'FITA', cat: 'FLOKKAR' }
                 : { p: 'PROT', c: 'CARBS', f: 'FAT', cat: 'CATEGORY' };
@@ -901,14 +957,18 @@
 
             container.innerHTML = items.map(item => {
                 const theme = THEMES[item.theme] || { color:'#9ca3af' };
-                // Safe Price Logic
+                const catInfo = CATEGORIES[item.category] || { is: '', en: '' };
                 const price = item.prices ? (item.prices.M || Object.values(item.prices)[0] || '') : item.price;
-                const m = getM(item); // Use helper
+                const m = getM(item);
+                const showThemeTag = item.theme !== 'ALL';
+                const showCategoryTag = state.viewMode === 'themes';
 
                 return `<div class="item-card bg-white p-7 rounded-[2.2rem] border border-gray-50 shadow-sm cursor-pointer relative" onclick="openModal(${rawData.indexOf(item)})">
                     <div class="flex justify-between items-start mb-4">
-                        <span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span>
-                        <!-- Admin hnappar (Edit/Delete) -->
+                        <div class="flex flex-wrap gap-1.5 items-center">
+                            ${showThemeTag ? `<span class="text-[8px] font-black px-2 py-0.5 rounded-md text-white uppercase tracking-widest" style="background-color:${theme.color}">${state.isIcelandic ? (THEMES[item.theme]?.is || '') : (THEMES[item.theme]?.en || '')}</span>` : ''}
+                            ${showCategoryTag ? `<span class="text-[8px] font-black px-2 py-0.5 rounded-md bg-gray-100 text-gray-400 border border-gray-200 uppercase tracking-widest">${state.isIcelandic ? catInfo.is : catInfo.en}</span>` : ''}
+                        </div>
                         <div class="admin-only absolute top-6 right-6 flex gap-1 bg-white p-1 rounded-full shadow-md z-20">
                             <button onclick="event.stopPropagation(); openEditor('${item.id}')" class="p-1.5 bg-gray-100 rounded-full text-gray-500 hover:text-blue-500 hover:bg-blue-50">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
@@ -938,26 +998,45 @@
             const btns = document.querySelectorAll('.export-hide');
             if (exportLogo) exportLogo.classList.remove('hidden');
             btns.forEach(b => b.style.display = 'none');
-            try { const canvas = await html2canvas(container, { backgroundColor: '#ffffff', borderRadius: 48, scale: 3, useCORS: true, logging: false, imageTimeout: 0, dpi: 300 }); const link = document.createElement('a'); link.download = `menu-${state.modalItem.nameIs || 'item'}.png`; link.href = canvas.toDataURL('image/png'); link.click(); } 
-            catch (err) { console.error("Error:", err); } finally { if (exportLogo) exportLogo.classList.add('hidden'); btns.forEach(b => b.style.display = ''); }
+            try { 
+                const canvas = await html2canvas(container, { 
+                    backgroundColor: '#ffffff', 
+                    borderRadius: 48, 
+                    scale: 3, 
+                    useCORS: true, 
+                    logging: false, 
+                    imageTimeout: 0, 
+                    dpi: 300 
+                }); 
+                const link = document.createElement('a'); 
+                link.download = `menu-${state.modalItem.nameIs || 'item'}.png`; 
+                link.href = canvas.toDataURL('image/png'); 
+                link.click(); 
+            } 
+            catch (err) { console.error("Error:", err); } 
+            finally { if (exportLogo) exportLogo.classList.add('hidden'); btns.forEach(b => b.style.display = ''); }
         }
 
         function openModal(idx) {
             const item = rawData[idx]; if (!item) return;
             state.modalItem = item; 
-            // Velja stærð M sjálfgefið, eða fyrstu stærð ef M er ekki til
             state.selectedSize = item.prices ? (item.prices.M ? 'M' : Object.keys(item.prices)[0]) : null;
             resetMacroVisuals();
             document.getElementById('modal-title').textContent = state.isIcelandic ? item.nameIs : item.nameEn;
             document.getElementById('modal-description').textContent = state.isIcelandic ? item.descriptionIs : item.descriptionEn;
             const themeInfo = THEMES[item.theme] || { is: '', en: '', color: '#9ca3af' };
-            document.getElementById('modal-tag').textContent = state.isIcelandic ? themeInfo.is : themeInfo.en;
-            document.getElementById('modal-tag').style.backgroundColor = themeInfo.color;
+            const modalTag = document.getElementById('modal-tag');
+            modalTag.textContent = state.isIcelandic ? themeInfo.is : themeInfo.en;
+            modalTag.style.backgroundColor = themeInfo.color;
+            modalTag.classList.toggle('hidden', item.theme === 'ALL');
             document.getElementById('modal-vegan').classList.toggle('hidden', !item.isVegan);
             updateModalUI();
             const modal = document.getElementById('item-modal');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => { document.getElementById('modal-content').classList.remove('opacity-0', 'scale-95'); document.getElementById('modal-content').classList.add('opacity-100', 'scale-100'); 
+            setTimeout(() => { 
+                const content = document.getElementById('modal-content');
+                content.classList.remove('opacity-0', 'scale-95'); 
+                content.classList.add('opacity-100', 'scale-100'); 
                 const m = item.macros ? (state.selectedSize ? item.macros[state.selectedSize] : item.macros) : null; 
                 if (m) animateSynchronized(m); 
             }, 50);
@@ -990,51 +1069,41 @@
                 pCont.innerHTML = `<span class="text-3xl font-black text-red-500 tracking-tighter">${item.price || ''}</span>`; 
             }
             
-            // Ofnæmisvaldar úr gagnagrunni (item.allergens)
             const info = item.allergens;
             if (info && (info.gluten || info.milk || info.nuts || info.soja || info.egg || info.other)) {
-                allergenCont.classList.remove('hidden');
+                allergenCont.classList.remove('hidden'); allergenCont.classList.add('flex');
                 let allAllergenItems = [];
                 const labels = { gluten: 'Glúten', milk: 'Mjólk', nuts: 'Hnetur', soja: 'Soja', egg: 'Egg' };
-                Object.keys(labels).forEach(key => {
-                    if (info[key]) allAllergenItems.push(labels[key]);
-                });
-                if (info.other) {
-                    const others = info.other.split(',').map(s => s.trim());
-                    allAllergenItems = [...allAllergenItems, ...others];
-                }
+                Object.keys(labels).forEach(key => { if (info[key]) allAllergenItems.push(labels[key]); });
+                if (info.other) { const others = info.other.split(',').map(s => s.trim()); allAllergenItems = [...allAllergenItems, ...others]; }
                 allAllergenItems = [...new Set(allAllergenItems)];
                 allergenList.innerHTML = allAllergenItems.map(a => `
-                    <span class="bg-gray-50 text-gray-400 text-[9px] font-medium px-2 py-1 rounded-full border border-gray-100 uppercase tracking-tight">
+                    <span class="bg-gray-50 text-gray-500 text-[8px] font-bold px-2 py-0.5 rounded-md border border-gray-100 uppercase tracking-tight">
                         ${a}
                     </span>
                 `).join('');
-                if (allAllergenItems.length === 0) allergenCont.classList.add('hidden');
-            } else {
-                allergenCont.classList.add('hidden');
-            }
+                if (allAllergenItems.length === 0) { allergenCont.classList.add('hidden'); allergenCont.classList.remove('flex'); }
+            } else { allergenCont.classList.add('hidden'); allergenCont.classList.remove('flex'); }
 
             const m = item.macros ? (state.selectedSize ? item.macros[state.selectedSize] : item.macros) : null;
             if (m) {
                 document.getElementById('modal-nutrition-section').classList.remove('hidden');
                 const rows = [{k:'protein', c:'text-[#dc2626]', bg:'bg-[#fff1f2]'},{k:'carbs', c:'text-[#ea580c]', bg:'bg-[#fff7ed]'},{k:'fat', c:'text-[#0284c7]', bg:'bg-[#f0f9ff]'},{k:'fiber', c:'text-[#16a34a]', bg:'bg-[#f0fdf4]'}];
-                mCont.innerHTML = rows.map(r => `<div class="${r.bg} px-5 py-2.5 rounded-[1.4rem] flex items-center justify-between border border-white/50 shadow-sm w-full"><span class="text-[6.5px] font-black uppercase tracking-[0.2em] ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-sm font-black text-gray-800 w-14 text-right">0g</span></div>`).join('');
+                mCont.innerHTML = rows.map(r => `<div class="${r.bg} px-4 py-2 rounded-2xl flex items-center justify-between border border-white/50 shadow-sm w-full"><span class="text-[6px] font-black uppercase tracking-[0.2em] ${r.c}">${lang[r.k]}</span><span id="val-${r.k}" class="text-xs font-black text-gray-800 w-12 text-right">0g</span></div>`).join('');
             } else { document.getElementById('modal-nutrition-section').classList.add('hidden'); }
         }
 
-        function closeModal() { const modal = document.getElementById('item-modal'); document.getElementById('modal-content').classList.remove('opacity-100', 'scale-100'); document.getElementById('modal-content').classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); }
+        function closeModal() { 
+            const modal = document.getElementById('item-modal'); 
+            const content = document.getElementById('modal-content');
+            content.classList.remove('opacity-100', 'scale-100'); 
+            content.classList.add('opacity-0', 'scale-95'); 
+            setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); resetMacroVisuals(); }, 300); 
+        }
 
         window.onload = function() {
-            checkSession(); // Athuga admin stöðu við hleðslu
-            fetchMenuFromSupabase();
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    const modal = document.getElementById('item-modal');
-                    if (modal && !modal.classList.contains('hidden')) {
-                        closeModal();
-                    }
-                }
-            });
+            checkSession(); fetchMenuFromSupabase();
+            window.addEventListener('keydown', (e) => { if (e.key === 'Escape') { const modal = document.getElementById('item-modal'); if (modal && !modal.classList.contains('hidden')) closeModal(); } });
         };
     </script>
 </body>
